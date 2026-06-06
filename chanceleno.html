@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chanceleno — Global Trade & Logistics</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #0A0A0A;
+    --dark-2: #111111;
+    --dark-3: #1A1A1A;
+    --dark-4: #222222;
+    --white: #F5F2EC;
+    --white-dim: rgba(245,242,236,0.6);
+    --white-faint: rgba(245,242,236,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 60px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+  .nav-logo-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex; gap: 40px; list-style: none;
+  }
+  .nav-links a {
+    color: var(--white-dim);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* LANG SWITCHER */
+  .lang-switcher {
+    display: flex; gap: 12px;
+  }
+  .lang-btn {
+    background: none; border: 1px solid rgba(201,168,76,0.3);
+    color: var(--white-dim);
+    font-size: 11px; letter-spacing: 0.15em;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .lang-btn:hover, .lang-btn.active {
+    background: var(--gold);
+    color: var(--dark);
+    border-color: var(--gold);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated background */
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to right, rgba(10,10,10,0.95) 35%, rgba(10,10,10,0.75) 65%, rgba(10,10,10,0.5) 100%),
+      url('https://chanceleno.github.io/hero.jpg') center/cover no-repeat;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 70% 70% at 70% 50%, black, transparent);
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb-1 {
+    width: 400px; height: 400px;
+    background: rgba(201,168,76,0.08);
+    top: 10%; right: 5%;
+    animation-delay: 0s;
+  }
+  .orb-2 {
+    width: 250px; height: 250px;
+    background: rgba(201,168,76,0.05);
+    bottom: 20%; right: 25%;
+    animation-delay: 3s;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.05); }
+  }
+
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    display: flex; align-items: center; gap: 16px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.3s;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block; width: 40px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 8vw, 110px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.5s;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--white-dim);
+    max-width: 480px;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.7s;
+  }
+
+  .hero-cta {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 0.9s;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+    padding: 16px 40px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+  }
+  .btn-outline {
+    border: 1px solid rgba(245,242,236,0.25);
+    color: var(--white);
+    padding: 16px 40px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--white-dim);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards 1.2s;
+  }
+  .scroll-line {
+    width: 40px; height: 1px;
+    background: var(--white-dim);
+    position: relative; overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+  @keyframes scrollLine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--dark-3);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    padding: 40px 60px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  .stat-item { text-align: center; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    margin-top: 8px;
+    display: block;
+  }
+
+  /* SECTION BASE */
+  section { padding: 120px 60px; }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .section-tag::before {
+    content: '';
+    display: block; width: 30px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ABOUT */
+  .about { background: var(--dark-2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    margin-top: 60px;
+  }
+  .about-text p {
+    color: var(--white-dim);
+    line-height: 1.9;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-card {
+    background: var(--dark-3);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 60px;
+    background: var(--gold);
+  }
+  .about-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
+  .about-card p {
+    color: var(--white-dim);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .about-quote {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--gold-light);
+    line-height: 1.5;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 60px;
+  }
+  .service-card {
+    background: var(--dark-3);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s;
+    cursor: default;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-card:hover { background: var(--dark-4); }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.12);
+    line-height: 1;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--white-dim);
+  }
+
+  .presence { 
+    background: var(--dark-2);
+    position: relative;
+  }
+  .presence::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('https://chanceleno.github.io/city.jpg') center/cover no-repeat;
+    opacity: 0.08;
+  }
+  .presence-intro {
+    color: var(--white-dim);
+    font-size: 15px;
+    line-height: 1.9;
+    max-width: 600px;
+    margin-bottom: 60px;
+  }
+  .continents {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .continent-card {
+    background: var(--dark-3);
+    padding: 40px;
+    border-left: 3px solid transparent;
+    transition: all 0.3s;
+  }
+  .continent-card:hover {
+    border-left-color: var(--gold);
+    background: var(--dark-4);
+  }
+  .continent-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .continent-countries {
+    font-size: 13px;
+    color: var(--white-dim);
+    line-height: 1.8;
+  }
+
+  /* CONTACT */
+  .contact {
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+  }
+  .contact::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 60px;
+  }
+  .contact-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px 0;
+    border-bottom: 1px solid rgba(245,242,236,0.06);
+  }
+  .contact-info-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .contact-info-value {
+    font-size: 15px;
+    color: var(--white);
+  }
+  .contact-form { display: flex; flex-direction: column; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+  }
+  .form-input, .form-select, .form-textarea {
+    background: var(--dark-3);
+    border: 1px solid rgba(245,242,236,0.1);
+    color: var(--white);
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    width: 100%;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--gold);
+  }
+  .form-select option { background: var(--dark-3); }
+  .form-textarea { resize: vertical; min-height: 120px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark-2);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 40px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--white-dim);
+    letter-spacing: 0.05em;
+  }
+  .footer-links {
+    display: flex; gap: 24px;
+  }
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Divider */
+  .gold-divider {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin: 32px 0;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px; }
+    section { padding: 80px 24px; }
+    .stats-bar { grid-template-columns: repeat(2,1fr); padding: 40px 24px; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services-grid, .continents { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
+    .lang-switcher { display: none; }
+  }
+
+  /* Hidden lang content */
+  [data-lang] { display: none; }
+  [data-lang].active { display: block; }
+  [data-lang-inline] { display: none; }
+  [data-lang-inline].active { display: inline; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="https://chanceleno.github.io/logo.jpg" alt="Chanceleno Logo">
+    <span class="nav-logo-text">Chanceleno</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about" data-nav="about">
+      <span data-lang="fr" class="active">À Propos</span>
+      <span data-lang="en">About</span>
+      <span data-lang="pt">Sobre</span>
+      <span data-lang="ar">حول</span>
+      <span data-lang="zh">关于</span>
+    </a></li>
+    <li><a href="#services" data-nav="services">
+      <span data-lang="fr" class="active">Services</span>
+      <span data-lang="en">Services</span>
+      <span data-lang="pt">Serviços</span>
+      <span data-lang="ar">خدمات</span>
+      <span data-lang="zh">服务</span>
+    </a></li>
+    <li><a href="#presence" data-nav="presence">
+      <span data-lang="fr" class="active">Présence</span>
+      <span data-lang="en">Presence</span>
+      <span data-lang="pt">Presença</span>
+      <span data-lang="ar">الحضور</span>
+      <span data-lang="zh">存在</span>
+    </a></li>
+    <li><a href="#recrutement" data-nav="recrutement">
+      <span data-lang="fr" class="active">Recrutement</span>
+      <span data-lang="en">Careers</span>
+      <span data-lang="pt">Recrutamento</span>
+      <span data-lang="ar">وظائف</span>
+      <span data-lang="zh">招聘</span>
+    </a></li>
+    <li><a href="#contact" data-nav="contact">Contact</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang-switch="fr">FR</button>
+    <button class="lang-btn" data-lang-switch="en">EN</button>
+    <button class="lang-btn" data-lang-switch="pt">PT</button>
+    <button class="lang-btn" data-lang-switch="ar">AR</button>
+    <button class="lang-btn" data-lang-switch="zh">中文</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span data-lang="fr" class="active">Vision Globale. Expertise Ciblée. Impact Durable.</span>
+      <span data-lang="en">Global Vision. Targeted Expertise. Lasting Impact.</span>
+      <span data-lang="pt">Visão Global. Expertise Direcionada. Impacto Duradouro.</span>
+      <span data-lang="ar">رؤية عالمية. خبرة موجهة. تأثير دائم.</span>
+      <span data-lang="zh">全球视野。精准专业。持久影响。</span>
+    </div>
+    <h1 class="hero-title">
+      <span data-lang="fr" class="active">Connecting<br><em>Africa</em><br>& the World</span>
+      <span data-lang="en">Connecting<br><em>Africa</em><br>& the World</span>
+      <span data-lang="pt">Conectando<br><em>África</em><br>& o Mundo</span>
+      <span data-lang="ar">ربط<br><em>أفريقيا</em><br>بالعالم</span>
+      <span data-lang="zh">连接<br><em>非洲</em><br>与世界</span>
+    </h1>
+    <p class="hero-sub">
+      <span data-lang="fr" class="active">Partenariats stratégiques, distribution internationale et logistique entre l'Europe, l'Afrique et au-delà.</span>
+      <span data-lang="en">Strategic partnerships, international distribution and logistics between Europe, Africa and beyond.</span>
+      <span data-lang="pt">Parcerias estratégicas, distribuição internacional e logística entre a Europa, África e além.</span>
+      <span data-lang="ar">شراكات استراتيجية وتوزيع دولي ولوجستيات بين أوروبا وأفريقيا وما وراءها.</span>
+      <span data-lang="zh">欧洲、非洲及其他地区之间的战略合作伙伴关系、国际分销和物流。</span>
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn-primary">
+        <span data-lang="fr" class="active">Devenir Partenaire</span>
+        <span data-lang="en">Become a Partner</span>
+        <span data-lang="pt">Tornar-se Parceiro</span>
+        <span data-lang="ar">كن شريكاً</span>
+        <span data-lang="zh">成为合作伙伴</span>
+      </a>
+      <a href="#services" class="btn-outline">
+        <span data-lang="fr" class="active">Nos Services</span>
+        <span data-lang="en">Our Services</span>
+        <span data-lang="pt">Nossos Serviços</span>
+        <span data-lang="ar">خدماتنا</span>
+        <span data-lang="zh">我们的服务</span>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span data-lang="fr" class="active">Découvrir</span>
+    <span data-lang="en">Explore</span>
+    <span data-lang="pt">Explorar</span>
+    <span data-lang="ar">اكتشف</span>
+    <span data-lang="zh">探索</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar reveal">
+  <div class="stat-item">
+    <span class="stat-num">3</span>
+    <span class="stat-label">
+      <span data-lang="fr" class="active">Continents</span>
+      <span data-lang="en">Continents</span>
+      <span data-lang="pt">Continentes</span>
+      <span data-lang="ar">قارات</span>
+      <span data-lang="zh">大洲</span>
+    </span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">20+</span>
+    <span class="stat-label">
+      <span data-lang="fr" class="active">Ans d'Expérience</span>
+      <span data-lang="en">Years Experience</span>
+      <span data-lang="pt">Anos de Experiência</span>
+      <span data-lang="ar">سنوات خبرة</span>
+      <span data-lang="zh">年经验</span>
+    </span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">5</span>
+    <span class="stat-label">
+      <span data-lang="fr" class="active">Langues</span>
+      <span data-lang="en">Languages</span>
+      <span data-lang="pt">Idiomas</span>
+      <span data-lang="ar">لغات</span>
+      <span data-lang="zh">语言</span>
+    </span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">∞</span>
+    <span class="stat-label">
+      <span data-lang="fr" class="active">Opportunités</span>
+      <span data-lang="en">Opportunities</span>
+      <span data-lang="pt">Oportunidades</span>
+      <span data-lang="ar">فرص</span>
+      <span data-lang="zh">机会</span>
+    </span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="section-tag reveal">
+    <span data-lang="fr" class="active">Notre Histoire</span>
+    <span data-lang="en">Our Story</span>
+    <span data-lang="pt">Nossa História</span>
+    <span data-lang="ar">قصتنا</span>
+    <span data-lang="zh">我们的故事</span>
+  </div>
+  <h2 class="section-title reveal">
+    <span data-lang="fr" class="active">Un pont entre<br><em>deux mondes</em></span>
+    <span data-lang="en">A bridge between<br><em>two worlds</em></span>
+    <span data-lang="pt">Uma ponte entre<br><em>dois mundos</em></span>
+    <span data-lang="ar">جسر بين<br><em>عالمين</em></span>
+    <span data-lang="zh">连接<br><em>两个世界</em></span>
+  </h2>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p data-lang="fr" class="active">Chanceleno est née de la conviction qu'entre l'Angola et l'Europe, entre l'Afrique et le monde, il existe un potentiel commercial immense encore inexploité.</p>
+      <p data-lang="en" >Chanceleno was born from the conviction that between Angola and Europe, between Africa and the world, there is an immense and still untapped commercial potential.</p>
+      <p data-lang="pt">A Chanceleno nasceu da convicção de que entre Angola e a Europa, entre África e o mundo, existe um imenso potencial comercial ainda inexplorado.</p>
+      <p data-lang="ar">وُلدت شانسيلينو من الاقتناع بأن بين أنغولا وأوروبا، وبين أفريقيا والعالم، هناك إمكانات تجارية هائلة لا تزال غير مستغلة.</p>
+      <p data-lang="zh">Chanceleno的诞生源于一个信念：安哥拉与欧洲之间、非洲与世界之间，存在着巨大的尚未开发的商业潜力。</p>
+
+      <p data-lang="fr" class="active">Fondée par Chano Chanceleno, entrepreneur franco-angolais fort de plus de 20 ans d'expérience en logistique et gestion internationale, notre société se positionne comme l'intermédiaire de confiance pour tous vos projets de développement commercial entre l'Europe et l'Afrique.</p>
+      <p data-lang="en">Founded by Chano Chanceleno, a Franco-Angolan entrepreneur with over 20 years of experience in logistics and international management, our company positions itself as the trusted intermediary for all your commercial development projects between Europe and Africa.</p>
+      <p data-lang="pt">Fundada por Chano Chanceleno, empreendedor franco-angolano com mais de 20 anos de experiência em logística e gestão internacional, nossa empresa se posiciona como o intermediário de confiança para todos os seus projetos de desenvolvimento comercial entre a Europa e a África.</p>
+      <p data-lang="ar">تأسست على يد شانو شانسيلينو، رائد أعمال فرنسي-أنغولي يتمتع بأكثر من 20 عاماً من الخبرة في اللوجستيات والإدارة الدولية.</p>
+      <p data-lang="zh">由拥有20多年物流和国际管理经验的法安两栖企业家Chano Chanceleno创立，我们公司定位为您在欧非之间商业发展项目的可信中间人。</p>
+
+      <div class="gold-divider"></div>
+      <p data-lang="fr" class="active" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"Notre force : comprendre les deux côtés. Notre mission : créer des opportunités réelles."</p>
+      <p data-lang="en" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"Our strength: understanding both sides. Our mission: creating real opportunities."</p>
+      <p data-lang="pt" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"Nossa força: entender os dois lados. Nossa missão: criar oportunidades reais."</p>
+      <p data-lang="ar" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"قوتنا: فهم الجانبين. مهمتنا: خلق فرص حقيقية."</p>
+      <p data-lang="zh" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"我们的优势：理解双方。我们的使命：创造真实机遇。"</p>
+    </div>
+    <div class="about-visual reveal">
+      <div class="about-card" style="background: linear-gradient(to bottom, rgba(17,17,17,0.7) 0%, rgba(17,17,17,0.95) 60%), url('https://chanceleno.github.io/about.jpg') center top/cover no-repeat;">
+        <div class="about-card-title">
+          <span data-lang="fr" class="active">Chano Chanceleno</span>
+          <span data-lang="en">Chano Chanceleno</span>
+          <span data-lang="pt">Chano Chanceleno</span>
+          <span data-lang="ar">شانو شانسيلينو</span>
+          <span data-lang="zh">Chano Chanceleno</span>
+        </div>
+        <p style="color: var(--gold); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px;">CEO & Founder</p>
+        <p data-lang="fr" class="active">Entrepreneur franco-angolais basé à Lyon, France. Expert en logistique internationale, transport et développement commercial entre l'Europe et l'Afrique.</p>
+        <p data-lang="en">Franco-Angolan entrepreneur based in Lyon, France. Expert in international logistics, transport and commercial development between Europe and Africa.</p>
+        <p data-lang="pt">Empreendedor franco-angolano baseado em Lyon, França. Especialista em logística internacional, transporte e desenvolvimento comercial entre Europa e África.</p>
+        <p data-lang="ar">رائد أعمال فرنسي-أنغولي مقيم في ليون، فرنسا. خبير في اللوجستيات الدولية والنقل والتطوير التجاري بين أوروبا وأفريقيا.</p>
+        <p data-lang="zh">法安两栖企业家，驻法国里昂。欧非之间国际物流、运输和商业发展专家。</p>
+        <div class="about-quote">
+          <span data-lang="fr" class="active">"Vision Globale. Expertise Ciblée. Impact Durable."</span>
+          <span data-lang="en">"Global Vision. Targeted Expertise. Lasting Impact."</span>
+          <span data-lang="pt">"Visão Global. Expertise Direcionada. Impacto Duradouro."</span>
+          <span data-lang="ar">"رؤية عالمية. خبرة موجهة. تأثير دائم."</span>
+          <span data-lang="zh">"全球视野。精准专业。持久影响。"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" style="background: var(--dark);">
+  <div class="section-tag reveal">
+    <span data-lang="fr" class="active">6 Pôles d'Excellence Mondiale</span>
+    <span data-lang="en">6 Poles of Global Excellence</span>
+    <span data-lang="pt">6 Polos de Excelência Global</span>
+    <span data-lang="ar">٦ محاور للتميز العالمي</span>
+    <span data-lang="zh">六大全球卓越业务</span>
+  </div>
+  <h2 class="section-title reveal">
+    <span data-lang="fr" class="active">Une vision.<br><em>Six expertises.</em></span>
+    <span data-lang="en">One vision.<br><em>Six expertises.</em></span>
+    <span data-lang="pt">Uma visão.<br><em>Seis expertises.</em></span>
+    <span data-lang="ar">رؤية واحدة.<br><em>ست خبرات.</em></span>
+    <span data-lang="zh">一个愿景。<br><em>六大专业。</em></span>
+  </h2>
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <span class="service-num">01</span>
+      <span class="service-icon">🚢</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Supply Chain & E-Commerce</span>
+        <span data-lang="en">Supply Chain & E-Commerce</span>
+        <span data-lang="pt">Supply Chain & E-Commerce</span>
+        <span data-lang="ar">سلسلة التوريد والتجارة الإلكترونية</span>
+        <span data-lang="zh">供应链与电子商务</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Import/export intercontinental, logistique internationale multimodale, représentation exclusive de marques entre l'Europe et l'Afrique. Gestion de flotte, fret aérien et maritime, e-commerce et propriété intellectuelle.</span>
+        <span data-lang="en">Intercontinental import/export, multimodal international logistics, exclusive brand representation between Europe and Africa. Fleet management, air and sea freight, e-commerce and intellectual property.</span>
+        <span data-lang="pt">Importação/exportação intercontinental, logística internacional multimodal, representação exclusiva de marcas entre a Europa e África.</span>
+        <span data-lang="ar">استيراد/تصدير عابر للقارات، لوجستيات دولية متعددة الوسائط، تمثيل حصري للعلامات التجارية بين أوروبا وأفريقيا.</span>
+        <span data-lang="zh">跨大陆进出口、多式联运国际物流、欧非品牌独家代理。车队管理、空海货运、电子商务与知识产权。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">02</span>
+      <span class="service-icon">🏥</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Life Sciences & Healthcare</span>
+        <span data-lang="en">Life Sciences & Healthcare</span>
+        <span data-lang="pt">Ciências da Vida & Saúde</span>
+        <span data-lang="ar">علوم الحياة والرعاية الصحية</span>
+        <span data-lang="zh">生命科学与医疗健康</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Distribution d'équipements médicaux de haute précision, gestion hospitalière, produits pharmaceutiques et solutions de santé pour l'Afrique. Partenariats avec fabricants européens et mondiaux.</span>
+        <span data-lang="en">Distribution of high-precision medical equipment, hospital management, pharmaceutical products and health solutions for Africa. Partnerships with European and global manufacturers.</span>
+        <span data-lang="pt">Distribuição de equipamentos médicos de alta precisão, gestão hospitalar, produtos farmacêuticos e soluções de saúde para África.</span>
+        <span data-lang="ar">توزيع المعدات الطبية عالية الدقة وإدارة المستشفيات والمستحضرات الصيدلانية وحلول الرعاية الصحية لأفريقيا.</span>
+        <span data-lang="zh">高精度医疗设备分销、医院管理、药品及非洲健康解决方案。与欧洲及全球制造商建立合作伙伴关系。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">03</span>
+      <span class="service-icon">🏙️</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Smart Cities & Technologie</span>
+        <span data-lang="en">Smart Cities & Technology</span>
+        <span data-lang="pt">Cidades Inteligentes & Tecnologia</span>
+        <span data-lang="ar">المدن الذكية والتكنولوجيا</span>
+        <span data-lang="zh">智慧城市与科技</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Solutions technologiques pour les villes africaines en développement. Construction civile, design d'intérieur, infrastructures intelligentes, économie digitale et intelligence artificielle appliquée.</span>
+        <span data-lang="en">Technological solutions for developing African cities. Civil construction, interior design, smart infrastructure, digital economy and applied artificial intelligence.</span>
+        <span data-lang="pt">Soluções tecnológicas para cidades africanas em desenvolvimento. Construção civil, design de interiores, infraestruturas inteligentes e economia digital.</span>
+        <span data-lang="ar">حلول تكنولوجية للمدن الأفريقية النامية. البناء المدني والتصميم الداخلي والبنية التحتية الذكية والاقتصاد الرقمي.</span>
+        <span data-lang="zh">非洲发展中城市的技术解决方案。土木建筑、室内设计、智能基础设施、数字经济和人工智能应用。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">04</span>
+      <span class="service-icon">⚡</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Énergie & Ressources</span>
+        <span data-lang="en">Energy & Resources</span>
+        <span data-lang="pt">Energia & Recursos</span>
+        <span data-lang="ar">الطاقة والموارد</span>
+        <span data-lang="zh">能源与资源</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Énergies renouvelables, ressources naturelles et minérales, stations-service, traitement des déchets et recyclage. Solutions durables pour l'Afrique subsaharienne et le marché européen.</span>
+        <span data-lang="en">Renewable energies, natural and mineral resources, fuel stations, waste treatment and recycling. Sustainable solutions for sub-Saharan Africa and the European market.</span>
+        <span data-lang="pt">Energias renováveis, recursos naturais e minerais, postos de combustível, tratamento de resíduos e reciclagem.</span>
+        <span data-lang="ar">الطاقة المتجددة والموارد الطبيعية والمعدنية ومحطات الوقود ومعالجة النفايات وإعادة التدوير.</span>
+        <span data-lang="zh">可再生能源、自然与矿产资源、加油站、废物处理与回收。为撒哈拉以南非洲和欧洲市场提供可持续解决方案。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">03</span>
+      <span class="service-icon">🎓</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Education & Services Humains</span>
+        <span data-lang="en">Education & Human Services</span>
+        <span data-lang="pt">Educação & Serviços Humanos</span>
+        <span data-lang="ar">التعليم والخدمات الإنسانية</span>
+        <span data-lang="zh">教育与人文服务</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Création et gestion d'établissements scolaires et de crèches, formation professionnelle certifiée, recrutement de capital humain spécialisé. Services de nettoyage industriel, hygiénisation et entretien de voirie.</span>
+        <span data-lang="en">Creation and management of schools and nurseries, certified professional training, specialized human capital recruitment. Industrial cleaning, hygienization and road maintenance services.</span>
+        <span data-lang="pt">Criação e gestão de estabelecimentos escolares e creches, formação profissional certificada, recrutamento de capital humano especializado.</span>
+        <span data-lang="ar">إنشاء وإدارة المدارس ودور الحضانة والتدريب المهني المعتمد وتوظيف الكوادر البشرية المتخصصة.</span>
+        <span data-lang="zh">学校和托儿所的创建与管理、认证职业培训、专业人才招募。工业清洁、卫生和道路养护服务。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">04</span>
+      <span class="service-icon">🏙️</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Smart Cities & Technologie</span>
+        <span data-lang="en">Smart Cities & Technology</span>
+        <span data-lang="pt">Cidades Inteligentes & Tecnologia</span>
+        <span data-lang="ar">المدن الذكية والتكنولوجيا</span>
+        <span data-lang="zh">智慧城市与科技</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Économie digitale, intelligence artificielle appliquée, produits électroniques et informatiques. Infrastructures connectées pour villes africaines émergentes. Organisation d'événements et production multimédia internationale.</span>
+        <span data-lang="en">Digital economy, applied artificial intelligence, electronic and IT products. Connected infrastructure for emerging African cities. International event organization and multimedia production.</span>
+        <span data-lang="pt">Economia digital, inteligência artificial aplicada, produtos eletrónicos e informáticos. Infraestruturas conectadas para cidades africanas emergentes.</span>
+        <span data-lang="ar">الاقتصاد الرقمي والذكاء الاصطناعي التطبيقي والمنتجات الإلكترونية وتكنولوجيا المعلومات.</span>
+        <span data-lang="zh">数字经济、人工智能应用、电子与信息技术产品。非洲新兴城市互联基础设施。国际活动组织与多媒体制作。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">05</span>
+      <span class="service-icon">🏗️</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Construction & Infrastructure</span>
+        <span data-lang="en">Construction & Infrastructure</span>
+        <span data-lang="pt">Construção & Infraestrutura</span>
+        <span data-lang="ar">البناء والبنية التحتية</span>
+        <span data-lang="zh">建筑与基础设施</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Construction civile, design d'intérieur haut de gamme, finitions et décoration. Commerce de matériaux de construction, véhicules et accessoires. Services de réfrigération et représentation de marques de machinerie industrielle.</span>
+        <span data-lang="en">Civil construction, high-end interior design, finishes and decoration. Construction materials, vehicles and accessories trade. Refrigeration services and industrial machinery brand representation.</span>
+        <span data-lang="pt">Construção civil, design de interiores de alto padrão, acabamentos e decoração. Comércio de materiais de construção, veículos e acessórios.</span>
+        <span data-lang="ar">البناء المدني وتصميم الداخل الراقي والتشطيبات والديكور. تجارة مواد البناء والمركبات والملحقات.</span>
+        <span data-lang="zh">土木建筑、高端室内设计、装饰装修。建材、车辆与配件贸易。制冷服务及工业机械品牌代理。</span>
+      </p>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-num">06</span>
+      <span class="service-icon">⚡</span>
+      <div class="service-title">
+        <span data-lang="fr" class="active">Énergie & Ressources Naturelles</span>
+        <span data-lang="en">Energy & Natural Resources</span>
+        <span data-lang="pt">Energia & Recursos Naturais</span>
+        <span data-lang="ar">الطاقة والموارد الطبيعية</span>
+        <span data-lang="zh">能源与自然资源</span>
+      </div>
+      <p class="service-desc">
+        <span data-lang="fr" class="active">Énergies renouvelables et solutions solaires, exploitation et commerce de ressources naturelles et minérales, stations-service. Traitement des déchets solides et liquides, recyclage et conseil environnemental pour une Afrique durable.</span>
+        <span data-lang="en">Renewable energies and solar solutions, natural and mineral resource exploitation and trade, fuel stations. Solid and liquid waste treatment, recycling and environmental consulting for a sustainable Africa.</span>
+        <span data-lang="pt">Energias renováveis e soluções solares, exploração e comércio de recursos naturais e minerais, postos de combustível. Tratamento de resíduos sólidos e líquidos, reciclagem e consultoria ambiental.</span>
+        <span data-lang="ar">الطاقة المتجددة والحلول الشمسية واستغلال وتجارة الموارد الطبيعية والمعدنية ومحطات الوقود.</span>
+        <span data-lang="zh">可再生能源与太阳能解决方案、自然与矿产资源开发贸易、加油站。固液废物处理、回收及环境咨询，助力可持续非洲。</span>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRESENCE -->
+<section class="presence" id="presence">
+  <div class="section-tag reveal">
+    <span data-lang="fr" class="active">Notre Rayonnement</span>
+    <span data-lang="en">Our Reach</span>
+    <span data-lang="pt">Nossa Presença</span>
+    <span data-lang="ar">نطاقنا</span>
+    <span data-lang="zh">我们的覆盖范围</span>
+  </div>
+  <h2 class="section-title reveal">
+    <span data-lang="fr" class="active">Présence <em>Mondiale</em></span>
+    <span data-lang="en"><em>Global</em> Presence</span>
+    <span data-lang="pt">Presença <em>Global</em></span>
+    <span data-lang="ar">الحضور <em>العالمي</em></span>
+    <span data-lang="zh"><em>全球</em>布局</span>
+  </h2>
+  <p class="presence-intro reveal">
+    <span data-lang="fr" class="active">Avec des bases opérationnelles en France et en Angola, Chanceleno développe activement ses partenariats sur 3 continents.</span>
+    <span data-lang="en">With operational bases in France and Angola, Chanceleno is actively developing partnerships across 3 continents.</span>
+    <span data-lang="pt">Com bases operacionais em França e Angola, a Chanceleno desenvolve ativamente parcerias em 3 continentes.</span>
+    <span data-lang="ar">مع قواعد تشغيلية في فرنسا وأنغولا، تطور شانسيلينو بنشاط شراكاتها عبر 3 قارات.</span>
+    <span data-lang="zh">Chanceleno在法国和安哥拉设有运营基地，正积极在3大洲发展合作伙伴关系。</span>
+  </p>
+  <div class="continents">
+    <div class="continent-card reveal">
+      <div class="continent-name">Europe</div>
+      <div class="continent-countries">
+        <span data-lang="fr" class="active">🇫🇷 France (Lyon) — Siège Europe<br>🇧🇪 Belgique<br>🇵🇹 Portugal<br>🇩🇪 Allemagne</span>
+        <span data-lang="en">🇫🇷 France (Lyon) — European HQ<br>🇧🇪 Belgium<br>🇵🇹 Portugal<br>🇩🇪 Germany</span>
+        <span data-lang="pt">🇫🇷 França (Lyon) — Sede Europa<br>🇧🇪 Bélgica<br>🇵🇹 Portugal<br>🇩🇪 Alemanha</span>
+        <span data-lang="ar">🇫🇷 فرنسا (ليون) — المقر الأوروبي<br>🇧🇪 بلجيكا<br>🇵🇹 البرتغال<br>🇩🇪 ألمانيا</span>
+        <span data-lang="zh">🇫🇷 法国（里昂）— 欧洲总部<br>🇧🇪 比利时<br>🇵🇹 葡萄牙<br>🇩🇪 德国</span>
+      </div>
+    </div>
+    <div class="continent-card reveal">
+      <div class="continent-name">Afrique</div>
+      <div class="continent-countries">
+        <span data-lang="fr" class="active">🇦🇴 Angola (Luanda) — Siège Afrique<br>🇨🇩 RD Congo<br>🇨🇬 Congo Brazzaville<br>🇳🇬 Nigeria</span>
+        <span data-lang="en">🇦🇴 Angola (Luanda) — African HQ<br>🇨🇩 DR Congo<br>🇨🇬 Congo Brazzaville<br>🇳🇬 Nigeria</span>
+        <span data-lang="pt">🇦🇴 Angola (Luanda) — Sede África<br>🇨🇩 RD Congo<br>🇨🇬 Congo Brazzaville<br>🇳🇬 Nigéria</span>
+        <span data-lang="ar">🇦🇴 أنغولا (لواندا) — المقر الأفريقي<br>🇨🇩 الكونغو الديمقراطية<br>🇨🇬 الكونغو برازافيل<br>🇳🇬 نيجيريا</span>
+        <span data-lang="zh">🇦🇴 安哥拉（罗安达）— 非洲总部<br>🇨🇩 刚果民主共和国<br>🇨🇬 刚果布拉柴维尔<br>🇳🇬 尼日利亚</span>
+      </div>
+    </div>
+    <div class="continent-card reveal">
+      <div class="continent-name">
+        <span data-lang="fr" class="active">Expansion</span>
+        <span data-lang="en">Expansion</span>
+        <span data-lang="pt">Expansão</span>
+        <span data-lang="ar">التوسع</span>
+        <span data-lang="zh">扩展中</span>
+      </div>
+      <div class="continent-countries">
+        <span data-lang="fr" class="active">🇦🇪 Émirats Arabes Unis<br>🇨🇳 Chine<br>🇧🇷 Brésil<br>🌍 Afrique du Nord</span>
+        <span data-lang="en">🇦🇪 United Arab Emirates<br>🇨🇳 China<br>🇧🇷 Brazil<br>🌍 North Africa</span>
+        <span data-lang="pt">🇦🇪 Emirados Árabes Unidos<br>🇨🇳 China<br>🇧🇷 Brasil<br>🌍 Norte de África</span>
+        <span data-lang="ar">🇦🇪 الإمارات العربية المتحدة<br>🇨🇳 الصين<br>🇧🇷 البرازيل<br>🌍 شمال أفريقيا</span>
+        <span data-lang="zh">🇦🇪 阿联酋<br>🇨🇳 中国<br>🇧🇷 巴西<br>🌍 北非</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-tag reveal">
+    <span data-lang="fr" class="active">Travaillons Ensemble</span>
+    <span data-lang="en">Let's Work Together</span>
+    <span data-lang="pt">Vamos Trabalhar Juntos</span>
+    <span data-lang="ar">لنعمل معاً</span>
+    <span data-lang="zh">携手合作</span>
+  </div>
+  <h2 class="section-title reveal">
+    <span data-lang="fr" class="active">Nous <em>Contacter</em></span>
+    <span data-lang="en"><em>Contact</em> Us</span>
+    <span data-lang="pt">Entre em <em>Contato</em></span>
+    <span data-lang="ar"><em>اتصل</em> بنا</span>
+    <span data-lang="zh"><em>联系</em>我们</span>
+  </h2>
+  <div class="contact-grid">
+    <div class="reveal">
+      <div class="contact-info-item">
+        <span class="contact-info-label">Email</span>
+        <span class="contact-info-value">ceo@chanceleno.com</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-label">
+          <span data-lang="fr" class="active">France — WhatsApp Business</span>
+          <span data-lang="en">France — WhatsApp Business</span>
+          <span data-lang="pt">França — WhatsApp Business</span>
+          <span data-lang="ar">فرنسا — واتساب بيزنس</span>
+          <span data-lang="zh">法国 — WhatsApp Business</span>
+        </span>
+        <span class="contact-info-value">+33 6 41 80 84 99</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-label">
+          <span data-lang="fr" class="active">Angola — WhatsApp</span>
+          <span data-lang="en">Angola — WhatsApp</span>
+          <span data-lang="pt">Angola — WhatsApp</span>
+          <span data-lang="ar">أنغولا — واتساب</span>
+          <span data-lang="zh">安哥拉 — WhatsApp</span>
+        </span>
+        <span class="contact-info-value">+244 928 424 849</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-label">
+          <span data-lang="fr" class="active">Siège Europe</span>
+          <span data-lang="en">European HQ</span>
+          <span data-lang="pt">Sede Europa</span>
+          <span data-lang="ar">المقر الأوروبي</span>
+          <span data-lang="zh">欧洲总部</span>
+        </span>
+        <span class="contact-info-value">Lyon, France — Département 69</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-label">
+          <span data-lang="fr" class="active">Siège Angola</span>
+          <span data-lang="en">Angola HQ</span>
+          <span data-lang="pt">Sede Angola</span>
+          <span data-lang="ar">مقر أنغولا</span>
+          <span data-lang="zh">安哥拉总部</span>
+        </span>
+        <span class="contact-info-value">Kilamba, Luanda — Angola</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-label">NIF Angola</span>
+        <span class="contact-info-value">003214171ZE032</span>
+      </div>
+      <div class="contact-info-item">
+        <span class="contact-info-label">
+          <span data-lang="fr" class="active">Entreprise Enregistrée</span>
+          <span data-lang="en">Registered Company</span>
+          <span data-lang="pt">Empresa Registada</span>
+          <span data-lang="ar">شركة مسجلة</span>
+          <span data-lang="zh">注册公司</span>
+        </span>
+        <span class="contact-info-value">CHANCELENO — COMÉRCIO GERAL, SU, LDA</span>
+      </div>
+    </div>
+    <div class="contact-form reveal">
+      <div class="form-group">
+        <label class="form-label">
+          <span data-lang="fr" class="active">Votre Nom</span>
+          <span data-lang="en">Your Name</span>
+          <span data-lang="pt">Seu Nome</span>
+          <span data-lang="ar">اسمك</span>
+          <span data-lang="zh">您的姓名</span>
+        </label>
+        <input type="text" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-input" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <span data-lang="fr" class="active">Type de Partenariat</span>
+          <span data-lang="en">Partnership Type</span>
+          <span data-lang="pt">Tipo de Parceria</span>
+          <span data-lang="ar">نوع الشراكة</span>
+          <span data-lang="zh">合作类型</span>
+        </label>
+        <select class="form-select">
+          <option value="">
+            <span data-lang="fr" class="active">Sélectionner...</span>
+          </option>
+          <option>Import / Export</option>
+          <option>
+            <span data-lang="fr" class="active">Distribution de marque</span>
+            <span data-lang="en">Brand distribution</span>
+          </option>
+          <option>
+            <span data-lang="fr" class="active">Consulting</span>
+          </option>
+          <option>
+            <span data-lang="fr" class="active">Logistique</span>
+            <span data-lang="en">Logistics</span>
+          </option>
+          <option>
+            <span data-lang="fr" class="active">Autre</span>
+            <span data-lang="en">Other</span>
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          <span data-lang="fr" class="active">Message</span>
+          <span data-lang="en">Message</span>
+          <span data-lang="pt">Mensagem</span>
+          <span data-lang="ar">رسالة</span>
+          <span data-lang="zh">留言</span>
+        </label>
+        <textarea class="form-textarea"></textarea>
+      </div>
+      <button class="btn-primary" style="border: none; cursor: pointer; width: 100%;">
+        <span data-lang="fr" class="active">Envoyer le Message</span>
+        <span data-lang="en">Send Message</span>
+        <span data-lang="pt">Enviar Mensagem</span>
+        <span data-lang="ar">إرسال الرسالة</span>
+        <span data-lang="zh">发送消息</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- RECRUTEMENT -->
+<section id="recrutement" style="background: var(--dark-3); position: relative; overflow: hidden;">
+  <div style="position: absolute; inset: 0; background: url('https://chanceleno.github.io/services.jpg') center/cover no-repeat; opacity: 0.06;"></div>
+  <div style="position: relative; z-index: 2;">
+    <div class="section-tag reveal">
+      <span data-lang="fr" class="active">Rejoignez l'Aventure</span>
+      <span data-lang="en">Join the Adventure</span>
+      <span data-lang="pt">Junte-se à Aventura</span>
+      <span data-lang="ar">انضم إلى المغامرة</span>
+      <span data-lang="zh">加入我们</span>
+    </div>
+    <h2 class="section-title reveal">
+      <span data-lang="fr" class="active">Travaillons <em>Ensemble</em></span>
+      <span data-lang="en">Let's Work <em>Together</em></span>
+      <span data-lang="pt">Vamos Trabalhar <em>Juntos</em></span>
+      <span data-lang="ar">لنعمل <em>معاً</em></span>
+      <span data-lang="zh">携手<em>共进</em></span>
+    </h2>
+
+    <div class="reveal" style="max-width: 650px; margin-bottom: 48px;">
+      <p style="color: var(--white-dim); font-size: 15px; line-height: 1.9; margin-bottom: 24px;">
+        <span data-lang="fr" class="active">Chanceleno est une entreprise en pleine construction. Nous croyons que les grandes réussites se bâtissent avec les bonnes personnes. Si vous êtes ambitieux, bilingue, passionné par le commerce international et le développement de l'Afrique — nous voulons vous connaître.</span>
+        <span data-lang="en">Chanceleno is a company in full development. We believe great success is built with the right people. If you are ambitious, bilingual, passionate about international trade and Africa's development — we want to meet you.</span>
+        <span data-lang="pt">A Chanceleno é uma empresa em plena construção. Acreditamos que os grandes sucessos são construídos com as pessoas certas. Se é ambicioso, bilíngue e apaixonado pelo comércio internacional — queremos conhecê-lo.</span>
+        <span data-lang="ar">شانسيلينو شركة في طور البناء. نؤمن أن النجاحات الكبيرة تُبنى مع الأشخاص المناسبين. إذا كنت طموحاً وثنائي اللغة ومتحمساً للتجارة الدولية — نريد التعرف عليك.</span>
+        <span data-lang="zh">Chanceleno是一家正在建设中的企业。我们相信伟大的成功需要合适的人才。如果您雄心勃勃、双语能力强、热衷于国际贸易和非洲发展——我们希望认识您。</span>
+      </p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px;">
+        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">🌍
+          <span data-lang="fr" class="active">Commerce International</span>
+          <span data-lang="en">International Trade</span>
+          <span data-lang="pt">Comércio Internacional</span>
+          <span data-lang="ar">التجارة الدولية</span>
+          <span data-lang="zh">国际贸易</span>
+        </div>
+        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">🚢
+          <span data-lang="fr" class="active">Logistique</span>
+          <span data-lang="en">Logistics</span>
+          <span data-lang="pt">Logística</span>
+          <span data-lang="ar">اللوجستيات</span>
+          <span data-lang="zh">物流</span>
+        </div>
+        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">💻
+          <span data-lang="fr" class="active">Technologie</span>
+          <span data-lang="en">Technology</span>
+          <span data-lang="pt">Tecnologia</span>
+          <span data-lang="ar">التكنولوجيا</span>
+          <span data-lang="zh">科技</span>
+        </div>
+        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">⚡
+          <span data-lang="fr" class="active">Énergie</span>
+          <span data-lang="en">Energy</span>
+          <span data-lang="pt">Energia</span>
+          <span data-lang="ar">الطاقة</span>
+          <span data-lang="zh">能源</span>
+        </div>
+      </div>
+
+      <a href="mailto:ceo@chanceleno.com?subject=Candidature Spontanée — Chanceleno" class="btn-primary" style="display: inline-block;">
+        <span data-lang="fr" class="active">Envoyer ma Candidature Spontanée</span>
+        <span data-lang="en">Send my Spontaneous Application</span>
+        <span data-lang="pt">Enviar Candidatura Espontânea</span>
+        <span data-lang="ar">إرسال طلبي العفوي</span>
+        <span data-lang="zh">发送自发申请</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Chanceleno</div>
+  <div class="footer-copy">© 2025 Chanceleno — Comércio Geral, SU, Lda. All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#about">
+      <span data-lang="fr" class="active">À Propos</span>
+      <span data-lang="en">About</span>
+      <span data-lang="pt">Sobre</span>
+    </a>
+    <a href="#services">Services</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 80);
+  });
+
+  // Lang switcher
+  const langBtns = document.querySelectorAll('[data-lang-switch]');
+  langBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const lang = btn.dataset.langSwitch;
+      langBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.classList.toggle('active', el.dataset.lang === lang);
+      });
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
