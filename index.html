@@ -1,1337 +1,938 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chanceleno — Global Trade & Logistics</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- ============================== SEO ============================== -->
+<title>Chanceleno Comércio Geral — Construction de prestige & Négoce international | Europe–Afrique</title>
+<meta name="description" content="Chanceleno : maison de négoce et de construction opérant entre l'Europe et l'Afrique. Construction de prestige, second œuvre haut de gamme, représentation de marques, équipements hospitaliers CE, agro-export et cosmétique. Lyon · Luanda · Pointe-Noire · Kinshasa." />
+<meta name="keywords" content="Chanceleno, construction prestige Angola, négoce international Europe Afrique, équipements hospitaliers CE, import export Luanda, représentation de marques, agro-export café Angola, BTP Luanda, Lyon, Pointe-Noire, Kinshasa" />
+<meta name="author" content="Chanceleno Comércio Geral, SU, LDA" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.chanceleno.com/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Chanceleno Comércio Geral" />
+<meta property="og:title" content="Chanceleno — Construction de prestige & Négoce international Europe–Afrique" />
+<meta property="og:description" content="Deux continents, une exigence. Du gros œuvre d'élite à la représentation de marques, la santé, l'agro-export et la cosmétique." />
+<meta property="og:url" content="https://www.chanceleno.com/" />
+<meta property="og:image" content="https://www.chanceleno.com/image_16.png" />
+<meta property="og:locale" content="fr_FR" />
+<meta property="og:locale:alternate" content="pt_PT" />
+<meta property="og:locale:alternate" content="en_US" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="icon" type="image/png" href="image_35.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Hanken+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Chanceleno Comércio Geral, SU, LDA",
+  "alternateName": "Chanceleno",
+  "url": "https://www.chanceleno.com/",
+  "logo": "https://www.chanceleno.com/image_35.png",
+  "description": "Maison de négoce et de construction opérant entre l'Europe et l'Afrique : construction de prestige, représentation de marques, équipements hospitaliers CE, agro-export et cosmétique.",
+  "email": "contact@chanceleno.com",
+  "areaServed": ["Europe", "Africa"],
+  "location": [
+    { "@type": "Place", "name": "Lyon, France" },
+    { "@type": "Place", "name": "Luanda, Angola" },
+    { "@type": "Place", "name": "Pointe-Noire, Congo-Brazzaville" },
+    { "@type": "Place", "name": "Kinshasa, RD Congo" }
+  ],
+  "knowsAbout": ["Construction", "Second œuvre de prestige", "Négoce international", "Représentation de marques", "Équipements hospitaliers CE", "Agro-export", "Cosmétique"]
+}
+</script>
+
 <style>
-  :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --dark: #0A0A0A;
-    --dark-2: #111111;
-    --dark-3: #1A1A1A;
-    --dark-4: #222222;
-    --white: #F5F2EC;
-    --white-dim: rgba(245,242,236,0.6);
-    --white-faint: rgba(245,242,236,0.08);
-  }
+/* ============================================================
+   CHANCELENO — « Clair de prestige »
+   Concept : maison de négoce / carte de navigation
+   Palette : Ivoire · Encre bleu nuit · Or feuille
+   Type    : Fraunces (voix) · Hanken Grotesk (corps) · IBM Plex Mono (références)
+   ============================================================ */
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root{
+  --paper:    #F4F0E7;   /* ivoire — fond */
+  --paper-2:  #FBF8F1;   /* cartes claires surélevées */
+  --ink:      #0A192F;   /* bleu nuit — encre / titres */
+  --ink-2:    #1B2C45;   /* encre adoucie */
+  --slate:    #5C6B82;   /* texte secondaire */
+  --line:     rgba(10,25,47,.14);    /* hairline encre */
+  --grid:     rgba(10,25,47,.045);   /* trame type plan */
+  --gold:     #A9812B;   /* or lisible sur clair (texte/traits fins) */
+  --gold-leaf:#D4AF37;   /* or feuille — aplats / CTA / accents */
 
-  html { scroll-behavior: smooth; }
+  --maxw: 1280px;
+  --gutter: clamp(1.25rem, 4vw, 4rem);
 
-  body {
-    background: var(--dark);
-    color: var(--white);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: none;
-  }
+  --voice: "Fraunces", Georgia, "Times New Roman", serif;
+  --body:  "Hanken Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono:  "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  /* Custom cursor */
-  .cursor {
-    position: fixed;
-    width: 8px; height: 8px;
-    background: var(--gold);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
-    transition: transform 0.1s;
-  }
-  .cursor-ring {
-    position: fixed;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(201,168,76,0.4);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9998;
-    transform: translate(-50%, -50%);
-    transition: all 0.15s ease;
-  }
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 28px 60px;
-    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
-    backdrop-filter: blur(2px);
-  }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-  }
-  .nav-logo img {
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-    border-radius: 4px;
-  }
-  .nav-logo-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    text-transform: uppercase;
-  }
-  .nav-links {
-    display: flex; gap: 40px; list-style: none;
-  }
-  .nav-links a {
-    color: var(--white-dim);
-    text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover { color: var(--gold); }
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body{
+  font-family:var(--body); background:var(--paper); color:var(--ink-2);
+  line-height:1.65; font-weight:400; letter-spacing:.005em; overflow-x:hidden;
+}
+::selection{ background:var(--gold-leaf); color:var(--ink); }
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; }
 
-  /* LANG SWITCHER */
-  .lang-switcher {
-    display: flex; gap: 12px;
-  }
-  .lang-btn {
-    background: none; border: 1px solid rgba(201,168,76,0.3);
-    color: var(--white-dim);
-    font-size: 11px; letter-spacing: 0.15em;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .lang-btn:hover, .lang-btn.active {
-    background: var(--gold);
-    color: var(--dark);
-    border-color: var(--gold);
-  }
+/* ---------- Type primitives ---------- */
+h1,h2,h3{ font-family:var(--voice); font-optical-sizing:auto; color:var(--ink); font-weight:500; line-height:1.06; }
 
-  /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column;
-    justify-content: center;
-    padding: 0 60px;
-    position: relative;
-    overflow: hidden;
-  }
+.mono{ font-family:var(--mono); }
+.ref{
+  font-family:var(--mono); font-size:.7rem; font-weight:500; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--gold);
+}
+.eyebrow{
+  font-family:var(--mono); font-size:.72rem; font-weight:500; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--slate); display:inline-flex; align-items:center; gap:.7rem;
+}
+.eyebrow::before{ content:""; width:1.8rem; height:1px; background:var(--gold); }
 
-  /* Animated background */
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(to right, rgba(10,10,10,0.95) 35%, rgba(10,10,10,0.75) 65%, rgba(10,10,10,0.5) 100%),
-      url('https://chanceleno.github.io/hero.jpg') center/cover no-repeat;
-  }
-  .hero-grid {
-    position: absolute; inset: 0;
-    background-image:
-      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(ellipse 70% 70% at 70% 50%, black, transparent);
-  }
+.section-title{ font-size:clamp(2rem,4.6vw,3.5rem); letter-spacing:-.01em; }
+.lead{ color:var(--slate); font-size:1.08rem; max-width:60ch; }
 
-  /* Floating orbs */
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    animation: float 8s ease-in-out infinite;
-  }
-  .orb-1 {
-    width: 400px; height: 400px;
-    background: rgba(201,168,76,0.08);
-    top: 10%; right: 5%;
-    animation-delay: 0s;
-  }
-  .orb-2 {
-    width: 250px; height: 250px;
-    background: rgba(201,168,76,0.05);
-    bottom: 20%; right: 25%;
-    animation-delay: 3s;
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-30px) scale(1.05); }
-  }
+/* ---------- Layout shells ---------- */
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter); }
+.section{ padding-block:clamp(4.5rem,9vw,8rem); position:relative; }
+.section--tint{ background:var(--paper-2); border-block:1px solid var(--line); }
+.s-head{ margin-bottom:3rem; }
+.s-head .ref{ display:block; margin-bottom:1rem; }
+.s-head h2{ margin:.9rem 0 1.2rem; }
 
-  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:.6rem;
+  font-family:var(--body); font-size:.8rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; padding:1rem 1.9rem; border-radius:2px;
+  transition:transform .35s var(--ease), background .35s var(--ease), color .35s var(--ease), border-color .35s var(--ease);
+}
+.btn--gold{ background:var(--gold-leaf); color:var(--ink); border:1px solid var(--gold-leaf); }
+.btn--gold:hover{ background:#E2C45A; border-color:#E2C45A; transform:translateY(-2px); }
+.btn--ghost{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+.btn--ghost:hover{ border-color:var(--gold); transform:translateY(-2px); }
+.btn svg{ width:1em; height:1em; }
 
-  .hero-eyebrow {
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 32px;
-    display: flex; align-items: center; gap: 16px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.3s;
-  }
-  .hero-eyebrow::before {
-    content: '';
-    display: block; width: 40px; height: 1px;
-    background: var(--gold);
-  }
+/* ============================================================
+   HEADER
+   ============================================================ */
+.site-header{
+  position:fixed; inset:0 0 auto 0; z-index:100; padding-block:1.15rem;
+  border-bottom:1px solid transparent; transition:background .4s var(--ease), border-color .4s var(--ease), padding .4s var(--ease);
+}
+.site-header.scrolled{
+  background:rgba(244,240,231,.88); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line); padding-block:.7rem;
+}
+.header-inner{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gutter);
+  display:flex; align-items:center; justify-content:space-between; gap:1.5rem; }
 
-  .hero-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(56px, 8vw, 110px);
-    font-weight: 300;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.5s;
-  }
-  .hero-title em {
-    font-style: italic;
-    color: var(--gold);
-  }
+.brand{ display:flex; align-items:center; gap:.7rem; flex-shrink:0; }
+.brand img{ height:44px; width:auto; }
+.brand .brand-fallback{ display:none; font-family:var(--voice); font-size:1.5rem; color:var(--ink); font-weight:600; letter-spacing:.02em; }
+.brand .brand-tag{ font-family:var(--mono); font-size:.66rem; letter-spacing:.18em; text-transform:uppercase; color:var(--slate); border-left:1px solid var(--line); padding-left:.7rem; }
 
-  .hero-sub {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--white-dim);
-    max-width: 480px;
-    margin-bottom: 56px;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.7s;
-  }
+.nav{ display:flex; align-items:center; gap:2.1rem; }
+.nav a{ font-family:var(--mono); font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); position:relative; padding-block:.3rem; transition:color .3s var(--ease); }
+.nav a::after{ content:""; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--gold); transition:width .35s var(--ease); }
+.nav a:hover{ color:var(--ink); } .nav a:hover::after{ width:100%; }
 
-  .hero-cta {
-    display: flex; gap: 20px; flex-wrap: wrap;
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 0.9s;
-  }
-  .btn-primary {
-    background: var(--gold);
-    color: var(--dark);
-    padding: 16px 40px;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    transition: all 0.3s;
-    display: inline-block;
-  }
-  .btn-primary:hover {
-    background: var(--gold-light);
-    transform: translateY(-2px);
-  }
-  .btn-outline {
-    border: 1px solid rgba(245,242,236,0.25);
-    color: var(--white);
-    padding: 16px 40px;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.3s;
-    display: inline-block;
-  }
-  .btn-outline:hover {
-    border-color: var(--gold);
-    color: var(--gold);
-  }
+/* Language popover */
+.lang{ position:relative; flex-shrink:0; }
+.lang-trigger{ display:inline-flex; align-items:center; gap:.5rem; background:transparent; border:1px solid var(--line);
+  color:var(--ink); padding:.5rem .8rem; border-radius:2px; font-family:var(--mono); font-size:.74rem; letter-spacing:.08em; transition:border-color .3s var(--ease); }
+.lang-trigger:hover{ border-color:var(--gold); }
+.lang-trigger svg{ width:.7rem; height:.7rem; transition:transform .3s var(--ease); }
+.lang-trigger[aria-expanded="true"] svg{ transform:rotate(180deg); }
+.lang-pop{
+  position:absolute; right:0; top:calc(100% + .6rem); width:230px; background:var(--paper-2);
+  border:1px solid var(--line); border-radius:3px; padding:1rem; box-shadow:0 18px 40px rgba(10,25,47,.14);
+  opacity:0; visibility:hidden; transform:translateY(-6px); transition:.28s var(--ease); z-index:120;
+}
+.lang-pop.open{ opacity:1; visibility:visible; transform:none; }
+.lang-h{ display:block; font-family:var(--mono); font-size:.6rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin:.2rem 0 .5rem; }
+.lang-group + .lang-group{ margin-top:1rem; padding-top:.9rem; border-top:1px solid var(--line); }
+.lang-pop button{ display:flex; width:100%; justify-content:space-between; align-items:center; background:transparent; border:none;
+  color:var(--ink-2); font-family:var(--body); font-size:.92rem; padding:.45rem .3rem; border-radius:2px; transition:.2s var(--ease); }
+.lang-pop button:hover{ background:rgba(10,25,47,.05); color:var(--ink); }
+.lang-pop button .code{ font-family:var(--mono); font-size:.66rem; color:var(--slate); letter-spacing:.06em; }
+.lang-pop button.active{ color:var(--gold); }
+.lang-pop button.active .code{ color:var(--gold); }
 
-  /* Scroll indicator */
-  .scroll-indicator {
-    position: absolute; bottom: 40px; left: 60px;
-    display: flex; align-items: center; gap: 12px;
-    font-size: 11px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--white-dim);
-    opacity: 0;
-    animation: fadeUp 1s ease forwards 1.2s;
-  }
-  .scroll-line {
-    width: 40px; height: 1px;
-    background: var(--white-dim);
-    position: relative; overflow: hidden;
-  }
-  .scroll-line::after {
-    content: '';
-    position: absolute; top: 0; left: -100%;
-    width: 100%; height: 100%;
-    background: var(--gold);
-    animation: scrollLine 2s ease-in-out infinite;
-  }
-  @keyframes scrollLine {
-    0% { left: -100%; }
-    100% { left: 100%; }
-  }
+.burger{ display:none; background:none; border:none; width:32px; height:32px; position:relative; }
+.burger span{ position:absolute; left:4px; right:4px; height:1.5px; background:var(--ink); transition:.3s var(--ease); }
+.burger span:nth-child(1){ top:10px; } .burger span:nth-child(2){ top:16px; } .burger span:nth-child(3){ top:22px; }
+.burger.open span:nth-child(1){ top:16px; transform:rotate(45deg); }
+.burger.open span:nth-child(2){ opacity:0; }
+.burger.open span:nth-child(3){ top:16px; transform:rotate(-45deg); }
 
-  /* STATS BAR */
-  .stats-bar {
-    background: var(--dark-3);
-    border-top: 1px solid rgba(201,168,76,0.15);
-    border-bottom: 1px solid rgba(201,168,76,0.15);
-    padding: 40px 60px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
-  }
-  .stat-item { text-align: center; }
-  .stat-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 48px;
-    font-weight: 300;
-    color: var(--gold);
-    line-height: 1;
-    display: block;
-  }
-  .stat-label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--white-dim);
-    margin-top: 8px;
-    display: block;
-  }
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  min-height:100svh; display:flex; align-items:center; padding-top:7.5rem; padding-bottom:2rem; position:relative; overflow:hidden;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:46px 46px;
+}
+.hero-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:clamp(2rem,5vw,4.5rem); align-items:center; width:100%; }
+.hero-eyebrow{ margin-bottom:1.8rem; }
+.hero h1{ font-size:clamp(2.6rem,6vw,4.7rem); font-weight:500; letter-spacing:-.015em; margin-bottom:1.6rem; }
+.hero h1 em{ font-style:italic; color:var(--gold); }
+.hero-sub{ color:var(--slate); font-size:clamp(1.02rem,1.6vw,1.18rem); max-width:50ch; margin-bottom:2.4rem; }
+.hero-cta{ display:flex; flex-wrap:wrap; gap:1rem; }
 
-  /* SECTION BASE */
-  section { padding: 120px 60px; }
+.hero-figure{ position:relative; }
+.hero-figure img{ width:100%; aspect-ratio:4/5; object-fit:cover; border-radius:3px; }
+.hero-figure .ph{ width:100%; aspect-ratio:4/5; display:flex; align-items:center; justify-content:center; color:var(--slate);
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; background:var(--paper-2); border:1px solid var(--line); border-radius:3px; }
+.hero-figure::after{ content:""; position:absolute; inset:16px -16px -16px 16px; border:1px solid var(--gold); border-radius:3px; z-index:-1; }
+.hero-figure .fig-stamp{ position:absolute; left:1rem; bottom:1rem; right:1rem; display:flex; justify-content:space-between;
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; color:#fff; text-shadow:0 1px 8px rgba(10,25,47,.7); }
 
-  .section-tag {
-    font-size: 11px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-    display: flex; align-items: center; gap: 16px;
-  }
-  .section-tag::before {
-    content: '';
-    display: block; width: 30px; height: 1px;
-    background: var(--gold);
-  }
+/* Méridien — la signature */
+.meridian{ grid-column:1 / -1; margin-top:clamp(1.5rem,4vw,3rem); padding-top:1.6rem; border-top:1px solid var(--line); }
+.meridian-cap{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:.4rem; }
+.meridian-cap .m-title{ font-family:var(--mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--slate); }
+.meridian-cap .m-coord{ font-family:var(--mono); font-size:.66rem; letter-spacing:.08em; color:var(--gold); }
+.chart{ position:relative; width:100%; }
+.chart svg{ width:100%; height:auto; display:block; overflow:visible; }
+.chart-base{ stroke:var(--line); stroke-width:1; }
+.chart-arc{ fill:none; stroke:var(--gold-leaf); stroke-width:1.6; stroke-dasharray:1400; stroke-dashoffset:1400; }
+.is-ready .chart-arc{ animation:draw 2.4s var(--ease) .5s forwards; }
+@keyframes draw{ to{ stroke-dashoffset:0; } }
+.chart-dot{ fill:var(--gold-leaf); }
+.chart-node{ fill:var(--paper); stroke:var(--ink); stroke-width:1.3; }
+.chart-tick{ stroke:var(--line); stroke-width:1; }
+.chart-label{ font-family:var(--mono); fill:var(--ink); font-size:13px; letter-spacing:.04em; }
+.chart-sub{ font-family:var(--mono); fill:var(--slate); font-size:10px; letter-spacing:.02em; }
 
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 5vw, 64px);
-    font-weight: 300;
-    line-height: 1.1;
-    margin-bottom: 24px;
-  }
-  .section-title em { font-style: italic; color: var(--gold); }
+.hero-scroll{ position:absolute; bottom:1.4rem; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:.6rem; letter-spacing:.28em; text-transform:uppercase; color:var(--slate);
+  display:flex; flex-direction:column; align-items:center; gap:.5rem; }
+.hero-scroll::after{ content:""; width:1px; height:38px; background:linear-gradient(var(--gold),transparent); }
 
-  /* ABOUT */
-  .about { background: var(--dark-2); }
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-    margin-top: 60px;
-  }
-  .about-text p {
-    color: var(--white-dim);
-    line-height: 1.9;
-    font-size: 15px;
-    margin-bottom: 20px;
-  }
-  .about-visual {
-    position: relative;
-  }
-  .about-card {
-    background: var(--dark-3);
-    border: 1px solid rgba(201,168,76,0.15);
-    padding: 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .about-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px; height: 60px;
-    background: var(--gold);
-  }
-  .about-card-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    font-weight: 300;
-    margin-bottom: 20px;
-  }
-  .about-card p {
-    color: var(--white-dim);
-    font-size: 14px;
-    line-height: 1.8;
-  }
-  .about-quote {
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(201,168,76,0.15);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-style: italic;
-    color: var(--gold-light);
-    line-height: 1.5;
-  }
+/* ============================================================
+   ABOUT
+   ============================================================ */
+.about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:clamp(2rem,6vw,5rem); align-items:center; }
+.about-figure{ position:relative; }
+.about-figure img{ width:100%; height:100%; min-height:380px; object-fit:cover; border-radius:3px; }
+.about-figure .ph{ min-height:380px; display:flex; align-items:center; justify-content:center; color:var(--slate);
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; background:var(--paper-2); border:1px solid var(--line); border-radius:3px; }
+.about-figure::after{ content:""; position:absolute; inset:-14px 14px 14px -14px; border:1px solid var(--gold); border-radius:3px; z-index:-1; }
+.about p + p{ margin-top:1.1rem; }
+.about .lead{ color:var(--ink-2); margin-bottom:1.3rem; }
+.stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem; margin-top:2.4rem; border-top:1px solid var(--line); padding-top:1.8rem; }
+.stat .s-num{ font-family:var(--voice); font-size:2.4rem; color:var(--ink); line-height:1; }
+.stat .s-txt{ font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-top:.5rem; }
 
-  /* SERVICES */
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    margin-top: 60px;
-  }
-  .service-card {
-    background: var(--dark-3);
-    padding: 48px 40px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s;
-    cursor: default;
-  }
-  .service-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transition: transform 0.4s;
-  }
-  .service-card:hover::after { transform: scaleX(1); }
-  .service-card:hover { background: var(--dark-4); }
+/* ============================================================
+   POLES
+   ============================================================ */
+.poles{ display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+.pole{ background:var(--paper); border:1px solid var(--line); border-radius:3px; padding:2.4rem; transition:border-color .4s var(--ease), transform .4s var(--ease); }
+.section--tint .pole{ background:var(--paper); }
+.pole:hover{ border-color:var(--gold); transform:translateY(-4px); }
+.pole-tag{ font-family:var(--mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); }
+.pole h3{ font-size:1.7rem; margin:.6rem 0 1.2rem; }
+.pole ul{ list-style:none; }
+.pole li{ font-size:.95rem; color:var(--ink-2); padding:.5rem 0 .5rem 1.5rem; position:relative; border-top:1px solid var(--line); }
+.pole li:first-child{ border-top:none; }
+.pole li::before{ content:""; position:absolute; left:0; top:1.1rem; width:7px; height:7px; border:1px solid var(--gold); background:var(--gold-leaf); transform:rotate(45deg); }
 
-  .service-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 64px;
-    font-weight: 300;
-    color: rgba(201,168,76,0.12);
-    line-height: 1;
-    margin-bottom: 20px;
-    display: block;
-  }
-  .service-icon {
-    font-size: 28px;
-    margin-bottom: 20px;
-    display: block;
-  }
-  .service-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px;
-    font-weight: 400;
-    margin-bottom: 16px;
-    color: var(--white);
-  }
-  .service-desc {
-    font-size: 13px;
-    line-height: 1.8;
-    color: var(--white-dim);
-  }
+/* ============================================================
+   PORTFOLIO
+   ============================================================ */
+.pf-head{ display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:1.5rem; margin-bottom:2.2rem; }
+.filters{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.filter{ background:transparent; border:1px solid var(--line); color:var(--slate); font-family:var(--mono); font-size:.7rem;
+  letter-spacing:.08em; text-transform:uppercase; padding:.65rem 1.05rem; border-radius:2px; transition:.3s var(--ease); }
+.filter:hover{ color:var(--ink); border-color:var(--gold); }
+.filter.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
 
-  .presence { 
-    background: var(--dark-2);
-    position: relative;
-  }
-  .presence::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('https://chanceleno.github.io/city.jpg') center/cover no-repeat;
-    opacity: 0.08;
-  }
-  .presence-intro {
-    color: var(--white-dim);
-    font-size: 15px;
-    line-height: 1.9;
-    max-width: 600px;
-    margin-bottom: 60px;
-  }
-  .continents {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .continent-card {
-    background: var(--dark-3);
-    padding: 40px;
-    border-left: 3px solid transparent;
-    transition: all 0.3s;
-  }
-  .continent-card:hover {
-    border-left-color: var(--gold);
-    background: var(--dark-4);
-  }
-  .continent-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px;
-    font-weight: 300;
-    color: var(--gold);
-    margin-bottom: 12px;
-  }
-  .continent-countries {
-    font-size: 13px;
-    color: var(--white-dim);
-    line-height: 1.8;
-  }
+.gallery{ display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.tile{ position:relative; overflow:hidden; border-radius:3px; aspect-ratio:4/5; background:var(--paper-2); border:1px solid var(--line);
+  opacity:0; transform:translateY(18px) scale(.98); transition:opacity .5s var(--ease), transform .5s var(--ease); }
+.tile.show{ opacity:1; transform:none; }
+.tile.hide{ display:none; }
+.tile.wide{ aspect-ratio:8/5; grid-column:span 2; }
+.tile img{ width:100%; height:100%; object-fit:cover; transition:transform .8s var(--ease); }
+.tile:hover img{ transform:scale(1.06); }
+.tile .ph{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--slate);
+  font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; padding:1rem;
+  background:repeating-linear-gradient(135deg, rgba(10,25,47,.03) 0 12px, transparent 12px 24px), var(--paper-2); }
+.tile-cap{ position:absolute; inset:auto 0 0 0; padding:1.4rem 1.1rem .9rem; background:linear-gradient(transparent, rgba(10,25,47,.88));
+  transform:translateY(8px); opacity:0; transition:.4s var(--ease); }
+.tile:hover .tile-cap{ transform:none; opacity:1; }
+.tile-cap .t-cat{ font-family:var(--mono); font-size:.58rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold-leaf); }
+.tile-cap .t-name{ font-family:var(--voice); font-size:1.15rem; color:#fff; margin-top:.2rem; }
 
-  /* CONTACT */
-  .contact {
-    background: var(--dark);
-    position: relative;
-    overflow: hidden;
-  }
-  .contact::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    margin-top: 60px;
-  }
-  .contact-info-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding: 28px 0;
-    border-bottom: 1px solid rgba(245,242,236,0.06);
-  }
-  .contact-info-label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  .contact-info-value {
-    font-size: 15px;
-    color: var(--white);
-  }
-  .contact-form { display: flex; flex-direction: column; gap: 20px; }
-  .form-group { display: flex; flex-direction: column; gap: 8px; }
-  .form-label {
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--white-dim);
-  }
-  .form-input, .form-select, .form-textarea {
-    background: var(--dark-3);
-    border: 1px solid rgba(245,242,236,0.1);
-    color: var(--white);
-    padding: 14px 18px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.3s;
-    width: 100%;
-  }
-  .form-input:focus, .form-select:focus, .form-textarea:focus {
-    border-color: var(--gold);
-  }
-  .form-select option { background: var(--dark-3); }
-  .form-textarea { resize: vertical; min-height: 120px; }
+/* ============================================================
+   TRADE
+   ============================================================ */
+.trade-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; }
+.trade-card{ border:1px solid var(--line); border-radius:3px; overflow:hidden; background:var(--paper); display:flex; flex-direction:column;
+  transition:border-color .4s var(--ease), transform .4s var(--ease); }
+.trade-card:hover{ border-color:var(--gold); transform:translateY(-4px); }
+.trade-card.feature{ grid-column:span 2; flex-direction:row; }
+.trade-media{ position:relative; overflow:hidden; background:var(--paper-2); flex:1 1 45%; min-height:220px; }
+.trade-media img{ width:100%; height:100%; object-fit:cover; }
+.trade-media .ph{ width:100%; height:100%; min-height:220px; display:flex; align-items:center; justify-content:center; color:var(--slate);
+  font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase;
+  background:repeating-linear-gradient(135deg, rgba(10,25,47,.03) 0 12px, transparent 12px 24px), var(--paper-2); }
+.trade-body{ padding:2rem; flex:1 1 55%; }
+.trade-idx{ font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; color:var(--gold); }
+.trade-card h3{ font-size:1.45rem; margin:.5rem 0 .8rem; }
+.trade-card p{ color:var(--slate); font-size:.93rem; }
+.trade-card .geo{ margin-top:1.1rem; font-family:var(--mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); }
 
-  /* FOOTER */
-  footer {
-    background: var(--dark-2);
-    border-top: 1px solid rgba(201,168,76,0.15);
-    padding: 40px 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .footer-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    text-transform: uppercase;
-  }
-  .footer-copy {
-    font-size: 12px;
-    color: var(--white-dim);
-    letter-spacing: 0.05em;
-  }
-  .footer-links {
-    display: flex; gap: 24px;
-  }
-  .footer-links a {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--white-dim);
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  .footer-links a:hover { color: var(--gold); }
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact-grid{ display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(2rem,6vw,5rem); }
+.contact-meta{ margin-top:2.4rem; display:grid; gap:1.4rem; }
+.cm-item .cm-k{ font-family:var(--mono); font-size:.64rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); }
+.cm-item .cm-v{ color:var(--ink); font-size:1.02rem; margin-top:.3rem; }
+.cm-item .cm-v a:hover{ color:var(--gold); }
 
-  /* ANIMATIONS */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: all 0.8s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.form{ display:grid; gap:1.1rem; background:var(--paper-2); border:1px solid var(--line); border-radius:3px; padding:clamp(1.6rem,3vw,2.6rem); }
+.form-row{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; }
+.field label{ display:block; font-family:var(--mono); font-size:.64rem; letter-spacing:.12em; text-transform:uppercase; color:var(--slate); margin-bottom:.5rem; }
+.field input, .field select, .field textarea{ width:100%; background:var(--paper); border:1px solid var(--line); color:var(--ink);
+  font-family:var(--body); font-size:.95rem; padding:.9rem 1rem; border-radius:2px; transition:border-color .3s var(--ease); }
+.field textarea{ resize:vertical; min-height:130px; }
+.field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--gold); }
+.field select{ appearance:none; background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 55%, calc(100% - 12px) 55%; background-size:6px 6px,6px 6px; background-repeat:no-repeat; }
+.form .btn{ justify-self:start; }
+.form-note{ font-family:var(--mono); font-size:.7rem; color:var(--slate); letter-spacing:.02em; }
 
-  /* Divider */
-  .gold-divider {
-    width: 60px; height: 1px;
-    background: var(--gold);
-    margin: 32px 0;
-  }
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer{ border-top:1px solid var(--line); padding-block:3.5rem; background:var(--paper-2); }
+.footer-grid{ display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:2.5rem; }
+.footer-brand img{ height:46px; margin-bottom:1rem; }
+.footer-brand p{ color:var(--slate); font-size:.88rem; max-width:38ch; }
+.footer-col h4{ font-family:var(--mono); font-size:.64rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:1.1rem; }
+.footer-col ul{ list-style:none; display:grid; gap:.6rem; }
+.footer-col a, .footer-col li{ color:var(--ink-2); font-size:.9rem; }
+.footer-col a:hover{ color:var(--gold); }
+.footer-bottom{ margin-top:3rem; padding-top:1.6rem; border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; align-items:center;
+  font-family:var(--mono); font-size:.7rem; color:var(--slate); letter-spacing:.03em; }
 
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
-    .nav-links { display: none; }
-    .hero { padding: 0 24px; }
-    section { padding: 80px 24px; }
-    .stats-bar { grid-template-columns: repeat(2,1fr); padding: 40px 24px; }
-    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-    .services-grid, .continents { grid-template-columns: 1fr; }
-    footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
-    .lang-switcher { display: none; }
-  }
+/* ============================================================
+   WHATSAPP FLOAT
+   ============================================================ */
+.wa{ position:fixed; right:1.4rem; bottom:1.4rem; z-index:90; display:flex; align-items:center; gap:.6rem;
+  background:var(--paper-2); color:var(--ink); border:1px solid var(--line); padding:.7rem .9rem; border-radius:50px;
+  box-shadow:0 12px 30px rgba(10,25,47,.16); transition:.35s var(--ease); font-family:var(--mono); font-size:.74rem; letter-spacing:.04em; }
+.wa:hover{ border-color:#25D366; transform:translateY(-3px); }
+.wa-ic{ width:24px; height:24px; flex-shrink:0; display:grid; place-items:center; background:#25D366; border-radius:50%; }
+.wa-ic svg{ width:15px; height:15px; fill:#fff; }
+.wa .wa-txt{ max-width:0; overflow:hidden; white-space:nowrap; opacity:0; transition:.4s var(--ease); }
+.wa:hover .wa-txt{ max-width:160px; opacity:1; }
 
-  /* Hidden lang content */
-  [data-lang] { display: none; }
-  [data-lang].active { display: block; }
-  [data-lang-inline] { display: none; }
-  [data-lang-inline].active { display: inline; }
+/* ---------- reveal & mobile ---------- */
+.reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.in{ opacity:1; transform:none; }
+.mobile-panel{ display:none; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1080px){
+  .gallery{ grid-template-columns:repeat(2,1fr); }
+  .trade-grid{ grid-template-columns:repeat(2,1fr); }
+  .trade-card.feature{ grid-column:span 2; }
+}
+@media (max-width:880px){
+  .nav, .lang{ display:none; }
+  .burger{ display:block; }
+  .mobile-panel{ display:block; position:fixed; inset:0; z-index:99; background:var(--paper); transform:translateX(100%);
+    transition:transform .45s var(--ease); padding:6rem var(--gutter) 2.5rem; overflow-y:auto; }
+  .mobile-panel.open{ transform:none; }
+  .mobile-panel .m-nav{ display:grid; gap:.2rem; }
+  .mobile-panel .m-nav a{ font-family:var(--voice); font-size:1.9rem; color:var(--ink); padding-block:.55rem; border-bottom:1px solid var(--line); }
+  .mobile-panel .m-lang{ margin-top:2rem; }
+  .mobile-panel .lang-h{ margin-top:1rem; }
+  .mobile-panel .m-lang button{ background:transparent; border:1px solid var(--line); color:var(--ink); padding:.5rem .9rem;
+    border-radius:2px; font-family:var(--mono); letter-spacing:.08em; margin:.2rem .3rem .2rem 0; font-size:.78rem; }
+  .mobile-panel .m-lang button.active{ background:var(--gold-leaf); color:var(--ink); border-color:var(--gold-leaf); }
+
+  .hero-grid{ grid-template-columns:1fr; gap:2.6rem; }
+  .hero-figure{ order:-1; max-width:420px; }
+  .about-grid, .poles, .contact-grid, .footer-grid{ grid-template-columns:1fr; }
+  .trade-grid{ grid-template-columns:1fr; }
+  .trade-card.feature{ grid-column:span 1; flex-direction:column; }
+  .form-row{ grid-template-columns:1fr; }
+  .footer-bottom{ flex-direction:column; align-items:flex-start; }
+  .hero-scroll{ display:none; }
+  .chart-label{ font-size:15px; } .chart-sub{ font-size:12px; }
+}
+@media (max-width:520px){
+  .gallery{ grid-template-columns:1fr; }
+  .tile.wide{ grid-column:span 1; aspect-ratio:4/5; }
+  .stats{ grid-template-columns:1fr; gap:1rem; }
+  .brand .brand-tag{ display:none; }
+}
+
+:focus-visible{ outline:2px solid var(--gold); outline-offset:3px; }
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+  .reveal{ opacity:1; transform:none; } .chart-arc{ stroke-dashoffset:0; }
+}
 </style>
 </head>
+
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="header">
+  <div class="header-inner">
+    <a href="#hero" class="brand" aria-label="Chanceleno — accueil">
+      <img src="image_35.png" alt="Logo Chanceleno" onerror="this.style.display='none';this.nextElementSibling.style.display='inline'">
+      <span class="brand-fallback">Chanceleno</span>
+      <span class="brand-tag">Comércio Geral</span>
+    </a>
 
-<!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">
-    <img src="https://chanceleno.github.io/logo.jpg" alt="Chanceleno Logo">
-    <span class="nav-logo-text">Chanceleno</span>
-  </a>
-  <ul class="nav-links">
-    <li><a href="#about" data-nav="about">
-      <span data-lang="fr" class="active">À Propos</span>
-      <span data-lang="en">About</span>
-      <span data-lang="pt">Sobre</span>
-      <span data-lang="ar">حول</span>
-      <span data-lang="zh">关于</span>
-    </a></li>
-    <li><a href="#services" data-nav="services">
-      <span data-lang="fr" class="active">Services</span>
-      <span data-lang="en">Services</span>
-      <span data-lang="pt">Serviços</span>
-      <span data-lang="ar">خدمات</span>
-      <span data-lang="zh">服务</span>
-    </a></li>
-    <li><a href="#presence" data-nav="presence">
-      <span data-lang="fr" class="active">Présence</span>
-      <span data-lang="en">Presence</span>
-      <span data-lang="pt">Presença</span>
-      <span data-lang="ar">الحضور</span>
-      <span data-lang="zh">存在</span>
-    </a></li>
-    <li><a href="#recrutement" data-nav="recrutement">
-      <span data-lang="fr" class="active">Recrutement</span>
-      <span data-lang="en">Careers</span>
-      <span data-lang="pt">Recrutamento</span>
-      <span data-lang="ar">وظائف</span>
-      <span data-lang="zh">招聘</span>
-    </a></li>
-    <li><a href="#contact" data-nav="contact">Contact</a></li>
-  </ul>
-  <div class="lang-switcher">
-    <button class="lang-btn active" data-lang-switch="fr">FR</button>
-    <button class="lang-btn" data-lang-switch="en">EN</button>
-    <button class="lang-btn" data-lang-switch="pt">PT</button>
-    <button class="lang-btn" data-lang-switch="ar">AR</button>
-    <button class="lang-btn" data-lang-switch="zh">中文</button>
-  </div>
-</nav>
+    <nav class="nav" aria-label="Navigation principale">
+      <a href="#about" data-i18n="nav.group">Le Groupe</a>
+      <a href="#portfolio" data-i18n="nav.construction">Construction</a>
+      <a href="#trade" data-i18n="nav.trade">Négoce</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow">
-      <span data-lang="fr" class="active">Vision Globale. Expertise Ciblée. Impact Durable.</span>
-      <span data-lang="en">Global Vision. Targeted Expertise. Lasting Impact.</span>
-      <span data-lang="pt">Visão Global. Expertise Direcionada. Impacto Duradouro.</span>
-      <span data-lang="ar">رؤية عالمية. خبرة موجهة. تأثير دائم.</span>
-      <span data-lang="zh">全球视野。精准专业。持久影响。</span>
+    <div class="lang">
+      <button class="lang-trigger" id="langTrigger" aria-haspopup="true" aria-expanded="false">
+        <span class="mono" id="langCurrent">FR</span>
+        <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+      </button>
+      <div class="lang-pop" id="langPop" role="menu" aria-label="Choisir la langue">
+        <div class="lang-group">
+          <span class="lang-h" data-i18n="lang.int">International</span>
+          <button data-lang="fr" class="active">Français <span class="code">FR</span></button>
+          <button data-lang="pt">Português <span class="code">PT</span></button>
+          <button data-lang="en">English <span class="code">EN</span></button>
+        </div>
+        <div class="lang-group">
+          <span class="lang-h" data-i18n="lang.reg">Régional</span>
+          <button data-lang="ln">Lingala <span class="code">LN</span></button>
+          <button data-lang="kg">Kikongo <span class="code">KG</span></button>
+          <button data-lang="mb">Kimbundu <span class="code">MB</span></button>
+        </div>
+      </div>
     </div>
-    <h1 class="hero-title">
-      <span data-lang="fr" class="active">Connecting<br><em>Africa</em><br>& the World</span>
-      <span data-lang="en">Connecting<br><em>Africa</em><br>& the World</span>
-      <span data-lang="pt">Conectando<br><em>África</em><br>& o Mundo</span>
-      <span data-lang="ar">ربط<br><em>أفريقيا</em><br>بالعالم</span>
-      <span data-lang="zh">连接<br><em>非洲</em><br>与世界</span>
-    </h1>
-    <p class="hero-sub">
-      <span data-lang="fr" class="active">Partenariats stratégiques, distribution internationale et logistique entre l'Europe, l'Afrique et au-delà.</span>
-      <span data-lang="en">Strategic partnerships, international distribution and logistics between Europe, Africa and beyond.</span>
-      <span data-lang="pt">Parcerias estratégicas, distribuição internacional e logística entre a Europa, África e além.</span>
-      <span data-lang="ar">شراكات استراتيجية وتوزيع دولي ولوجستيات بين أوروبا وأفريقيا وما وراءها.</span>
-      <span data-lang="zh">欧洲、非洲及其他地区之间的战略合作伙伴关系、国际分销和物流。</span>
-    </p>
-    <div class="hero-cta">
-      <a href="#contact" class="btn-primary">
-        <span data-lang="fr" class="active">Devenir Partenaire</span>
-        <span data-lang="en">Become a Partner</span>
-        <span data-lang="pt">Tornar-se Parceiro</span>
-        <span data-lang="ar">كن شريكاً</span>
-        <span data-lang="zh">成为合作伙伴</span>
-      </a>
-      <a href="#services" class="btn-outline">
-        <span data-lang="fr" class="active">Nos Services</span>
-        <span data-lang="en">Our Services</span>
-        <span data-lang="pt">Nossos Serviços</span>
-        <span data-lang="ar">خدماتنا</span>
-        <span data-lang="zh">我们的服务</span>
-      </a>
-    </div>
-  </div>
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-    <span data-lang="fr" class="active">Découvrir</span>
-    <span data-lang="en">Explore</span>
-    <span data-lang="pt">Explorar</span>
-    <span data-lang="ar">اكتشف</span>
-    <span data-lang="zh">探索</span>
-  </div>
-</section>
 
-<!-- STATS -->
-<div class="stats-bar reveal">
-  <div class="stat-item">
-    <span class="stat-num">3</span>
-    <span class="stat-label">
-      <span data-lang="fr" class="active">Continents</span>
-      <span data-lang="en">Continents</span>
-      <span data-lang="pt">Continentes</span>
-      <span data-lang="ar">قارات</span>
-      <span data-lang="zh">大洲</span>
-    </span>
+    <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
-  <div class="stat-item">
-    <span class="stat-num">20+</span>
-    <span class="stat-label">
-      <span data-lang="fr" class="active">Ans d'Expérience</span>
-      <span data-lang="en">Years Experience</span>
-      <span data-lang="pt">Anos de Experiência</span>
-      <span data-lang="ar">سنوات خبرة</span>
-      <span data-lang="zh">年经验</span>
-    </span>
-  </div>
-  <div class="stat-item">
-    <span class="stat-num">5</span>
-    <span class="stat-label">
-      <span data-lang="fr" class="active">Langues</span>
-      <span data-lang="en">Languages</span>
-      <span data-lang="pt">Idiomas</span>
-      <span data-lang="ar">لغات</span>
-      <span data-lang="zh">语言</span>
-    </span>
-  </div>
-  <div class="stat-item">
-    <span class="stat-num">∞</span>
-    <span class="stat-label">
-      <span data-lang="fr" class="active">Opportunités</span>
-      <span data-lang="en">Opportunities</span>
-      <span data-lang="pt">Oportunidades</span>
-      <span data-lang="ar">فرص</span>
-      <span data-lang="zh">机会</span>
-    </span>
+</header>
+
+<div class="mobile-panel" id="mobilePanel">
+  <nav class="m-nav" aria-label="Navigation mobile">
+    <a href="#about" data-i18n="nav.group">Le Groupe</a>
+    <a href="#portfolio" data-i18n="nav.construction">Construction</a>
+    <a href="#trade" data-i18n="nav.trade">Négoce</a>
+    <a href="#contact" data-i18n="nav.contact">Contact</a>
+  </nav>
+  <div class="m-lang">
+    <span class="lang-h" data-i18n="lang.int">International</span>
+    <div><button data-lang="fr" class="active">FR</button><button data-lang="pt">PT</button><button data-lang="en">EN</button></div>
+    <span class="lang-h" data-i18n="lang.reg">Régional</span>
+    <div><button data-lang="ln">LN</button><button data-lang="kg">KG</button><button data-lang="mb">MB</button></div>
   </div>
 </div>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="section-tag reveal">
-    <span data-lang="fr" class="active">Notre Histoire</span>
-    <span data-lang="en">Our Story</span>
-    <span data-lang="pt">Nossa História</span>
-    <span data-lang="ar">قصتنا</span>
-    <span data-lang="zh">我们的故事</span>
-  </div>
-  <h2 class="section-title reveal">
-    <span data-lang="fr" class="active">Un pont entre<br><em>deux mondes</em></span>
-    <span data-lang="en">A bridge between<br><em>two worlds</em></span>
-    <span data-lang="pt">Uma ponte entre<br><em>dois mundos</em></span>
-    <span data-lang="ar">جسر بين<br><em>عالمين</em></span>
-    <span data-lang="zh">连接<br><em>两个世界</em></span>
-  </h2>
-  <div class="about-grid">
-    <div class="about-text reveal">
-      <p data-lang="fr" class="active">Chanceleno est née de la conviction qu'entre l'Angola et l'Europe, entre l'Afrique et le monde, il existe un potentiel commercial immense encore inexploité.</p>
-      <p data-lang="en" >Chanceleno was born from the conviction that between Angola and Europe, between Africa and the world, there is an immense and still untapped commercial potential.</p>
-      <p data-lang="pt">A Chanceleno nasceu da convicção de que entre Angola e a Europa, entre África e o mundo, existe um imenso potencial comercial ainda inexplorado.</p>
-      <p data-lang="ar">وُلدت شانسيلينو من الاقتناع بأن بين أنغولا وأوروبا، وبين أفريقيا والعالم، هناك إمكانات تجارية هائلة لا تزال غير مستغلة.</p>
-      <p data-lang="zh">Chanceleno的诞生源于一个信念：安哥拉与欧洲之间、非洲与世界之间，存在着巨大的尚未开发的商业潜力。</p>
-
-      <p data-lang="fr" class="active">Fondée par Chano Chanceleno, entrepreneur franco-angolais fort de plus de 20 ans d'expérience en logistique et gestion internationale, notre société se positionne comme l'intermédiaire de confiance pour tous vos projets de développement commercial entre l'Europe et l'Afrique.</p>
-      <p data-lang="en">Founded by Chano Chanceleno, a Franco-Angolan entrepreneur with over 20 years of experience in logistics and international management, our company positions itself as the trusted intermediary for all your commercial development projects between Europe and Africa.</p>
-      <p data-lang="pt">Fundada por Chano Chanceleno, empreendedor franco-angolano com mais de 20 anos de experiência em logística e gestão internacional, nossa empresa se posiciona como o intermediário de confiança para todos os seus projetos de desenvolvimento comercial entre a Europa e a África.</p>
-      <p data-lang="ar">تأسست على يد شانو شانسيلينو، رائد أعمال فرنسي-أنغولي يتمتع بأكثر من 20 عاماً من الخبرة في اللوجستيات والإدارة الدولية.</p>
-      <p data-lang="zh">由拥有20多年物流和国际管理经验的法安两栖企业家Chano Chanceleno创立，我们公司定位为您在欧非之间商业发展项目的可信中间人。</p>
-
-      <div class="gold-divider"></div>
-      <p data-lang="fr" class="active" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"Notre force : comprendre les deux côtés. Notre mission : créer des opportunités réelles."</p>
-      <p data-lang="en" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"Our strength: understanding both sides. Our mission: creating real opportunities."</p>
-      <p data-lang="pt" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"Nossa força: entender os dois lados. Nossa missão: criar oportunidades reais."</p>
-      <p data-lang="ar" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"قوتنا: فهم الجانبين. مهمتنا: خلق فرص حقيقية."</p>
-      <p data-lang="zh" style="color: var(--gold-light); font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; line-height: 1.7;">"我们的优势：理解双方。我们的使命：创造真实机遇。"</p>
-    </div>
-    <div class="about-visual reveal">
-      <div class="about-card" style="background: linear-gradient(to bottom, rgba(17,17,17,0.7) 0%, rgba(17,17,17,0.95) 60%), url('https://chanceleno.github.io/about.jpg') center top/cover no-repeat;">
-        <div class="about-card-title">
-          <span data-lang="fr" class="active">Chano Chanceleno</span>
-          <span data-lang="en">Chano Chanceleno</span>
-          <span data-lang="pt">Chano Chanceleno</span>
-          <span data-lang="ar">شانو شانسيلينو</span>
-          <span data-lang="zh">Chano Chanceleno</span>
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <span class="eyebrow hero-eyebrow" data-i18n="hero.eyebrow">Maison de négoce · Europe – Afrique</span>
+        <h1 data-i18n="hero.title">Bâtir des passerelles durables, de la <em>construction de prestige</em> à la représentation de marques et au négoce international entre l'Europe et l'Afrique.</h1>
+        <p class="hero-sub" data-i18n="hero.sub">Deux continents, une exigence. Du gros œuvre d'élite à la santé, l'agro-export et la cosmétique — Chanceleno opère sur le terrain, de Lyon à Luanda.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn--gold" data-i18n="hero.cta">Demander un devis</a>
+          <a href="#portfolio" class="btn btn--ghost" data-i18n="hero.cta2">Voir nos réalisations</a>
         </div>
-        <p style="color: var(--gold); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 20px;">CEO & Founder</p>
-        <p data-lang="fr" class="active">Entrepreneur franco-angolais basé à Lyon, France. Expert en logistique internationale, transport et développement commercial entre l'Europe et l'Afrique.</p>
-        <p data-lang="en">Franco-Angolan entrepreneur based in Lyon, France. Expert in international logistics, transport and commercial development between Europe and Africa.</p>
-        <p data-lang="pt">Empreendedor franco-angolano baseado em Lyon, França. Especialista em logística internacional, transporte e desenvolvimento comercial entre Europa e África.</p>
-        <p data-lang="ar">رائد أعمال فرنسي-أنغولي مقيم في ليون، فرنسا. خبير في اللوجستيات الدولية والنقل والتطوير التجاري بين أوروبا وأفريقيا.</p>
-        <p data-lang="zh">法安两栖企业家，驻法国里昂。欧非之间国际物流、运输和商业发展专家。</p>
-        <div class="about-quote">
-          <span data-lang="fr" class="active">"Vision Globale. Expertise Ciblée. Impact Durable."</span>
-          <span data-lang="en">"Global Vision. Targeted Expertise. Lasting Impact."</span>
-          <span data-lang="pt">"Visão Global. Expertise Direcionada. Impacto Duradouro."</span>
-          <span data-lang="ar">"رؤية عالمية. خبرة موجهة. تأثير دائم."</span>
-          <span data-lang="zh">"全球视野。精准专业。持久影响。"</span>
+      </div>
+
+      <figure class="hero-figure">
+        <img src="image_16.png" alt="Réalisation Chanceleno — suite de prestige" onerror="this.outerHTML='&lt;div class=\'ph\'&gt;image_16.png — Réalisation&lt;/div&gt;'">
+        <figcaption class="fig-stamp"><span>RÉALISATION · LUANDA</span><span class="mono">ARCHIVE 2025</span></figcaption>
+      </figure>
+
+      <!-- Signature : la passerelle-méridien -->
+      <div class="meridian" aria-hidden="false">
+        <div class="meridian-cap">
+          <span class="m-title" data-i18n="chart.route">Route opérationnelle</span>
+          <span class="m-coord">45.76°N · 8.84°S</span>
+        </div>
+        <div class="chart">
+          <svg viewBox="0 0 1200 150" role="img" aria-label="Passerelle reliant Lyon à Luanda, Pointe-Noire et Kinshasa">
+            <line class="chart-base" x1="40" y1="118" x2="1160" y2="118"/>
+            <line class="chart-tick" x1="120" y1="110" x2="120" y2="126"/>
+            <line class="chart-tick" x1="1040" y1="110" x2="1040" y2="126"/>
+            <path class="chart-arc" d="M120 118 C 380 -8, 800 -8, 1040 118"/>
+            <circle class="chart-node" cx="120" cy="118" r="6"/>
+            <circle class="chart-dot" cx="1040" cy="118" r="6"/>
+            <circle class="chart-dot" cx="1078" cy="118" r="3.5"/>
+            <circle class="chart-dot" cx="1006" cy="118" r="3.5"/>
+            <text class="chart-label" x="120" y="146" text-anchor="middle">LYON</text>
+            <text class="chart-sub" x="120" y="92" text-anchor="middle">45.76°N 4.84°E</text>
+            <text class="chart-label" x="1040" y="146" text-anchor="middle">LUANDA</text>
+            <text class="chart-sub" x="1040" y="92" text-anchor="middle">8.84°S 13.23°E</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll" data-i18n="hero.scroll">Découvrir</div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section class="section about" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <figure class="about-figure reveal">
+        <img src="image_27.png" alt="Équipe Chanceleno sur le terrain, en tenue de chantier" onerror="this.outerHTML='&lt;div class=\'ph\'&gt;image_27.png — Équipe terrain&lt;/div&gt;'">
+      </figure>
+      <div class="reveal">
+        <span class="ref">§01 — <span data-i18n="about.eyebrow">Le Groupe</span></span>
+        <h2 class="section-title" data-i18n="about.title">Une présence réelle sur deux continents</h2>
+        <p class="lead" data-i18n="about.lead">Chanceleno n'est pas un intermédiaire théorique : c'est une entreprise qui exécute, avec des équipes sur le terrain et une documentation de projets prouvée.</p>
+        <p data-i18n="about.p1">Depuis notre base de Lyon, nous pilotons la logistique européenne et les relations internationales, en synergie directe avec nos ancrages de Luanda, Pointe-Noire et Kinshasa. Cette double implantation nous permet de conduire des chantiers de prestige comme d'orchestrer des flux commerciaux entre l'Europe et l'Afrique.</p>
+        <p data-i18n="about.p2">Notre sérieux repose sur des engagements écrits, une rigueur de purchasing et de logistique, et une connaissance intime des marchés lusophones et francophones d'Afrique centrale.</p>
+        <div class="stats">
+          <div class="stat"><div class="s-num">02</div><div class="s-txt" data-i18n="about.stat1">Continents reliés</div></div>
+          <div class="stat"><div class="s-num">04</div><div class="s-txt" data-i18n="about.stat2">Bases opérationnelles</div></div>
+          <div class="stat"><div class="s-num">06</div><div class="s-txt" data-i18n="about.stat3">Langues de travail</div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section id="services" style="background: var(--dark);">
-  <div class="section-tag reveal">
-    <span data-lang="fr" class="active">6 Pôles d'Excellence Mondiale</span>
-    <span data-lang="en">6 Poles of Global Excellence</span>
-    <span data-lang="pt">6 Polos de Excelência Global</span>
-    <span data-lang="ar">٦ محاور للتميز العالمي</span>
-    <span data-lang="zh">六大全球卓越业务</span>
-  </div>
-  <h2 class="section-title reveal">
-    <span data-lang="fr" class="active">Une vision.<br><em>Six expertises.</em></span>
-    <span data-lang="en">One vision.<br><em>Six expertises.</em></span>
-    <span data-lang="pt">Uma visão.<br><em>Seis expertises.</em></span>
-    <span data-lang="ar">رؤية واحدة.<br><em>ست خبرات.</em></span>
-    <span data-lang="zh">一个愿景。<br><em>六大专业。</em></span>
-  </h2>
-  <div class="services-grid">
-
-    <div class="service-card reveal">
-      <span class="service-num">01</span>
-      <span class="service-icon">🚢</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Supply Chain & E-Commerce</span>
-        <span data-lang="en">Supply Chain & E-Commerce</span>
-        <span data-lang="pt">Supply Chain & E-Commerce</span>
-        <span data-lang="ar">سلسلة التوريد والتجارة الإلكترونية</span>
-        <span data-lang="zh">供应链与电子商务</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Import/export intercontinental, logistique internationale multimodale, représentation exclusive de marques entre l'Europe et l'Afrique. Gestion de flotte, fret aérien et maritime, e-commerce et propriété intellectuelle.</span>
-        <span data-lang="en">Intercontinental import/export, multimodal international logistics, exclusive brand representation between Europe and Africa. Fleet management, air and sea freight, e-commerce and intellectual property.</span>
-        <span data-lang="pt">Importação/exportação intercontinental, logística internacional multimodal, representação exclusiva de marcas entre a Europa e África.</span>
-        <span data-lang="ar">استيراد/تصدير عابر للقارات، لوجستيات دولية متعددة الوسائط، تمثيل حصري للعلامات التجارية بين أوروبا وأفريقيا.</span>
-        <span data-lang="zh">跨大陆进出口、多式联运国际物流、欧非品牌独家代理。车队管理、空海货运、电子商务与知识产权。</span>
-      </p>
+<!-- ===================== POLES ===================== -->
+<section class="section section--tint" id="poles">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="ref">§02 — <span data-i18n="poles.eyebrow">Nos métiers</span></span>
+      <h2 class="section-title" data-i18n="poles.title">Deux pôles, une même exigence d'exécution</h2>
+      <p class="lead" data-i18n="poles.lead">De la fondation au négoce mondial, Chanceleno couvre l'intégralité de la chaîne de valeur entre l'Europe et l'Afrique.</p>
     </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">02</span>
-      <span class="service-icon">🏥</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Life Sciences & Healthcare</span>
-        <span data-lang="en">Life Sciences & Healthcare</span>
-        <span data-lang="pt">Ciências da Vida & Saúde</span>
-        <span data-lang="ar">علوم الحياة والرعاية الصحية</span>
-        <span data-lang="zh">生命科学与医疗健康</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Distribution d'équipements médicaux de haute précision, gestion hospitalière, produits pharmaceutiques et solutions de santé pour l'Afrique. Partenariats avec fabricants européens et mondiaux.</span>
-        <span data-lang="en">Distribution of high-precision medical equipment, hospital management, pharmaceutical products and health solutions for Africa. Partnerships with European and global manufacturers.</span>
-        <span data-lang="pt">Distribuição de equipamentos médicos de alta precisão, gestão hospitalar, produtos farmacêuticos e soluções de saúde para África.</span>
-        <span data-lang="ar">توزيع المعدات الطبية عالية الدقة وإدارة المستشفيات والمستحضرات الصيدلانية وحلول الرعاية الصحية لأفريقيا.</span>
-        <span data-lang="zh">高精度医疗设备分销、医院管理、药品及非洲健康解决方案。与欧洲及全球制造商建立合作伙伴关系。</span>
-      </p>
-    </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">03</span>
-      <span class="service-icon">🏙️</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Smart Cities & Technologie</span>
-        <span data-lang="en">Smart Cities & Technology</span>
-        <span data-lang="pt">Cidades Inteligentes & Tecnologia</span>
-        <span data-lang="ar">المدن الذكية والتكنولوجيا</span>
-        <span data-lang="zh">智慧城市与科技</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Solutions technologiques pour les villes africaines en développement. Construction civile, design d'intérieur, infrastructures intelligentes, économie digitale et intelligence artificielle appliquée.</span>
-        <span data-lang="en">Technological solutions for developing African cities. Civil construction, interior design, smart infrastructure, digital economy and applied artificial intelligence.</span>
-        <span data-lang="pt">Soluções tecnológicas para cidades africanas em desenvolvimento. Construção civil, design de interiores, infraestruturas inteligentes e economia digital.</span>
-        <span data-lang="ar">حلول تكنولوجية للمدن الأفريقية النامية. البناء المدني والتصميم الداخلي والبنية التحتية الذكية والاقتصاد الرقمي.</span>
-        <span data-lang="zh">非洲发展中城市的技术解决方案。土木建筑、室内设计、智能基础设施、数字经济和人工智能应用。</span>
-      </p>
-    </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">04</span>
-      <span class="service-icon">⚡</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Énergie & Ressources</span>
-        <span data-lang="en">Energy & Resources</span>
-        <span data-lang="pt">Energia & Recursos</span>
-        <span data-lang="ar">الطاقة والموارد</span>
-        <span data-lang="zh">能源与资源</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Énergies renouvelables, ressources naturelles et minérales, stations-service, traitement des déchets et recyclage. Solutions durables pour l'Afrique subsaharienne et le marché européen.</span>
-        <span data-lang="en">Renewable energies, natural and mineral resources, fuel stations, waste treatment and recycling. Sustainable solutions for sub-Saharan Africa and the European market.</span>
-        <span data-lang="pt">Energias renováveis, recursos naturais e minerais, postos de combustível, tratamento de resíduos e reciclagem.</span>
-        <span data-lang="ar">الطاقة المتجددة والموارد الطبيعية والمعدنية ومحطات الوقود ومعالجة النفايات وإعادة التدوير.</span>
-        <span data-lang="zh">可再生能源、自然与矿产资源、加油站、废物处理与回收。为撒哈拉以南非洲和欧洲市场提供可持续解决方案。</span>
-      </p>
-    </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">03</span>
-      <span class="service-icon">🎓</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Education & Services Humains</span>
-        <span data-lang="en">Education & Human Services</span>
-        <span data-lang="pt">Educação & Serviços Humanos</span>
-        <span data-lang="ar">التعليم والخدمات الإنسانية</span>
-        <span data-lang="zh">教育与人文服务</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Création et gestion d'établissements scolaires et de crèches, formation professionnelle certifiée, recrutement de capital humain spécialisé. Services de nettoyage industriel, hygiénisation et entretien de voirie.</span>
-        <span data-lang="en">Creation and management of schools and nurseries, certified professional training, specialized human capital recruitment. Industrial cleaning, hygienization and road maintenance services.</span>
-        <span data-lang="pt">Criação e gestão de estabelecimentos escolares e creches, formação profissional certificada, recrutamento de capital humano especializado.</span>
-        <span data-lang="ar">إنشاء وإدارة المدارس ودور الحضانة والتدريب المهني المعتمد وتوظيف الكوادر البشرية المتخصصة.</span>
-        <span data-lang="zh">学校和托儿所的创建与管理、认证职业培训、专业人才招募。工业清洁、卫生和道路养护服务。</span>
-      </p>
-    </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">04</span>
-      <span class="service-icon">🏙️</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Smart Cities & Technologie</span>
-        <span data-lang="en">Smart Cities & Technology</span>
-        <span data-lang="pt">Cidades Inteligentes & Tecnologia</span>
-        <span data-lang="ar">المدن الذكية والتكنولوجيا</span>
-        <span data-lang="zh">智慧城市与科技</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Économie digitale, intelligence artificielle appliquée, produits électroniques et informatiques. Infrastructures connectées pour villes africaines émergentes. Organisation d'événements et production multimédia internationale.</span>
-        <span data-lang="en">Digital economy, applied artificial intelligence, electronic and IT products. Connected infrastructure for emerging African cities. International event organization and multimedia production.</span>
-        <span data-lang="pt">Economia digital, inteligência artificial aplicada, produtos eletrónicos e informáticos. Infraestruturas conectadas para cidades africanas emergentes.</span>
-        <span data-lang="ar">الاقتصاد الرقمي والذكاء الاصطناعي التطبيقي والمنتجات الإلكترونية وتكنولوجيا المعلومات.</span>
-        <span data-lang="zh">数字经济、人工智能应用、电子与信息技术产品。非洲新兴城市互联基础设施。国际活动组织与多媒体制作。</span>
-      </p>
-    </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">05</span>
-      <span class="service-icon">🏗️</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Construction & Infrastructure</span>
-        <span data-lang="en">Construction & Infrastructure</span>
-        <span data-lang="pt">Construção & Infraestrutura</span>
-        <span data-lang="ar">البناء والبنية التحتية</span>
-        <span data-lang="zh">建筑与基础设施</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Construction civile, design d'intérieur haut de gamme, finitions et décoration. Commerce de matériaux de construction, véhicules et accessoires. Services de réfrigération et représentation de marques de machinerie industrielle.</span>
-        <span data-lang="en">Civil construction, high-end interior design, finishes and decoration. Construction materials, vehicles and accessories trade. Refrigeration services and industrial machinery brand representation.</span>
-        <span data-lang="pt">Construção civil, design de interiores de alto padrão, acabamentos e decoração. Comércio de materiais de construção, veículos e acessórios.</span>
-        <span data-lang="ar">البناء المدني وتصميم الداخل الراقي والتشطيبات والديكور. تجارة مواد البناء والمركبات والملحقات.</span>
-        <span data-lang="zh">土木建筑、高端室内设计、装饰装修。建材、车辆与配件贸易。制冷服务及工业机械品牌代理。</span>
-      </p>
-    </div>
-
-    <div class="service-card reveal">
-      <span class="service-num">06</span>
-      <span class="service-icon">⚡</span>
-      <div class="service-title">
-        <span data-lang="fr" class="active">Énergie & Ressources Naturelles</span>
-        <span data-lang="en">Energy & Natural Resources</span>
-        <span data-lang="pt">Energia & Recursos Naturais</span>
-        <span data-lang="ar">الطاقة والموارد الطبيعية</span>
-        <span data-lang="zh">能源与自然资源</span>
-      </div>
-      <p class="service-desc">
-        <span data-lang="fr" class="active">Énergies renouvelables et solutions solaires, exploitation et commerce de ressources naturelles et minérales, stations-service. Traitement des déchets solides et liquides, recyclage et conseil environnemental pour une Afrique durable.</span>
-        <span data-lang="en">Renewable energies and solar solutions, natural and mineral resource exploitation and trade, fuel stations. Solid and liquid waste treatment, recycling and environmental consulting for a sustainable Africa.</span>
-        <span data-lang="pt">Energias renováveis e soluções solares, exploração e comércio de recursos naturais e minerais, postos de combustível. Tratamento de resíduos sólidos e líquidos, reciclagem e consultoria ambiental.</span>
-        <span data-lang="ar">الطاقة المتجددة والحلول الشمسية واستغلال وتجارة الموارد الطبيعية والمعدنية ومحطات الوقود.</span>
-        <span data-lang="zh">可再生能源与太阳能解决方案、自然与矿产资源开发贸易、加油站。固液废物处理、回收及环境咨询，助力可持续非洲。</span>
-      </p>
-    </div>
-
-  </div>
-</section>
-
-<!-- PRESENCE -->
-<section class="presence" id="presence">
-  <div class="section-tag reveal">
-    <span data-lang="fr" class="active">Notre Rayonnement</span>
-    <span data-lang="en">Our Reach</span>
-    <span data-lang="pt">Nossa Presença</span>
-    <span data-lang="ar">نطاقنا</span>
-    <span data-lang="zh">我们的覆盖范围</span>
-  </div>
-  <h2 class="section-title reveal">
-    <span data-lang="fr" class="active">Présence <em>Mondiale</em></span>
-    <span data-lang="en"><em>Global</em> Presence</span>
-    <span data-lang="pt">Presença <em>Global</em></span>
-    <span data-lang="ar">الحضور <em>العالمي</em></span>
-    <span data-lang="zh"><em>全球</em>布局</span>
-  </h2>
-  <p class="presence-intro reveal">
-    <span data-lang="fr" class="active">Avec des bases opérationnelles en France et en Angola, Chanceleno développe activement ses partenariats sur 3 continents.</span>
-    <span data-lang="en">With operational bases in France and Angola, Chanceleno is actively developing partnerships across 3 continents.</span>
-    <span data-lang="pt">Com bases operacionais em França e Angola, a Chanceleno desenvolve ativamente parcerias em 3 continentes.</span>
-    <span data-lang="ar">مع قواعد تشغيلية في فرنسا وأنغولا، تطور شانسيلينو بنشاط شراكاتها عبر 3 قارات.</span>
-    <span data-lang="zh">Chanceleno在法国和安哥拉设有运营基地，正积极在3大洲发展合作伙伴关系。</span>
-  </p>
-  <div class="continents">
-    <div class="continent-card reveal">
-      <div class="continent-name">Europe</div>
-      <div class="continent-countries">
-        <span data-lang="fr" class="active">🇫🇷 France (Lyon) — Siège Europe<br>🇧🇪 Belgique<br>🇵🇹 Portugal<br>🇩🇪 Allemagne</span>
-        <span data-lang="en">🇫🇷 France (Lyon) — European HQ<br>🇧🇪 Belgium<br>🇵🇹 Portugal<br>🇩🇪 Germany</span>
-        <span data-lang="pt">🇫🇷 França (Lyon) — Sede Europa<br>🇧🇪 Bélgica<br>🇵🇹 Portugal<br>🇩🇪 Alemanha</span>
-        <span data-lang="ar">🇫🇷 فرنسا (ليون) — المقر الأوروبي<br>🇧🇪 بلجيكا<br>🇵🇹 البرتغال<br>🇩🇪 ألمانيا</span>
-        <span data-lang="zh">🇫🇷 法国（里昂）— 欧洲总部<br>🇧🇪 比利时<br>🇵🇹 葡萄牙<br>🇩🇪 德国</span>
-      </div>
-    </div>
-    <div class="continent-card reveal">
-      <div class="continent-name">Afrique</div>
-      <div class="continent-countries">
-        <span data-lang="fr" class="active">🇦🇴 Angola (Luanda) — Siège Afrique<br>🇨🇩 RD Congo<br>🇨🇬 Congo Brazzaville<br>🇳🇬 Nigeria</span>
-        <span data-lang="en">🇦🇴 Angola (Luanda) — African HQ<br>🇨🇩 DR Congo<br>🇨🇬 Congo Brazzaville<br>🇳🇬 Nigeria</span>
-        <span data-lang="pt">🇦🇴 Angola (Luanda) — Sede África<br>🇨🇩 RD Congo<br>🇨🇬 Congo Brazzaville<br>🇳🇬 Nigéria</span>
-        <span data-lang="ar">🇦🇴 أنغولا (لواندا) — المقر الأفريقي<br>🇨🇩 الكونغو الديمقراطية<br>🇨🇬 الكونغو برازافيل<br>🇳🇬 نيجيريا</span>
-        <span data-lang="zh">🇦🇴 安哥拉（罗安达）— 非洲总部<br>🇨🇩 刚果民主共和国<br>🇨🇬 刚果布拉柴维尔<br>🇳🇬 尼日利亚</span>
-      </div>
-    </div>
-    <div class="continent-card reveal">
-      <div class="continent-name">
-        <span data-lang="fr" class="active">Expansion</span>
-        <span data-lang="en">Expansion</span>
-        <span data-lang="pt">Expansão</span>
-        <span data-lang="ar">التوسع</span>
-        <span data-lang="zh">扩展中</span>
-      </div>
-      <div class="continent-countries">
-        <span data-lang="fr" class="active">🇦🇪 Émirats Arabes Unis<br>🇨🇳 Chine<br>🇧🇷 Brésil<br>🌍 Afrique du Nord</span>
-        <span data-lang="en">🇦🇪 United Arab Emirates<br>🇨🇳 China<br>🇧🇷 Brazil<br>🌍 North Africa</span>
-        <span data-lang="pt">🇦🇪 Emirados Árabes Unidos<br>🇨🇳 China<br>🇧🇷 Brasil<br>🌍 Norte de África</span>
-        <span data-lang="ar">🇦🇪 الإمارات العربية المتحدة<br>🇨🇳 الصين<br>🇧🇷 البرازيل<br>🌍 شمال أفريقيا</span>
-        <span data-lang="zh">🇦🇪 阿联酋<br>🇨🇳 中国<br>🇧🇷 巴西<br>🌍 北非</span>
-      </div>
+    <div class="poles">
+      <article class="pole reveal">
+        <span class="pole-tag" data-i18n="poles.a.tag">Pôle A</span>
+        <h3 data-i18n="poles.a.title">Construction, Luxe & Architecture</h3>
+        <ul>
+          <li data-i18n="poles.a.1">Gros œuvre & ingénierie : fondations, terrassement, élévation, VRD</li>
+          <li data-i18n="poles.a.2">Assainissement complexe et réseaux techniques</li>
+          <li data-i18n="poles.a.3">Second œuvre de prestige : faux-plafonds, plâtrerie de précision</li>
+          <li data-i18n="poles.a.4">Pose de marbres nobles & calepinage haut de gamme</li>
+          <li data-i18n="poles.a.5">Cuisines laquées, salles de bain contemporaines, paysagisme & piscines</li>
+        </ul>
+      </article>
+      <article class="pole reveal">
+        <span class="pole-tag" data-i18n="poles.b.tag">Pôle B</span>
+        <h3 data-i18n="poles.b.title">Négoce, Logistique & Commerce International</h3>
+        <ul>
+          <li data-i18n="poles.b.1">Chanceleno France (Lyon) : logistique européenne & import-export</li>
+          <li data-i18n="poles.b.2">Représentation croisée de marques Europe ↔ Afrique</li>
+          <li data-i18n="poles.b.sante">Santé : matériel & équipements hospitaliers certifiés CE</li>
+          <li data-i18n="poles.b.3">Agro-export : café supérieur & productions d'Angola</li>
+          <li data-i18n="poles.b.4">Cosmétique de prestige : bars à parfum & recharge éco-responsable</li>
+        </ul>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section class="contact" id="contact">
-  <div class="section-tag reveal">
-    <span data-lang="fr" class="active">Travaillons Ensemble</span>
-    <span data-lang="en">Let's Work Together</span>
-    <span data-lang="pt">Vamos Trabalhar Juntos</span>
-    <span data-lang="ar">لنعمل معاً</span>
-    <span data-lang="zh">携手合作</span>
-  </div>
-  <h2 class="section-title reveal">
-    <span data-lang="fr" class="active">Nous <em>Contacter</em></span>
-    <span data-lang="en"><em>Contact</em> Us</span>
-    <span data-lang="pt">Entre em <em>Contato</em></span>
-    <span data-lang="ar"><em>اتصل</em> بنا</span>
-    <span data-lang="zh"><em>联系</em>我们</span>
-  </h2>
-  <div class="contact-grid">
-    <div class="reveal">
-      <div class="contact-info-item">
-        <span class="contact-info-label">Email</span>
-        <span class="contact-info-value">ceo@chanceleno.com</span>
+<!-- ===================== PORTFOLIO ===================== -->
+<section class="section" id="portfolio">
+  <div class="wrap">
+    <div class="pf-head">
+      <div class="reveal">
+        <span class="ref">§03 — <span data-i18n="pf.eyebrow">Réalisations</span></span>
+        <h2 class="section-title" data-i18n="pf.title">Portfolio BTP & Finitions</h2>
       </div>
-      <div class="contact-info-item">
-        <span class="contact-info-label">
-          <span data-lang="fr" class="active">France — WhatsApp Business</span>
-          <span data-lang="en">France — WhatsApp Business</span>
-          <span data-lang="pt">França — WhatsApp Business</span>
-          <span data-lang="ar">فرنسا — واتساب بيزنس</span>
-          <span data-lang="zh">法国 — WhatsApp Business</span>
-        </span>
-        <span class="contact-info-value">+33 6 41 80 84 99</span>
-      </div>
-      <div class="contact-info-item">
-        <span class="contact-info-label">
-          <span data-lang="fr" class="active">Angola — WhatsApp</span>
-          <span data-lang="en">Angola — WhatsApp</span>
-          <span data-lang="pt">Angola — WhatsApp</span>
-          <span data-lang="ar">أنغولا — واتساب</span>
-          <span data-lang="zh">安哥拉 — WhatsApp</span>
-        </span>
-        <span class="contact-info-value">+244 928 424 849</span>
-      </div>
-      <div class="contact-info-item">
-        <span class="contact-info-label">
-          <span data-lang="fr" class="active">Siège Europe</span>
-          <span data-lang="en">European HQ</span>
-          <span data-lang="pt">Sede Europa</span>
-          <span data-lang="ar">المقر الأوروبي</span>
-          <span data-lang="zh">欧洲总部</span>
-        </span>
-        <span class="contact-info-value">Lyon, France — Département 69</span>
-      </div>
-      <div class="contact-info-item">
-        <span class="contact-info-label">
-          <span data-lang="fr" class="active">Siège Angola</span>
-          <span data-lang="en">Angola HQ</span>
-          <span data-lang="pt">Sede Angola</span>
-          <span data-lang="ar">مقر أنغولا</span>
-          <span data-lang="zh">安哥拉总部</span>
-        </span>
-        <span class="contact-info-value">Kilamba, Luanda — Angola</span>
-      </div>
-      <div class="contact-info-item">
-        <span class="contact-info-label">NIF Angola</span>
-        <span class="contact-info-value">003214171ZE032</span>
-      </div>
-      <div class="contact-info-item">
-        <span class="contact-info-label">
-          <span data-lang="fr" class="active">Entreprise Enregistrée</span>
-          <span data-lang="en">Registered Company</span>
-          <span data-lang="pt">Empresa Registada</span>
-          <span data-lang="ar">شركة مسجلة</span>
-          <span data-lang="zh">注册公司</span>
-        </span>
-        <span class="contact-info-value">CHANCELENO — COMÉRCIO GERAL, SU, LDA</span>
+      <div class="filters reveal" role="tablist" aria-label="Filtrer les réalisations">
+        <button class="filter active" data-filter="all" data-i18n="pf.f.all">Tout</button>
+        <button class="filter" data-filter="gros" data-i18n="pf.f.gros">Gros Œuvre</button>
+        <button class="filter" data-filter="ext" data-i18n="pf.f.ext">Extérieurs</button>
+        <button class="filter" data-filter="second" data-i18n="pf.f.second">Second Œuvre</button>
+        <button class="filter" data-filter="archi" data-i18n="pf.f.archi">Architecture d'Intérieur</button>
       </div>
     </div>
-    <div class="contact-form reveal">
-      <div class="form-group">
-        <label class="form-label">
-          <span data-lang="fr" class="active">Votre Nom</span>
-          <span data-lang="en">Your Name</span>
-          <span data-lang="pt">Seu Nome</span>
-          <span data-lang="ar">اسمك</span>
-          <span data-lang="zh">您的姓名</span>
-        </label>
-        <input type="text" class="form-input" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input type="email" class="form-input" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">
-          <span data-lang="fr" class="active">Type de Partenariat</span>
-          <span data-lang="en">Partnership Type</span>
-          <span data-lang="pt">Tipo de Parceria</span>
-          <span data-lang="ar">نوع الشراكة</span>
-          <span data-lang="zh">合作类型</span>
-        </label>
-        <select class="form-select">
-          <option value="">
-            <span data-lang="fr" class="active">Sélectionner...</span>
-          </option>
-          <option>Import / Export</option>
-          <option>
-            <span data-lang="fr" class="active">Distribution de marque</span>
-            <span data-lang="en">Brand distribution</span>
-          </option>
-          <option>
-            <span data-lang="fr" class="active">Consulting</span>
-          </option>
-          <option>
-            <span data-lang="fr" class="active">Logistique</span>
-            <span data-lang="en">Logistics</span>
-          </option>
-          <option>
-            <span data-lang="fr" class="active">Autre</span>
-            <span data-lang="en">Other</span>
-          </option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">
-          <span data-lang="fr" class="active">Message</span>
-          <span data-lang="en">Message</span>
-          <span data-lang="pt">Mensagem</span>
-          <span data-lang="ar">رسالة</span>
-          <span data-lang="zh">留言</span>
-        </label>
-        <textarea class="form-textarea"></textarea>
-      </div>
-      <button class="btn-primary" style="border: none; cursor: pointer; width: 100%;">
-        <span data-lang="fr" class="active">Envoyer le Message</span>
-        <span data-lang="en">Send Message</span>
-        <span data-lang="pt">Enviar Mensagem</span>
-        <span data-lang="ar">إرسال الرسالة</span>
-        <span data-lang="zh">发送消息</span>
-      </button>
+
+    <div class="gallery" id="gallery">
+      <figure class="tile" data-cat="gros"><img src="image_19.png" alt="Gros œuvre — structure de bâtiment" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_19.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Gros Œuvre</span><span class="t-name">Élévation de structure</span></figcaption></figure>
+      <figure class="tile" data-cat="gros"><img src="image_21.png" alt="Gros œuvre — coffrage et béton armé" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_21.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Gros Œuvre</span><span class="t-name">Coffrage & béton</span></figcaption></figure>
+      <figure class="tile" data-cat="gros"><img src="image_22.png" alt="Gros œuvre — dalle et fondations" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_22.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Gros Œuvre</span><span class="t-name">Fondations</span></figcaption></figure>
+      <figure class="tile" data-cat="gros"><img src="image_33.png" alt="Gros œuvre — chantier en cours" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_33.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Gros Œuvre</span><span class="t-name">Chantier structurel</span></figcaption></figure>
+      <figure class="tile" data-cat="gros"><img src="image_34.png" alt="Gros œuvre — ouvrage maçonné" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_34.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Gros Œuvre</span><span class="t-name">Maçonnerie</span></figcaption></figure>
+      <figure class="tile" data-cat="gros"><img src="image_31.png" alt="Gros œuvre — terrassement et VRD" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_31.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Gros Œuvre</span><span class="t-name">Terrassement & VRD</span></figcaption></figure>
+
+      <figure class="tile" data-cat="ext"><img src="image_20.png" alt="Aménagement extérieur — piscine" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_20.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Extérieurs</span><span class="t-name">Piscine</span></figcaption></figure>
+      <figure class="tile" data-cat="ext"><img src="image_25.png" alt="Aménagement extérieur — pavage" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_25.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Extérieurs</span><span class="t-name">Pavage</span></figcaption></figure>
+      <figure class="tile" data-cat="ext"><img src="image_29.png" alt="Aménagement extérieur — bar d'été" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_29.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Extérieurs</span><span class="t-name">Bar d'été</span></figcaption></figure>
+
+      <figure class="tile" data-cat="second"><img src="image_17.png" alt="Second œuvre — faux-plafond architectural" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_17.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Second Œuvre</span><span class="t-name">Faux-plafond</span></figcaption></figure>
+      <figure class="tile" data-cat="second"><img src="image_24.png" alt="Second œuvre — cloisons placo" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_24.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Second Œuvre</span><span class="t-name">Plâtrerie / Placo</span></figcaption></figure>
+      <figure class="tile" data-cat="second"><img src="image_23.png" alt="Second œuvre — plan technique" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_23.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Second Œuvre</span><span class="t-name">Plan technique</span></figcaption></figure>
+
+      <figure class="tile" data-cat="archi"><img src="image_16.png" alt="Architecture d'intérieur — suite" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_16.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Intérieur</span><span class="t-name">Suite</span></figcaption></figure>
+      <figure class="tile" data-cat="archi"><img src="image_26.png" alt="Architecture d'intérieur — cuisine laquée" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_26.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Intérieur</span><span class="t-name">Cuisine laquée</span></figcaption></figure>
+      <figure class="tile" data-cat="archi"><img src="image_28.png" alt="Architecture d'intérieur — douche contemporaine" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_28.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Intérieur</span><span class="t-name">Douche contemporaine</span></figcaption></figure>
+      <figure class="tile" data-cat="archi"><img src="image_32.png" alt="Architecture d'intérieur — marbre noble" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_32.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Intérieur</span><span class="t-name">Marbre noble</span></figcaption></figure>
+      <figure class="tile" data-cat="archi"><img src="image_30.png" alt="Architecture d'intérieur — chambre enfant" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_30.png&lt;/div&gt;'"><figcaption class="tile-cap"><span class="t-cat">Intérieur</span><span class="t-name">Chambre enfant</span></figcaption></figure>
     </div>
   </div>
 </section>
 
-<!-- RECRUTEMENT -->
-<section id="recrutement" style="background: var(--dark-3); position: relative; overflow: hidden;">
-  <div style="position: absolute; inset: 0; background: url('https://chanceleno.github.io/services.jpg') center/cover no-repeat; opacity: 0.06;"></div>
-  <div style="position: relative; z-index: 2;">
-    <div class="section-tag reveal">
-      <span data-lang="fr" class="active">Rejoignez l'Aventure</span>
-      <span data-lang="en">Join the Adventure</span>
-      <span data-lang="pt">Junte-se à Aventura</span>
-      <span data-lang="ar">انضم إلى المغامرة</span>
-      <span data-lang="zh">加入我们</span>
+<!-- ===================== TRADE ===================== -->
+<section class="section section--tint" id="trade">
+  <div class="wrap">
+    <div class="s-head reveal">
+      <span class="ref">§04 — <span data-i18n="trade.eyebrow">Chanceleno International Trade</span></span>
+      <h2 class="section-title" data-i18n="trade.title">Le négoce qui relie les marchés</h2>
+      <p class="lead" data-i18n="trade.lead">Cinq métiers complémentaires, un même flux maîtrisé entre l'Europe et l'Afrique — matériaux, marques, santé, matières premières et cosmétique.</p>
     </div>
-    <h2 class="section-title reveal">
-      <span data-lang="fr" class="active">Travaillons <em>Ensemble</em></span>
-      <span data-lang="en">Let's Work <em>Together</em></span>
-      <span data-lang="pt">Vamos Trabalhar <em>Juntos</em></span>
-      <span data-lang="ar">لنعمل <em>معاً</em></span>
-      <span data-lang="zh">携手<em>共进</em></span>
-    </h2>
+    <div class="trade-grid">
+      <article class="trade-card reveal"><div class="trade-body">
+        <span class="trade-idx">01</span>
+        <h3 data-i18n="trade.1.title">Matériaux & Logistique</h3>
+        <p data-i18n="trade.1.body">Pilotage des flux Europe–Afrique : approvisionnement de finitions et de matériaux premium, dédouanement et logistique de bout en bout vers nos chantiers et nos partenaires.</p>
+        <div class="geo">Lyon → Luanda · Pointe-Noire · Kinshasa</div>
+      </div></article>
 
-    <div class="reveal" style="max-width: 650px; margin-bottom: 48px;">
-      <p style="color: var(--white-dim); font-size: 15px; line-height: 1.9; margin-bottom: 24px;">
-        <span data-lang="fr" class="active">Chanceleno est une entreprise en pleine construction. Nous croyons que les grandes réussites se bâtissent avec les bonnes personnes. Si vous êtes ambitieux, bilingue, passionné par le commerce international et le développement de l'Afrique — nous voulons vous connaître.</span>
-        <span data-lang="en">Chanceleno is a company in full development. We believe great success is built with the right people. If you are ambitious, bilingual, passionate about international trade and Africa's development — we want to meet you.</span>
-        <span data-lang="pt">A Chanceleno é uma empresa em plena construção. Acreditamos que os grandes sucessos são construídos com as pessoas certas. Se é ambicioso, bilíngue e apaixonado pelo comércio internacional — queremos conhecê-lo.</span>
-        <span data-lang="ar">شانسيلينو شركة في طور البناء. نؤمن أن النجاحات الكبيرة تُبنى مع الأشخاص المناسبين. إذا كنت طموحاً وثنائي اللغة ومتحمساً للتجارة الدولية — نريد التعرف عليك.</span>
-        <span data-lang="zh">Chanceleno是一家正在建设中的企业。我们相信伟大的成功需要合适的人才。如果您雄心勃勃、双语能力强、热衷于国际贸易和非洲发展——我们希望认识您。</span>
-      </p>
+      <article class="trade-card reveal"><div class="trade-body">
+        <span class="trade-idx">02</span>
+        <h3 data-i18n="trade.2.title">Partenariats de Marques</h3>
+        <p data-i18n="trade.2.body">Représentation exclusive et croisée : implantation de marques européennes en Afrique francophone et lusophone, et promotion de marques africaines de premier plan vers l'Europe.</p>
+        <div class="geo">Europe ↔ Afrique</div>
+      </div></article>
 
-      <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px;">
-        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">🌍
-          <span data-lang="fr" class="active">Commerce International</span>
-          <span data-lang="en">International Trade</span>
-          <span data-lang="pt">Comércio Internacional</span>
-          <span data-lang="ar">التجارة الدولية</span>
-          <span data-lang="zh">国际贸易</span>
+      <article class="trade-card feature reveal">
+        <div class="trade-media"><img src="image_18.png" alt="Équipements hospitaliers certifiés CE" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;Santé — visuel équipements&lt;/div&gt;'"></div>
+        <div class="trade-body">
+          <span class="trade-idx">03</span>
+          <h3 data-i18n="trade.3.title">Santé & Équipements hospitaliers</h3>
+          <p data-i18n="trade.3.body">Sourcing et fourniture d'équipements médicaux certifiés CE pour les structures de santé d'Afrique centrale, avec accompagnement logistique et conformité réglementaire.</p>
+          <div class="geo" data-i18n="trade.3.geo">Europe → Afrique · Certifié CE</div>
         </div>
-        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">🚢
-          <span data-lang="fr" class="active">Logistique</span>
-          <span data-lang="en">Logistics</span>
-          <span data-lang="pt">Logística</span>
-          <span data-lang="ar">اللوجستيات</span>
-          <span data-lang="zh">物流</span>
-        </div>
-        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">💻
-          <span data-lang="fr" class="active">Technologie</span>
-          <span data-lang="en">Technology</span>
-          <span data-lang="pt">Tecnologia</span>
-          <span data-lang="ar">التكنولوجيا</span>
-          <span data-lang="zh">科技</span>
-        </div>
-        <div style="background: var(--white-faint); border: 1px solid rgba(201,168,76,0.2); padding: 8px 18px; font-size: 12px; color: var(--white-dim); letter-spacing: 0.1em;">⚡
-          <span data-lang="fr" class="active">Énergie</span>
-          <span data-lang="en">Energy</span>
-          <span data-lang="pt">Energia</span>
-          <span data-lang="ar">الطاقة</span>
-          <span data-lang="zh">能源</span>
-        </div>
-      </div>
+      </article>
 
-      <a href="mailto:ceo@chanceleno.com?subject=Candidature Spontanée — Chanceleno" class="btn-primary" style="display: inline-block;">
-        <span data-lang="fr" class="active">Envoyer ma Candidature Spontanée</span>
-        <span data-lang="en">Send my Spontaneous Application</span>
-        <span data-lang="pt">Enviar Candidatura Espontânea</span>
-        <span data-lang="ar">إرسال طلبي العفوي</span>
-        <span data-lang="zh">发送自发申请</span>
-      </a>
+      <article class="trade-card reveal"><div class="trade-body">
+        <span class="trade-idx">04</span>
+        <h3 data-i18n="trade.4.title">Agro-Export & Café</h3>
+        <p data-i18n="trade.4.body">Exportation internationale des richesses agricoles de l'Angola — café de qualité supérieure et productions locales — avec traçabilité conforme aux exigences européennes.</p>
+        <div class="geo" data-i18n="trade.4.geo">Angola → Europe</div>
+      </div></article>
+
+      <article class="trade-card feature reveal">
+        <div class="trade-media"><img src="image_36.png" alt="Station de recharge de cosmétiques liquides — bar à parfum Chanceleno" onerror="this.parentElement.innerHTML='&lt;div class=\'ph\'&gt;image_36.png — Bar à parfum&lt;/div&gt;'"></div>
+        <div class="trade-body">
+          <span class="trade-idx">05</span>
+          <h3 data-i18n="trade.5.title">Cosmétique de Prestige</h3>
+          <p data-i18n="trade.5.body">Importation et distribution exclusive de bars à parfum et de stations de recharge de cosmétiques liquides — technologie éco-responsable — et sourcing de matières premières végétales pour les laboratoires européens.</p>
+          <div class="geo" data-i18n="trade.5.geo">Distribution & Vrac</div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">Chanceleno</div>
-  <div class="footer-copy">© 2025 Chanceleno — Comércio Geral, SU, Lda. All rights reserved.</div>
-  <div class="footer-links">
-    <a href="#about">
-      <span data-lang="fr" class="active">À Propos</span>
-      <span data-lang="en">About</span>
-      <span data-lang="pt">Sobre</span>
-    </a>
-    <a href="#services">Services</a>
-    <a href="#contact">Contact</a>
+<!-- ===================== CONTACT ===================== -->
+<section class="section" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact reveal">
+        <span class="ref">§05 — <span data-i18n="contact.eyebrow">Contact</span></span>
+        <h2 class="section-title" data-i18n="contact.title">Construisons la prochaine passerelle</h2>
+        <p class="lead" data-i18n="contact.lead">Devis construction, partenariat de marque, équipement de santé, sourcing ou export : écrivez-nous. Réponse sous 48 h ouvrées.</p>
+        <div class="contact-meta">
+          <div class="cm-item"><div class="cm-k" data-i18n="contact.k.mail">E-mail</div><div class="cm-v"><a href="mailto:contact@chanceleno.com">contact@chanceleno.com</a></div></div>
+          <div class="cm-item"><div class="cm-k" data-i18n="contact.k.bases">Bases opérationnelles</div><div class="cm-v">Lyon · Luanda · Pointe-Noire · Kinshasa</div></div>
+          <div class="cm-item"><div class="cm-k" data-i18n="contact.k.entity">Entité légale</div><div class="cm-v">Chanceleno Comércio Geral, SU, LDA</div></div>
+        </div>
+      </div>
+
+      <!-- IMPORTANT : remplacez VOTRE_ID_FORMSPREE par votre identifiant Formspree réel -->
+      <form class="form reveal" action="https://formspree.io/f/VOTRE_ID_FORMSPREE" method="POST">
+        <div class="form-row">
+          <div class="field"><label for="f-name" data-i18n="form.name">Nom complet</label><input id="f-name" name="nom" type="text" required></div>
+          <div class="field"><label for="f-email" data-i18n="form.email">E-mail</label><input id="f-email" name="email" type="email" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="f-phone" data-i18n="form.phone">Téléphone</label><input id="f-phone" name="telephone" type="tel"></div>
+          <div class="field"><label for="f-subject" data-i18n="form.subject">Sujet</label>
+            <select id="f-subject" name="sujet">
+              <option data-i18n="form.s.construction">Construction de prestige</option>
+              <option data-i18n="form.s.trade">Négoce & Représentation de marques</option>
+              <option data-i18n="form.s.sante">Santé & Équipements hospitaliers</option>
+              <option data-i18n="form.s.agro">Agro-Export & Café</option>
+              <option data-i18n="form.s.cosmetic">Cosmétique & Bars à parfum</option>
+              <option data-i18n="form.s.other">Autre demande</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="f-msg" data-i18n="form.message">Message</label><textarea id="f-msg" name="message" required></textarea></div>
+        <button type="submit" class="btn btn--gold" data-i18n="form.submit">Envoyer la demande</button>
+        <p class="form-note" data-i18n="form.note">Vos informations restent confidentielles et ne servent qu'au traitement de votre demande.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="image_35.png" alt="Logo Chanceleno" onerror="this.style.display='none'">
+        <p data-i18n="footer.tag">Maison de négoce et de construction Europe–Afrique. Construction de prestige, représentation de marques, santé, agro-export et cosmétique.</p>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.nav">Navigation</h4>
+        <ul>
+          <li><a href="#about" data-i18n="nav.group">Le Groupe</a></li>
+          <li><a href="#portfolio" data-i18n="nav.construction">Construction</a></li>
+          <li><a href="#trade" data-i18n="nav.trade">Négoce</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 data-i18n="footer.contact">Contact</h4>
+        <ul>
+          <li><a href="mailto:contact@chanceleno.com">contact@chanceleno.com</a></li>
+          <li><a href="mailto:ceo@chanceleno.com">ceo@chanceleno.com</a></li>
+          <li>Lyon · Luanda</li>
+          <li>Pointe-Noire · Kinshasa</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Chanceleno Comércio Geral, SU, LDA</span>
+      <span>NIF 003214171ZE032 · Angola — Filiale logistique Lyon, France</span>
+    </div>
   </div>
 </footer>
 
+<!-- IMPORTANT : remplacez 33600000000 par votre numéro WhatsApp réel (format international, sans +) -->
+<a class="wa" href="https://wa.me/33600000000?text=Bonjour%20Chanceleno%2C%20je%20souhaite%20un%20renseignement." target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp">
+  <span class="wa-ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.5A10 10 0 1 0 12 2zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.9.9-2.8-.2-.3A8 8 0 1 1 12 20zm4.4-5.6c-.2-.1-1.4-.7-1.6-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-1.9-1.2 7.2 7.2 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4v-.4c0-.1-.5-1.3-.7-1.7s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11 11 0 0 0 4.2 3.7c.6.3 1 .4 1.4.5a3.3 3.3 0 0 0 1.5.1 2.5 2.5 0 0 0 1.6-1.1 2 2 0 0 0 .1-1.1c0-.1-.2-.2-.4-.3z"/></svg></span>
+  <span class="wa-txt" data-i18n="wa.txt">Écrivez-nous</span>
+</a>
+
+<!-- ===================== SCRIPTS ===================== -->
 <script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    setTimeout(() => {
-      ring.style.left = e.clientX + 'px';
-      ring.style.top = e.clientY + 'px';
-    }, 80);
-  });
+/* ============================================================
+   DICTIONNAIRE MULTILINGUE
+   FR / PT / EN complets · LN / KG / MB : slogan fourni + repli FR.
+   Pour enrichir les langues régionales, ajoutez les clés dans ln/kg/mb.
+   ============================================================ */
+const i18n = {
+  fr: {
+    "nav.group":"Le Groupe","nav.construction":"Construction","nav.trade":"Négoce","nav.contact":"Contact",
+    "lang.int":"International","lang.reg":"Régional",
+    "hero.eyebrow":"Maison de négoce · Europe – Afrique",
+    "hero.title":"Bâtir des passerelles durables, de la <em>construction de prestige</em> à la représentation de marques et au négoce international entre l'Europe et l'Afrique.",
+    "hero.sub":"Deux continents, une exigence. Du gros œuvre d'élite à la santé, l'agro-export et la cosmétique — Chanceleno opère sur le terrain, de Lyon à Luanda.",
+    "hero.cta":"Demander un devis","hero.cta2":"Voir nos réalisations","hero.scroll":"Découvrir","chart.route":"Route opérationnelle",
+    "about.eyebrow":"Le Groupe","about.title":"Une présence réelle sur deux continents",
+    "about.lead":"Chanceleno n'est pas un intermédiaire théorique : c'est une entreprise qui exécute, avec des équipes sur le terrain et une documentation de projets prouvée.",
+    "about.p1":"Depuis notre base de Lyon, nous pilotons la logistique européenne et les relations internationales, en synergie directe avec nos ancrages de Luanda, Pointe-Noire et Kinshasa. Cette double implantation nous permet de conduire des chantiers de prestige comme d'orchestrer des flux commerciaux entre l'Europe et l'Afrique.",
+    "about.p2":"Notre sérieux repose sur des engagements écrits, une rigueur de purchasing et de logistique, et une connaissance intime des marchés lusophones et francophones d'Afrique centrale.",
+    "about.stat1":"Continents reliés","about.stat2":"Bases opérationnelles","about.stat3":"Langues de travail",
+    "poles.eyebrow":"Nos métiers","poles.title":"Deux pôles, une même exigence d'exécution",
+    "poles.lead":"De la fondation au négoce mondial, Chanceleno couvre l'intégralité de la chaîne de valeur entre l'Europe et l'Afrique.",
+    "poles.a.tag":"Pôle A","poles.a.title":"Construction, Luxe & Architecture",
+    "poles.a.1":"Gros œuvre & ingénierie : fondations, terrassement, élévation, VRD","poles.a.2":"Assainissement complexe et réseaux techniques",
+    "poles.a.3":"Second œuvre de prestige : faux-plafonds, plâtrerie de précision","poles.a.4":"Pose de marbres nobles & calepinage haut de gamme",
+    "poles.a.5":"Cuisines laquées, salles de bain contemporaines, paysagisme & piscines",
+    "poles.b.tag":"Pôle B","poles.b.title":"Négoce, Logistique & Commerce International",
+    "poles.b.1":"Chanceleno France (Lyon) : logistique européenne & import-export","poles.b.2":"Représentation croisée de marques Europe ↔ Afrique",
+    "poles.b.sante":"Santé : matériel & équipements hospitaliers certifiés CE","poles.b.3":"Agro-export : café supérieur & productions d'Angola",
+    "poles.b.4":"Cosmétique de prestige : bars à parfum & recharge éco-responsable",
+    "pf.eyebrow":"Réalisations","pf.title":"Portfolio BTP & Finitions",
+    "pf.f.all":"Tout","pf.f.gros":"Gros Œuvre","pf.f.ext":"Extérieurs","pf.f.second":"Second Œuvre","pf.f.archi":"Architecture d'Intérieur",
+    "trade.eyebrow":"Chanceleno International Trade","trade.title":"Le négoce qui relie les marchés",
+    "trade.lead":"Cinq métiers complémentaires, un même flux maîtrisé entre l'Europe et l'Afrique — matériaux, marques, santé, matières premières et cosmétique.",
+    "trade.1.title":"Matériaux & Logistique","trade.1.body":"Pilotage des flux Europe–Afrique : approvisionnement de finitions et de matériaux premium, dédouanement et logistique de bout en bout vers nos chantiers et nos partenaires.",
+    "trade.2.title":"Partenariats de Marques","trade.2.body":"Représentation exclusive et croisée : implantation de marques européennes en Afrique francophone et lusophone, et promotion de marques africaines de premier plan vers l'Europe.",
+    "trade.3.title":"Santé & Équipements hospitaliers","trade.3.body":"Sourcing et fourniture d'équipements médicaux certifiés CE pour les structures de santé d'Afrique centrale, avec accompagnement logistique et conformité réglementaire.","trade.3.geo":"Europe → Afrique · Certifié CE",
+    "trade.4.title":"Agro-Export & Café","trade.4.body":"Exportation internationale des richesses agricoles de l'Angola — café de qualité supérieure et productions locales — avec traçabilité conforme aux exigences européennes.","trade.4.geo":"Angola → Europe",
+    "trade.5.title":"Cosmétique de Prestige","trade.5.body":"Importation et distribution exclusive de bars à parfum et de stations de recharge de cosmétiques liquides — technologie éco-responsable — et sourcing de matières premières végétales pour les laboratoires européens.","trade.5.geo":"Distribution & Vrac",
+    "contact.eyebrow":"Contact","contact.title":"Construisons la prochaine passerelle",
+    "contact.lead":"Devis construction, partenariat de marque, équipement de santé, sourcing ou export : écrivez-nous. Réponse sous 48 h ouvrées.",
+    "contact.k.mail":"E-mail","contact.k.bases":"Bases opérationnelles","contact.k.entity":"Entité légale",
+    "form.name":"Nom complet","form.email":"E-mail","form.phone":"Téléphone","form.subject":"Sujet","form.message":"Message",
+    "form.s.construction":"Construction de prestige","form.s.trade":"Négoce & Représentation de marques","form.s.sante":"Santé & Équipements hospitaliers","form.s.agro":"Agro-Export & Café","form.s.cosmetic":"Cosmétique & Bars à parfum","form.s.other":"Autre demande",
+    "form.submit":"Envoyer la demande","form.note":"Vos informations restent confidentielles et ne servent qu'au traitement de votre demande.",
+    "footer.tag":"Maison de négoce et de construction Europe–Afrique. Construction de prestige, représentation de marques, santé, agro-export et cosmétique.",
+    "footer.nav":"Navigation","footer.contact":"Contact","wa.txt":"Écrivez-nous"
+  },
+  pt: {
+    "nav.group":"O Grupo","nav.construction":"Construção","nav.trade":"Comércio","nav.contact":"Contato",
+    "lang.int":"Internacional","lang.reg":"Regional",
+    "hero.eyebrow":"Casa de comércio · Europa – África",
+    "hero.title":"Construir pontes duráveis, da <em>construção de prestígio</em> à representação de marcas e ao comércio internacional entre a Europa e a África.",
+    "hero.sub":"Dois continentes, uma exigência. Da grande obra de elite à saúde, à agroexportação e à cosmética — a Chanceleno opera no terreno, de Lyon a Luanda.",
+    "hero.cta":"Solicitar orçamento","hero.cta2":"Ver realizações","hero.scroll":"Descobrir","chart.route":"Rota operacional",
+    "about.eyebrow":"O Grupo","about.title":"Uma presença real em dois continentes",
+    "about.lead":"A Chanceleno não é um intermediário teórico: é uma empresa que executa, com equipas no terreno e documentação de projetos comprovada.",
+    "about.p1":"A partir da nossa base em Lyon, gerimos a logística europeia e as relações internacionais, em sinergia direta com as nossas âncoras de Luanda, Pointe-Noire e Kinshasa. Esta dupla implantação permite-nos conduzir obras de prestígio e orquestrar fluxos comerciais entre a Europa e a África.",
+    "about.p2":"A nossa seriedade assenta em compromissos escritos, rigor de compras e logística, e um conhecimento profundo dos mercados lusófonos e francófonos da África Central.",
+    "about.stat1":"Continentes ligados","about.stat2":"Bases operacionais","about.stat3":"Línguas de trabalho",
+    "poles.eyebrow":"As nossas atividades","poles.title":"Dois polos, a mesma exigência de execução",
+    "poles.lead":"Da fundação ao comércio mundial, a Chanceleno cobre toda a cadeia de valor entre a Europa e a África.",
+    "poles.a.tag":"Polo A","poles.a.title":"Construção, Luxo & Arquitetura",
+    "poles.a.1":"Grande obra & engenharia: fundações, terraplenagem, elevação, infraestruturas","poles.a.2":"Saneamento complexo e redes técnicas",
+    "poles.a.3":"Acabamentos de prestígio: tetos falsos, gesso de precisão","poles.a.4":"Aplicação de mármores nobres & paginação de alta gama",
+    "poles.a.5":"Cozinhas lacadas, casas de banho contemporâneas, paisagismo & piscinas",
+    "poles.b.tag":"Polo B","poles.b.title":"Comércio, Logística & Comércio Internacional",
+    "poles.b.1":"Chanceleno França (Lyon): logística europeia & import-export","poles.b.2":"Representação cruzada de marcas Europa ↔ África",
+    "poles.b.sante":"Saúde: equipamentos hospitalares certificados CE","poles.b.3":"Agroexportação: café superior & produções de Angola",
+    "poles.b.4":"Cosmética de prestígio: bares de perfume & recarga eco-responsável",
+    "pf.eyebrow":"Realizações","pf.title":"Portfólio de Construção & Acabamentos",
+    "pf.f.all":"Tudo","pf.f.gros":"Grande Obra","pf.f.ext":"Exteriores","pf.f.second":"Acabamentos","pf.f.archi":"Arquitetura de Interiores",
+    "trade.eyebrow":"Chanceleno International Trade","trade.title":"O comércio que liga os mercados",
+    "trade.lead":"Cinco atividades complementares, um mesmo fluxo dominado entre a Europa e a África — materiais, marcas, saúde, matérias-primas e cosmética.",
+    "trade.1.title":"Materiais & Logística","trade.1.body":"Gestão dos fluxos Europa–África: aprovisionamento de acabamentos e materiais premium, desalfandegamento e logística de ponta a ponta para as nossas obras e parceiros.",
+    "trade.2.title":"Parcerias de Marcas","trade.2.body":"Representação exclusiva e cruzada: implantação de marcas europeias na África francófona e lusófona, e promoção de marcas africanas de topo na Europa.",
+    "trade.3.title":"Saúde & Equipamentos hospitalares","trade.3.body":"Sourcing e fornecimento de equipamentos médicos certificados CE para as estruturas de saúde da África Central, com apoio logístico e conformidade regulamentar.","trade.3.geo":"Europa → África · Certificado CE",
+    "trade.4.title":"Agroexportação & Café","trade.4.body":"Exportação internacional das riquezas agrícolas de Angola — café de qualidade superior e produções locais — com rastreabilidade conforme às exigências europeias.","trade.4.geo":"Angola → Europa",
+    "trade.5.title":"Cosmética de Prestígio","trade.5.body":"Importação e distribuição exclusiva de bares de perfume e estações de recarga de cosméticos líquidos — tecnologia eco-responsável — e sourcing de matérias-primas vegetais para os laboratórios europeus.","trade.5.geo":"Distribuição & Granel",
+    "contact.eyebrow":"Contato","contact.title":"Vamos construir a próxima ponte",
+    "contact.lead":"Orçamento de construção, parceria de marca, equipamento de saúde, sourcing ou exportação: escreva-nos. Resposta em 48 h úteis.",
+    "contact.k.mail":"E-mail","contact.k.bases":"Bases operacionais","contact.k.entity":"Entidade legal",
+    "form.name":"Nome completo","form.email":"E-mail","form.phone":"Telefone","form.subject":"Assunto","form.message":"Mensagem",
+    "form.s.construction":"Construção de prestígio","form.s.trade":"Comércio & Representação de marcas","form.s.sante":"Saúde & Equipamentos hospitalares","form.s.agro":"Agroexportação & Café","form.s.cosmetic":"Cosmética & Bares de perfume","form.s.other":"Outro pedido",
+    "form.submit":"Enviar pedido","form.note":"As suas informações são confidenciais e servem apenas para tratar o seu pedido.",
+    "footer.tag":"Casa de comércio e construção Europa–África. Construção de prestígio, representação de marcas, saúde, agroexportação e cosmética.",
+    "footer.nav":"Navegação","footer.contact":"Contato","wa.txt":"Escreva-nos"
+  },
+  en: {
+    "nav.group":"The Group","nav.construction":"Construction","nav.trade":"Trade","nav.contact":"Contact",
+    "lang.int":"International","lang.reg":"Regional",
+    "hero.eyebrow":"Trading house · Europe – Africa",
+    "hero.title":"Building sustainable bridges, from <em>prestige construction</em> to brand representation and international trade between Europe and Africa.",
+    "hero.sub":"Two continents, one standard. From elite structural works to healthcare, agro-export and cosmetics — Chanceleno operates on the ground, from Lyon to Luanda.",
+    "hero.cta":"Request a quote","hero.cta2":"See our projects","hero.scroll":"Discover","chart.route":"Operational route",
+    "about.eyebrow":"The Group","about.title":"A real presence on two continents",
+    "about.lead":"Chanceleno is not a theoretical middleman: it is a company that executes, with teams on the ground and proven project documentation.",
+    "about.p1":"From our Lyon base, we manage European logistics and international relations, in direct synergy with our anchors in Luanda, Pointe-Noire and Kinshasa. This dual presence lets us run prestige projects and orchestrate commercial flows between Europe and Africa.",
+    "about.p2":"Our credibility rests on written commitments, purchasing and logistics rigour, and an intimate knowledge of the Lusophone and Francophone markets of Central Africa.",
+    "about.stat1":"Continents linked","about.stat2":"Operational bases","about.stat3":"Working languages",
+    "poles.eyebrow":"What we do","poles.title":"Two divisions, one standard of execution",
+    "poles.lead":"From foundation to global trade, Chanceleno covers the full value chain between Europe and Africa.",
+    "poles.a.tag":"Division A","poles.a.title":"Construction, Luxury & Architecture",
+    "poles.a.1":"Structural works & engineering: foundations, earthworks, elevation, utilities","poles.a.2":"Complex sanitation and technical networks",
+    "poles.a.3":"Prestige finishing: architectural ceilings, precision plastering","poles.a.4":"Noble marble installation & high-end layout",
+    "poles.a.5":"Lacquered kitchens, contemporary bathrooms, landscaping & pools",
+    "poles.b.tag":"Division B","poles.b.title":"Trade, Logistics & International Commerce",
+    "poles.b.1":"Chanceleno France (Lyon): European logistics & import-export","poles.b.2":"Cross-border brand representation Europe ↔ Africa",
+    "poles.b.sante":"Healthcare: CE-certified hospital equipment & supplies","poles.b.3":"Agro-export: premium coffee & Angolan produce",
+    "poles.b.4":"Prestige cosmetics: perfume bars & eco-friendly refills",
+    "pf.eyebrow":"Projects","pf.title":"Construction & Finishing Portfolio",
+    "pf.f.all":"All","pf.f.gros":"Structural Works","pf.f.ext":"Outdoor","pf.f.second":"Finishing","pf.f.archi":"Interior Architecture",
+    "trade.eyebrow":"Chanceleno International Trade","trade.title":"The trade that connects markets",
+    "trade.lead":"Five complementary activities, one controlled flow between Europe and Africa — materials, brands, healthcare, commodities and cosmetics.",
+    "trade.1.title":"Materials & Logistics","trade.1.body":"Managing Europe–Africa flows: sourcing of premium finishes and materials, customs clearance and end-to-end logistics to our projects and partners.",
+    "trade.2.title":"Brand Partnerships","trade.2.body":"Exclusive, cross-border representation: bringing European brands to Francophone and Lusophone Africa, and promoting leading African brands in Europe.",
+    "trade.3.title":"Health & Hospital Equipment","trade.3.body":"Sourcing and supply of CE-certified medical equipment for Central African healthcare facilities, with logistics support and regulatory compliance.","trade.3.geo":"Europe → Africa · CE-certified",
+    "trade.4.title":"Agro-Export & Coffee","trade.4.body":"International export of Angola's agricultural wealth — premium coffee and local produce — with traceability compliant with European requirements.","trade.4.geo":"Angola → Europe",
+    "trade.5.title":"Prestige Cosmetics","trade.5.body":"Exclusive import and distribution of perfume bars and liquid-cosmetic refill stations — eco-responsible technology — and sourcing of plant raw materials for European laboratories.","trade.5.geo":"Distribution & Bulk",
+    "contact.eyebrow":"Contact","contact.title":"Let's build the next bridge",
+    "contact.lead":"Construction quote, brand partnership, medical equipment, sourcing or export: write to us. Reply within 48 business hours.",
+    "contact.k.mail":"Email","contact.k.bases":"Operational bases","contact.k.entity":"Legal entity",
+    "form.name":"Full name","form.email":"Email","form.phone":"Phone","form.subject":"Subject","form.message":"Message",
+    "form.s.construction":"Prestige construction","form.s.trade":"Trade & Brand representation","form.s.sante":"Health & Hospital equipment","form.s.agro":"Agro-Export & Coffee","form.s.cosmetic":"Cosmetics & Perfume bars","form.s.other":"Other enquiry",
+    "form.submit":"Send request","form.note":"Your information stays confidential and is used only to process your request.",
+    "footer.tag":"Europe–Africa trading and construction house. Prestige construction, brand representation, healthcare, agro-export and cosmetics.",
+    "footer.nav":"Navigation","footer.contact":"Contact","wa.txt":"Message us"
+  },
+  ln: { "hero.title":"Kotonga banzela ya mombongo ya koumela, botongi ya kitoko, bopanzi biloko ya bilanga mpe mafuta ya kitoko kouta Poto kino Afríka.", "nav.contact":"Contact" },
+  kg: { "hero.title":"Kutunga mambu ma kinsalu mazingila, tuka ku tunga ya mbanza nate ye ku mwangasa bima ya bilanga ye mafuta va kati ya Mpoto ye Afrika.", "nav.contact":"Contact" },
+  mb: { "hero.title":"Kubanga jinjila ja wenji ja kuwaba, tuka ku kubanga jinzo ja wenji nduka ku kuendesisa bima ya jinjila ni maji ya uaba va kaxaxi ka Poto ni Afrika.", "nav.contact":"Contact" }
+};
 
-  // Lang switcher
-  const langBtns = document.querySelectorAll('[data-lang-switch]');
-  langBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const lang = btn.dataset.langSwitch;
-      langBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('[data-lang]').forEach(el => {
-        el.classList.toggle('active', el.dataset.lang === lang);
-      });
-    });
-  });
+const HTML_KEYS = new Set(["hero.title"]);
+const CODES = { fr:"FR", pt:"PT", en:"EN", ln:"LN", kg:"KG", mb:"MB" };
 
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-      }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
+function applyLang(lang){
+  const dict = i18n[lang] || i18n.fr;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const key = el.getAttribute("data-i18n");
+    const val = (dict[key] !== undefined) ? dict[key] : i18n.fr[key];
+    if(val === undefined) return;
+    if(HTML_KEYS.has(key)) el.innerHTML = val; else el.textContent = val;
+  });
+  document.documentElement.lang = ["fr","pt","en"].includes(lang) ? lang : "fr";
+  document.getElementById("langCurrent").textContent = CODES[lang] || "FR";
+  document.querySelectorAll("[data-lang]").forEach(b=> b.classList.toggle("active", b.getAttribute("data-lang")===lang));
+}
+
+/* Language popover */
+const trigger = document.getElementById("langTrigger");
+const pop = document.getElementById("langPop");
+function closePop(){ pop.classList.remove("open"); trigger.setAttribute("aria-expanded","false"); }
+trigger.addEventListener("click", (e)=>{ e.stopPropagation(); const open = pop.classList.toggle("open"); trigger.setAttribute("aria-expanded", open?"true":"false"); });
+document.addEventListener("click", (e)=>{ if(!pop.contains(e.target) && e.target!==trigger) closePop(); });
+document.querySelectorAll("[data-lang]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{ applyLang(btn.getAttribute("data-lang")); closePop(); closeMobile(); });
+});
+
+/* Header scroll state */
+const header = document.getElementById("header");
+const onScroll = ()=> header.classList.toggle("scrolled", window.scrollY > 40);
+window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+/* Mobile menu */
+const burger = document.getElementById("burger");
+const panel  = document.getElementById("mobilePanel");
+function closeMobile(){ panel.classList.remove("open"); burger.classList.remove("open"); burger.setAttribute("aria-expanded","false"); document.body.style.overflow=""; }
+burger.addEventListener("click", ()=>{ const open = panel.classList.toggle("open"); burger.classList.toggle("open", open); burger.setAttribute("aria-expanded", open?"true":"false"); document.body.style.overflow = open?"hidden":""; });
+panel.querySelectorAll(".m-nav a").forEach(a=> a.addEventListener("click", closeMobile));
+
+/* Portfolio filters */
+const tiles = Array.from(document.querySelectorAll(".tile"));
+const filters = document.querySelectorAll(".filter");
+function showTiles(cat){
+  tiles.forEach((t,i)=>{
+    const match = (cat==="all" || t.dataset.cat===cat);
+    if(match){ t.classList.remove("hide"); requestAnimationFrame(()=> setTimeout(()=> t.classList.add("show"), i*35)); }
+    else{ t.classList.remove("show"); setTimeout(()=> t.classList.add("hide"), 250); }
+  });
+}
+filters.forEach(f=> f.addEventListener("click", ()=>{ filters.forEach(x=>x.classList.remove("active")); f.classList.add("active"); showTiles(f.dataset.filter); }));
+
+/* Scroll reveal */
+const io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); }, {threshold:.16, rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll(".reveal").forEach(el=> io.observe(el));
+
+/* Init */
+document.getElementById("year").textContent = new Date().getFullYear();
+applyLang("fr");
+showTiles("all");
+requestAnimationFrame(()=> document.body.classList.add("is-ready"));
 </script>
 </body>
 </html>
