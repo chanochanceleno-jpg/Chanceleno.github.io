@@ -859,7 +859,13 @@
         <a class="cline" href="https://wa.me/33641808499"><span class="cl-k">Europe · WhatsApp</span><span class="cl-v">+33 6 41 80 84 99</span></a>
         <a class="cline" href="https://www.linkedin.com/in/chano-chanceleno-992531271" target="_blank" rel="noopener"><span class="cl-k">LinkedIn</span><span class="cl-v">Chano Ndandu Chanceleno</span></a>
       </div>
-      <form class="contact-form" id="contactForm">
+      <form class="contact-form" id="contactForm" method="POST"
+            action="https://formsubmit.co/dd4826d916be1ff8585a8daf1f96ea91"
+            enctype="multipart/form-data" target="clFrame">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_subject" id="fSubject" value="Nouvelle demande — Chanceleno">
+        <input type="hidden" name="pole_libelle" id="fPoleLabel">
         <p class="form-title full" data-i18n="form.title">Demande de devis — plus la référence est précise, plus le chiffrage est rapide</p>
         <input type="text" name="name" placeholder="Nom / Entreprise *" data-i18n-ph="form.name">
         <input type="text" name="country" placeholder="Pays *" data-i18n-ph="form.country">
@@ -889,6 +895,7 @@
         <p class="form-status full" id="formStatus"></p>
         <p class="form-note full" data-i18n="form.note">Vos données ne servent qu'à répondre à votre demande — jamais partagées ni revendues.</p>
       </form>
+      <iframe name="clFrame" id="clFrame" style="display:none" title="envoi"></iframe>
     </div>
   </div>
 </section>
@@ -1416,11 +1423,18 @@ const ORDERS = {
 
 <script>
 /* ===== FORMULAIRE DE DEVIS =====
-   L'adresse ci-dessous reçoit les demandes. FormSubmit transmet la pièce
-   jointe par e-mail et ne demande aucune inscription — au premier envoi,
-   vous recevrez un mail d'activation à confirmer une seule fois. */
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/contact@chanceleno.com";
+   Envoi natif multipart vers FormSubmit : c'est le seul mode qui transporte
+   la pièce jointe. La réponse s'affiche dans un cadre invisible, donc le
+   visiteur ne quitte jamais la page. La clé remplace l'adresse e-mail, qui
+   n'apparaît plus dans le code source. */
 const WA_NUMBER = "33641808499";
+
+/* Préfixe d'objet, pour trier la boîte de réception d'un coup d'œil */
+const SUBJECT_PREFIX = {
+  "audit-doc":"AUDIT 48H", "audit-site":"AUDIT TERRAIN",
+  "poids-lourds":"PIÈCES", "industrie-energie":"INDUSTRIE",
+  "sante":"SANTÉ", "sourcing-general":"NÉGOCE", "representation":"MARQUES"
+};
 
 (function(){
   const form = document.getElementById('contactForm');
@@ -1428,8 +1442,10 @@ const WA_NUMBER = "33641808499";
   const fileInput = document.getElementById('fFile');
   const fileName  = document.getElementById('fileName');
   const statusEl  = document.getElementById('formStatus');
+  const frame     = document.getElementById('clFrame');
   const L = () => (document.documentElement.lang||'fr').slice(0,2);
   const txt = k => (T[L()] && T[L()][k]) || T.fr[k] || k;
+  let pending = false, guard = null;
 
   function say(kind, msg){ statusEl.className = 'form-status full show ' + kind; statusEl.textContent = msg; }
 
@@ -1475,33 +1491,6 @@ const WA_NUMBER = "33641808499";
                     '&body=' + encodeURIComponent(buildBody(v));
   }
 
-  document.getElementById('formSend').addEventListener('click', async () => {
-    const v = collect(); if(!v) return;
-    say('ok', txt('form.sending'));
-    try{
-      const fd = new FormData();
-      Object.keys(v).forEach(k => fd.append(k, v[k]));
-      fd.append('_subject', 'Devis ' + v.pole + ' — ' + v.name + ' (' + v.country + ')');
-      fd.append('_captcha', 'false');
-      if(fileInput.files[0]) fd.append('attachment', fileInput.files[0]);
-      const r = await fetch(FORM_ENDPOINT, { method:'POST', body: fd });
-      let j = null;
-      try { j = await r.json(); } catch(_) {}
-      const okSend = r.ok && (!j || j.success === true || j.success === 'true');
-      if(!okSend){
-        // FormSubmit renvoie ici son propre message (activation requise, etc.)
-        say('ko', (j && j.message) ? j.message : txt('form.failed'));
-        openMail(v);
-        return;
-      }
-      say('ok', txt('form.sent'));
-      form.reset(); fileName.textContent='';
-    }catch(e){
-      say('ko', txt('form.failed'));
-      openMail(v);
-    }
-  });
-
   const auditCta = document.getElementById('auditCta');
   if(auditCta){
     auditCta.addEventListener('click', () => {
@@ -1511,6 +1500,27 @@ const WA_NUMBER = "33641808499";
       setTimeout(() => { const n = form.querySelector('[name="name"]'); if(n) n.focus({preventScroll:true}); }, 700);
     });
   }
+
+  document.getElementById('formSend').addEventListener('click', () => {
+    const v = collect(); if(!v) return;
+    const sel = document.getElementById('fPole');
+    const prefix = SUBJECT_PREFIX[sel.value] || 'DEMANDE';
+    document.getElementById('fSubject').value =
+      '[' + prefix + '] ' + v.name + ' (' + v.country + ') — ' + v.reference.slice(0,60);
+    document.getElementById('fPoleLabel').value = v.pole;
+    say('ok', txt('form.sending'));
+    pending = true;
+    form.submit();
+    // si FormSubmit ne répond pas, on bascule sur l'e-mail pré-rempli
+    guard = setTimeout(() => { if(pending){ pending = false; say('ko', txt('form.failed')); openMail(v); } }, 15000);
+  });
+
+  frame.addEventListener('load', () => {
+    if(!pending) return;
+    pending = false; clearTimeout(guard);
+    say('ok', txt('form.sent'));
+    form.reset(); fileName.textContent = '';
+  });
 
   document.getElementById('formWa').addEventListener('click', () => {
     const v = collect(); if(!v) return;
