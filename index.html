@@ -220,38 +220,14 @@
   .fade.in{opacity:1;transform:none}
 
   /* WHATSAPP FAB */
-  .wa{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;flex-direction:column;align-items:flex-end;gap:12px}
+  .wa{position:fixed;left:22px;bottom:22px;z-index:60;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
   .wa-menu{display:flex;flex-direction:column;gap:10px;opacity:0;pointer-events:none;transform:translateY(10px);transition:.25s}
   .wa.open .wa-menu{opacity:1;pointer-events:auto;transform:none}
-  .wa-item{display:flex;align-items:center;gap:10px;background:var(--encre);color:var(--creme);text-decoration:none;padding:10px 16px;border-radius:30px;font-size:.84rem;font-weight:600;box-shadow:0 8px 24px rgba(10,25,47,.28)}
+  .wa-item{display:flex;align-items:center;gap:10px;align-self:flex-start;background:var(--encre);color:var(--creme);text-decoration:none;padding:10px 16px;border-radius:30px;font-size:.84rem;font-weight:600;box-shadow:0 8px 24px rgba(10,25,47,.28)}
   .wa-item small{display:block;font-weight:400;font-size:.66rem;color:var(--or-clair);font-family:'JetBrains Mono',monospace}
   .wa-toggle{width:58px;height:58px;border-radius:50%;background:#1faf54;border:0;cursor:pointer;display:grid;place-items:center;box-shadow:0 10px 30px rgba(31,175,84,.4);transition:transform .2s}
   .wa-toggle:hover{transform:scale(1.05)}
   .wa-toggle svg{width:30px;height:30px;fill:#fff}
-
-  /* AI ASSISTANT */
-  .ai-fab{position:fixed;left:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;background:var(--encre);border:1.5px solid var(--or);cursor:pointer;display:grid;place-items:center;box-shadow:0 10px 30px rgba(10,25,47,.35);transition:transform .2s}
-  .ai-fab:hover{transform:scale(1.05)}
-  .ai-fab svg{width:26px;height:26px;stroke:var(--or-clair);fill:none;stroke-width:1.6}
-  .ai-panel{position:fixed;left:22px;bottom:90px;z-index:61;width:min(380px,calc(100vw - 44px));height:min(520px,70vh);background:var(--creme);border-radius:18px;box-shadow:0 30px 70px rgba(10,25,47,.4);display:none;flex-direction:column;overflow:hidden;border:1px solid var(--ligne)}
-  .ai-panel.open{display:flex}
-  .ai-top{background:var(--encre);color:var(--creme);padding:16px 18px;display:flex;align-items:center;gap:12px}
-  .ai-top .av{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--or);display:grid;place-items:center;font-family:'Fraunces',serif;color:var(--or-clair);flex:none}
-  .ai-top .tt{font-family:'Fraunces',serif;font-size:1rem}
-  .ai-top .st{font-size:.68rem;color:var(--or-clair);font-family:'JetBrains Mono',monospace}
-  .ai-top .x{margin-left:auto;background:none;border:0;color:rgba(244,240,231,.7);cursor:pointer;font-size:1.3rem;line-height:1}
-  .ai-body{flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
-  .ai-chips{display:flex;flex-wrap:wrap;gap:8px;align-self:flex-start;max-width:100%}
-  .ai-chip{background:#fff;border:1px solid var(--ligne);border-radius:30px;padding:8px 13px;font-family:inherit;font-size:.8rem;color:var(--encre);cursor:pointer;transition:.2s;line-height:1.2}
-  .ai-chip:hover{border-color:var(--or);color:var(--or)}
-  .msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:.9rem;line-height:1.5}
-  .msg.bot{background:#fff;border:1px solid var(--ligne);align-self:flex-start;border-bottom-left-radius:4px}
-  .msg.me{background:var(--encre);color:var(--creme);align-self:flex-end;border-bottom-right-radius:4px}
-  .msg.typing{color:var(--encre-soft);font-style:italic}
-  .ai-foot{padding:12px;border-top:1px solid var(--ligne);display:flex;gap:8px}
-  .ai-foot input{flex:1;border:1px solid var(--ligne);border-radius:30px;padding:10px 16px;font-family:inherit;font-size:1rem;outline:none}
-  .ai-foot input:focus{border-color:var(--or)}
-  .ai-foot button{background:var(--encre);border:0;color:var(--creme);border-radius:50%;width:40px;height:40px;cursor:pointer;flex:none}
 
   /* mobile nav */
   .burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:6px;margin-left:4px}
@@ -266,8 +242,7 @@
   .mm-overlay{position:fixed;inset:0;background:rgba(10,25,47,.45);z-index:64;opacity:0;pointer-events:none;transition:.3s}
   .mm-overlay.open{opacity:1;pointer-events:auto}
   /* iPhone safe-area for floating buttons */
-  .wa,.ai-fab{bottom:calc(22px + env(safe-area-inset-bottom))}
-  .ai-panel{bottom:calc(90px + env(safe-area-inset-bottom))}
+  .wa{left:16px;bottom:calc(22px + env(safe-area-inset-bottom))}
 
   @media(max-width:880px){
     .hero-grid{grid-template-columns:1fr;gap:40px}
@@ -291,8 +266,7 @@
     .pole{padding:26px 22px}
     .contact-card{padding:34px 22px}
     .cta-row .btn{flex:1;justify-content:center}
-    .wa-toggle,.ai-fab{width:52px;height:52px}
-    .ai-panel{left:12px;width:calc(100vw - 24px)}
+    .wa-toggle{width:52px;height:52px}
   }
   @media (prefers-reduced-motion: reduce){*{animation:none !important;scroll-behavior:auto}.fade{opacity:1;transform:none}}
 
@@ -559,7 +533,7 @@ p,li{overflow-wrap:break-word;hyphens:auto}
   .cookie-banner{padding:14px 18px calc(14px + env(safe-area-inset-bottom));
     gap:10px;font-size:.86rem;line-height:1.5;text-align:left;justify-content:flex-start}
   .cookie-banner button{min-height:46px;font-size:.9rem}
-  body.cookies-visibles .wa,body.cookies-visibles .ai-fab{bottom:calc(128px + env(safe-area-inset-bottom))}
+  body.cookies-visibles .wa{bottom:calc(128px + env(safe-area-inset-bottom))}
 
   /* Simulateur : les libellés d'étapes ne doivent pas se chevaucher */
   .sim-stop-label{width:80px;font-size:.72rem;line-height:1.3}
@@ -1003,14 +977,14 @@ p,li{overflow-wrap:break-word;hyphens:auto}
     <p><strong data-i18n="legal.editorLbl">Éditeur du site</strong><br>Chanceleno — Comércio Geral (SU), LDA — NIF 003214171ZE032 — Luanda, Angola.<br><span data-i18n="legal.editor2">Représentation européenne : Lyon, France.</span></p>
     <p><strong data-i18n="legal.hostLbl">Hébergement</strong><br>GitHub Pages, GitHub Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA.</p>
     <p><strong data-i18n="legal.dataLbl">Données personnelles</strong><br><span data-i18n="legal.data1">Les seules données que nous collectons sont celles que vous nous transmettez volontairement (formulaire de devis, email, WhatsApp) : nom, pays, email, téléphone, contenu de votre demande et pièce jointe éventuelle. Elles servent uniquement à établir votre devis et ne sont ni revendues ni partagées avec des tiers.</span></p>
-    <p><strong data-i18n="legal.cookieLbl">Cookies</strong><br><span data-i18n="legal.cookie1">Ce site n'utilise aucun cookie de suivi ni outil d'analyse tiers (pas de Google Analytics, pas de pixel publicitaire). Un seul stockage technique local est utilisé, pour mémoriser que vous avez vu ce message — il ne quitte jamais votre navigateur.</span></p>
+    <p><strong data-i18n="legal.cookieLbl">Cookies</strong><br><span data-i18n="legal.cookie1">Ce site n'utilise aucun cookie publicitaire et aucun outil de mesure d'audience. Deux stockages techniques seulement : l'un mémorise votre choix de langue et l'affichage de ce message, sans jamais quitter votre navigateur ; l'autre est déposé par Chatbase, le service qui fait fonctionner notre assistant conversationnel, uniquement pour maintenir le fil de votre conversation. Si vous n'ouvrez pas l'assistant, aucune donnée ne lui est transmise.</span></p>
     <p><strong data-i18n="legal.rightsLbl">Vos droits</strong><br><span data-i18n="legal.rights1">Conformément au RGPD, vous pouvez demander l'accès, la rectification ou la suppression de vos données à tout moment en écrivant à contact@chanceleno.com.</span></p>
   </div>
 </div>
 
 <!-- BANDEAU COOKIES -->
 <div class="cookie-banner" id="cookieBanner">
-  <span data-i18n="cookie.text">Ce site n'utilise que des cookies techniques essentiels — aucun traceur publicitaire.</span>
+  <span data-i18n="cookie.text">Cookies techniques uniquement — aucun traceur publicitaire. Notre assistant conversationnel est fourni par Chatbase.</span>
   <button id="cookieOk" data-i18n="cookie.ok">Compris</button>
 </div>
 
@@ -1025,23 +999,6 @@ p,li{overflow-wrap:break-word;hyphens:auto}
   </button>
 </div>
 
-<!-- AI ASSISTANT -->
-<button class="ai-fab" id="ai-fab" aria-label="Assistant">
-  <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21l-3-1.5L9 21l-.7-6C6.3 13.7 5 11.5 5 9a7 7 0 017-7z"/><circle cx="9.5" cy="9" r="1"/><circle cx="14.5" cy="9" r="1"/></svg>
-</button>
-<div class="ai-panel" id="ai-panel">
-  <div class="ai-top">
-    <div class="av">C</div>
-    <div><div class="tt">Assistant Chanceleno</div><div class="st" id="ai-status">● en ligne</div></div>
-    <button class="x" id="ai-x">×</button>
-  </div>
-  <div class="ai-body" id="ai-body"></div>
-  <div class="ai-foot">
-    <input id="ai-input" placeholder="Posez votre question…" />
-    <button id="ai-send" aria-label="Envoyer">↑</button>
-  </div>
-</div>
-
 <script>
 /* ---------- i18n ---------- */
 const T={
@@ -1050,8 +1007,8 @@ const T={
   "sim.eyebrow":"Comment fonctionne une transaction Chanceleno","sim.h2":"Votre capital reste <em>protégé</em> jusqu'à l'inspection — voyez-le, étape par étape.","sim.sub":"Cette simulation montre le trajet réel d'une commande : du fournisseur vérifié jusqu'à la livraison, avec le paiement libéré uniquement une fois la marchandise contrôlée.","sim.trajet":"Trajet de la transaction","sim.live":"simulation en direct","sim.s1cap":"Sourcing","sim.s1":"Fournisseur vérifié","sim.s2cap":"Négociation","sim.s2":"Prix & conditions","sim.s3cap":"Inspection","sim.s3":"Contrôle avant paiement","sim.s4cap":"Livraison","sim.s4":"Paiement libéré","sim.statut":"Statut du capital","sim.protege":"Protégé — en attente d'inspection","sim.rejouer":"Rejouer la simulation ↻","sim.calc.eyebrow":"Simulateur de transaction","sim.calc.h3":"Testez une affaire avant de vous lancer.","sim.calc.p":"Entrez les paramètres d'une commande réelle ou envisagée : vous verrez immédiatement ce qu'elle représente, en coût, en commission, et en prix pour votre client.","sim.origine":"Origine du sourcing","sim.europe":"Europe","sim.asie":"Asie","sim.afrique":"Afrique","sim.prix":"Prix unitaire fournisseur","sim.qte":"Quantité","sim.commission":"Votre commission","sim.frais":"Frais de transport & douane (estimation)","sim.coutmarch":"Coût marchandise","sim.transport":"Transport & douane","sim.coutTotal":"Coût total (client paie ce montant en inspection)","sim.prixFacture":"Prix total facturé au client","sim.noteEurope":"Le fournisseur n'est réglé qu'après inspection de la marchandise — votre client comme vous restez protégés jusque-là.","sim.lancer":"Lancer la simulation de cette affaire",
   "tr.eyebrow":"Suivi de commande","tr.h2":"Où en est votre commande ?","tr.p":"Entrez le numéro indiqué sur votre devis ou votre confirmation de commande pour voir son statut.","tr.placeholder":"Ex : CH-2026-001","tr.btn":"Suivre ma commande","tr.eta":"Estimation","tr.notfound":"Numéro non trouvé. Vérifiez-le, ou contactez-nous directement — nous vous répondrons rapidement.","tr.contact":"Nous écrire sur WhatsApp","tr.footlink":"Suivre une commande",
   "form.title":"Demande de devis — plus la référence est précise, plus le chiffrage est rapide","form.name":"Nom / Entreprise *","form.country":"Pays *","form.email":"Email *","form.phone":"Téléphone / WhatsApp *","form.qty":"Quantité *","form.pole0":"— Choisissez votre besoin * —","form.poleAudit1":"Pack Audit documentaire — fournisseur existant (250 €, sous 48 h)","form.poleAudit2":"Inspection physique sur site — usine ou port (sur devis)","form.pole1":"Pôle 01 — Pièces détachées, camions & poids lourds","form.pole2":"Pôle 02 — Matériel industriel, énergie & solaire (BTP, groupes, pompes)","form.pole3":"Pôle 03 — Santé, produits pharmaceutiques & matériel médical","form.pole4":"Pôle 04 — Négoce global & sourcing sécurisé","form.pole5":"Pôle 05 — Représentation & distribution de marques","form.refPh":"Référence de la pièce ou fiche technique de la machine * — ex. réf. OEM 1K0-615-301-AA, marque + modèle du véhicule, ou description de la machine","form.file":"📎 Joindre une photo de la pièce, de la plaque ou de la carte grise (10 Mo max)","form.send":"Envoyer la demande","form.wa":"Envoyer via WhatsApp","form.sending":"Envoi en cours…","form.sent":"Demande envoyée. Réponse sous 24 heures ouvrées.","form.failed":"L'envoi a échoué. Utilisez le bouton WhatsApp — votre demande est déjà rédigée.","form.errFill":"Merci de compléter les champs obligatoires.","form.errMail":"Adresse e-mail invalide.","form.errFile":"Fichier trop lourd (10 Mo max).","form.waIntro":"Bonjour Chanceleno, demande de devis :","form.note":"Vos données ne servent qu'à répondre à votre demande — jamais partagées ni revendues.",
-  "legal.link":"Mentions légales & confidentialité","legal.h1":"Mentions légales & confidentialité","legal.editorLbl":"Éditeur du site","legal.editor2":"Représentation européenne : Lyon, France.","legal.hostLbl":"Hébergement","legal.dataLbl":"Données personnelles","legal.data1":"Les seules données que nous collectons sont celles que vous nous transmettez volontairement (formulaire de devis, email, WhatsApp) : nom, pays, email, téléphone, contenu de votre demande et pièce jointe éventuelle. Elles servent uniquement à établir votre devis et ne sont ni revendues ni partagées avec des tiers.","legal.cookieLbl":"Cookies","legal.cookie1":"Ce site n'utilise aucun cookie de suivi ni outil d'analyse tiers (pas de Google Analytics, pas de pixel publicitaire). Un seul stockage technique local est utilisé, pour mémoriser que vous avez vu ce message — il ne quitte jamais votre navigateur.","legal.rightsLbl":"Vos droits","legal.rights1":"Conformément au RGPD, vous pouvez demander l'accès, la rectification ou la suppression de vos données à tout moment en écrivant à contact@chanceleno.com.",
-  "cookie.text":"Ce site n'utilise que des cookies techniques essentiels — aucun traceur publicitaire.","cookie.ok":"Compris",
+  "legal.link":"Mentions légales & confidentialité","legal.h1":"Mentions légales & confidentialité","legal.editorLbl":"Éditeur du site","legal.editor2":"Représentation européenne : Lyon, France.","legal.hostLbl":"Hébergement","legal.dataLbl":"Données personnelles","legal.data1":"Les seules données que nous collectons sont celles que vous nous transmettez volontairement (formulaire de devis, email, WhatsApp) : nom, pays, email, téléphone, contenu de votre demande et pièce jointe éventuelle. Elles servent uniquement à établir votre devis et ne sont ni revendues ni partagées avec des tiers.","legal.cookieLbl":"Cookies","legal.cookie1":"Ce site n'utilise aucun cookie publicitaire et aucun outil de mesure d'audience. Deux stockages techniques seulement : l'un mémorise votre choix de langue et l'affichage de ce message, sans jamais quitter votre navigateur ; l'autre est déposé par Chatbase, le service qui fait fonctionner notre assistant conversationnel, uniquement pour maintenir le fil de votre conversation. Si vous n'ouvrez pas l'assistant, aucune donnée ne lui est transmise.","legal.rightsLbl":"Vos droits","legal.rights1":"Conformément au RGPD, vous pouvez demander l'accès, la rectification ou la suppression de vos données à tout moment en écrivant à contact@chanceleno.com.",
+  "cookie.text":"Cookies techniques uniquement — aucun traceur publicitaire. Notre assistant conversationnel est fourni par Chatbase.","cookie.ok":"Compris",
   "hero.eyebrow":"Sourcing sécurisé · Europe · Asie · Afrique",
   "hero.h1":"Acheter à l'autre bout du monde, <span class='accent'>sans payer à l'aveugle.</span>",
   "hero.sub":"Nous trouvons et vérifions vos fournisseurs en Europe, en Asie et en Afrique, et votre paiement n'est libéré qu'après inspection de la marchandise. Une présence réelle sur le terrain — pas une simple mise en relation.",
@@ -1087,8 +1044,8 @@ const T={
   "sim.eyebrow":"How a Chanceleno transaction works","sim.h2":"Your capital stays <em>protected</em> until inspection — see it, step by step.","sim.sub":"This simulation shows the real path of an order: from a vetted supplier to delivery, with payment released only once the goods are inspected.","sim.trajet":"Transaction journey","sim.live":"live simulation","sim.s1cap":"Sourcing","sim.s1":"Vetted supplier","sim.s2cap":"Negotiation","sim.s2":"Price & terms","sim.s3cap":"Inspection","sim.s3":"Check before payment","sim.s4cap":"Delivery","sim.s4":"Payment released","sim.statut":"Capital status","sim.protege":"Protected — awaiting inspection","sim.rejouer":"Replay the simulation ↻","sim.calc.eyebrow":"Transaction simulator","sim.calc.h3":"Test a deal before you commit.","sim.calc.p":"Enter the parameters of a real or planned order: you'll instantly see what it represents in cost, commission, and price for your client.","sim.origine":"Sourcing origin","sim.europe":"Europe","sim.asie":"Asia","sim.afrique":"Africa","sim.prix":"Unit supplier price","sim.qte":"Quantity","sim.commission":"Your commission","sim.frais":"Shipping & customs (estimate)","sim.coutmarch":"Goods cost","sim.transport":"Shipping & customs","sim.coutTotal":"Total cost (client pays this at inspection)","sim.prixFacture":"Total price billed to client","sim.noteEurope":"The supplier is paid only after goods inspection — both you and your client stay protected until then.","sim.lancer":"Run the simulation for this deal",
   "tr.eyebrow":"Order tracking","tr.h2":"Where is your order?","tr.p":"Enter the number shown on your quote or order confirmation to see its status.","tr.placeholder":"E.g. CH-2026-001","tr.btn":"Track my order","tr.eta":"Estimate","tr.notfound":"Number not found. Please check it, or contact us directly — we will reply quickly.","tr.contact":"Message us on WhatsApp","tr.footlink":"Track an order",
   "form.title":"Quote request — the more precise the reference, the faster the quote","form.name":"Name / Company *","form.country":"Country *","form.email":"Email *","form.phone":"Phone / WhatsApp *","form.qty":"Quantity *","form.pole0":"— Choose your need * —","form.poleAudit1":"Documentary audit pack — existing supplier (€250, within 48 h)","form.poleAudit2":"Physical on-site inspection — factory or port (on quotation)","form.pole1":"Sector 01 — Spare parts, trucks & heavy vehicles","form.pole2":"Sector 02 — Industrial equipment, energy & solar (construction, gensets, pumps)","form.pole3":"Sector 03 — Health, pharmaceuticals & medical equipment","form.pole4":"Sector 04 — Global trading & secured sourcing","form.pole5":"Sector 05 — Brand representation & distribution","form.refPh":"Part reference or machine technical sheet * — e.g. OEM ref. 1K0-615-301-AA, vehicle make + model, or machine description","form.file":"📎 Attach a photo of the part, nameplate or registration document (10 MB max)","form.send":"Send request","form.wa":"Send via WhatsApp","form.sending":"Sending…","form.sent":"Request sent. Reply within 24 business hours.","form.failed":"Sending failed. Use the WhatsApp button — your request is already written.","form.errFill":"Please complete the required fields.","form.errMail":"Invalid email address.","form.errFile":"File too large (10 MB max).","form.waIntro":"Hello Chanceleno, quote request:","form.note":"Your data is only used to answer your request — never shared or sold.",
-  "legal.link":"Legal notice & privacy","legal.h1":"Legal notice & privacy","legal.editorLbl":"Site publisher","legal.editor2":"European representation: Lyon, France.","legal.hostLbl":"Hosting","legal.dataLbl":"Personal data","legal.data1":"The only data we collect is what you voluntarily share with us (quote form, email, WhatsApp): name, country, email, phone, the content of your request and any attachment. It is used solely to prepare your quote and is never sold or shared with third parties.","legal.cookieLbl":"Cookies","legal.cookie1":"This site uses no tracking cookies and no third-party analytics tools (no Google Analytics, no ad pixel). One local technical storage is used, only to remember you've seen this message — it never leaves your browser.","legal.rightsLbl":"Your rights","legal.rights1":"Under GDPR, you may request access, correction, or deletion of your data at any time by writing to contact@chanceleno.com.",
-  "cookie.text":"This site only uses essential technical cookies — no advertising trackers.","cookie.ok":"Got it",
+  "legal.link":"Legal notice & privacy","legal.h1":"Legal notice & privacy","legal.editorLbl":"Site publisher","legal.editor2":"European representation: Lyon, France.","legal.hostLbl":"Hosting","legal.dataLbl":"Personal data","legal.data1":"The only data we collect is what you voluntarily share with us (quote form, email, WhatsApp): name, country, email, phone, the content of your request and any attachment. It is used solely to prepare your quote and is never sold or shared with third parties.","legal.cookieLbl":"Cookies","legal.cookie1":"This site uses no advertising cookies and no audience measurement tools. Only two technical storages: one remembers your language choice and that you have seen this message, and never leaves your browser; the other is set by Chatbase, the service powering our conversational assistant, solely to keep the thread of your conversation. If you do not open the assistant, no data is sent to it.","legal.rightsLbl":"Your rights","legal.rights1":"Under GDPR, you may request access, correction, or deletion of your data at any time by writing to contact@chanceleno.com.",
+  "cookie.text":"Essential technical cookies only — no advertising trackers. Our conversational assistant is provided by Chatbase.","cookie.ok":"Got it",
   "hero.eyebrow":"Secured sourcing · Europe · Asia · Africa",
   "hero.h1":"Buying from across the world, <span class='accent'>without paying blind.</span>",
   "hero.sub":"We find and vet your suppliers in Europe, Asia and Africa, and your payment is released only after the goods are inspected. A real presence on the ground — not a simple introduction.",
@@ -1124,8 +1081,8 @@ const T={
   "sim.eyebrow":"Como funciona uma transação Chanceleno","sim.h2":"O seu capital permanece <em>protegido</em> até à inspeção — veja, passo a passo.","sim.sub":"Esta simulação mostra o percurso real de uma encomenda: do fornecedor verificado até à entrega, com o pagamento libertado apenas após a inspeção da mercadoria.","sim.trajet":"Percurso da transação","sim.live":"simulação em direto","sim.s1cap":"Sourcing","sim.s1":"Fornecedor verificado","sim.s2cap":"Negociação","sim.s2":"Preço & condições","sim.s3cap":"Inspeção","sim.s3":"Controlo antes do pagamento","sim.s4cap":"Entrega","sim.s4":"Pagamento libertado","sim.statut":"Estado do capital","sim.protege":"Protegido — aguardando inspeção","sim.rejouer":"Repetir a simulação ↻","sim.calc.eyebrow":"Simulador de transação","sim.calc.h3":"Teste um negócio antes de avançar.","sim.calc.p":"Introduza os parâmetros de uma encomenda real ou prevista: verá imediatamente o que representa em custo, comissão e preço para o seu cliente.","sim.origine":"Origem do sourcing","sim.europe":"Europa","sim.asie":"Ásia","sim.afrique":"África","sim.prix":"Preço unitário do fornecedor","sim.qte":"Quantidade","sim.commission":"A sua comissão","sim.frais":"Transporte & alfândega (estimativa)","sim.coutmarch":"Custo da mercadoria","sim.transport":"Transporte & alfândega","sim.coutTotal":"Custo total (cliente paga este valor na inspeção)","sim.prixFacture":"Preço total faturado ao cliente","sim.noteEurope":"O fornecedor só é pago após a inspeção da mercadoria — tanto o cliente como você permanecem protegidos até lá.","sim.lancer":"Executar a simulação deste negócio",
   "tr.eyebrow":"Acompanhamento de encomenda","tr.h2":"Onde está a sua encomenda?","tr.p":"Introduza o número indicado no seu orçamento ou confirmação de encomenda para ver o estado.","tr.placeholder":"Ex.: CH-2026-001","tr.btn":"Acompanhar a minha encomenda","tr.eta":"Estimativa","tr.notfound":"Número não encontrado. Verifique-o, ou contacte-nos diretamente — responderemos rapidamente.","tr.contact":"Escrever-nos no WhatsApp","tr.footlink":"Acompanhar uma encomenda",
   "form.title":"Pedido de cotação — quanto mais precisa a referência, mais rápida a cotação","form.name":"Nome / Empresa *","form.country":"País *","form.email":"Email *","form.phone":"Telefone / WhatsApp *","form.qty":"Quantidade *","form.pole0":"— Escolha a sua necessidade * —","form.poleAudit1":"Pacote Auditoria documental — fornecedor existente (250 €, em 48 h)","form.poleAudit2":"Inspeção física no local — fábrica ou porto (sob orçamento)","form.pole1":"Setor 01 — Peças, camiões & pesados","form.pole2":"Setor 02 — Material industrial, energia & solar (construção, geradores, bombas)","form.pole3":"Setor 03 — Saúde, produtos farmacêuticos & material médico","form.pole4":"Setor 04 — Comércio global & sourcing seguro","form.pole5":"Setor 05 — Representação & distribuição de marcas","form.refPh":"Referência da peça ou ficha técnica da máquina * — ex. ref. OEM 1K0-615-301-AA, marca e modelo do veículo, ou descrição da máquina","form.file":"📎 Anexar uma foto da peça, da placa ou do livrete (10 MB máx.)","form.send":"Enviar o pedido","form.wa":"Enviar via WhatsApp","form.sending":"A enviar…","form.sent":"Pedido enviado. Resposta em 24 horas úteis.","form.failed":"O envio falhou. Utilize o botão WhatsApp — o seu pedido já está escrito.","form.errFill":"Preencha os campos obrigatórios.","form.errMail":"Endereço de email inválido.","form.errFile":"Ficheiro demasiado grande (10 MB máx.).","form.waIntro":"Olá Chanceleno, pedido de cotação:","form.note":"Os seus dados servem apenas para responder ao seu pedido — nunca partilhados nem vendidos.",
-  "legal.link":"Aviso legal & privacidade","legal.h1":"Aviso legal & privacidade","legal.editorLbl":"Editor do site","legal.editor2":"Representação europeia: Lyon, França.","legal.hostLbl":"Alojamento","legal.dataLbl":"Dados pessoais","legal.data1":"Os únicos dados que recolhemos são os que nos transmite voluntariamente (formulário de cotação, email, WhatsApp): nome, país, email, telefone, conteúdo do seu pedido e eventual anexo. Servem apenas para preparar a sua cotação e nunca são vendidos ou partilhados com terceiros.","legal.cookieLbl":"Cookies","legal.cookie1":"Este site não utiliza cookies de rastreio nem ferramentas de análise de terceiros (sem Google Analytics, sem pixel publicitário). É usado apenas um armazenamento técnico local, para memorizar que viu esta mensagem — nunca sai do seu navegador.","legal.rightsLbl":"Os seus direitos","legal.rights1":"Em conformidade com o RGPD, pode solicitar o acesso, retificação ou eliminação dos seus dados a qualquer momento, escrevendo para contact@chanceleno.com.",
-  "cookie.text":"Este site utiliza apenas cookies técnicos essenciais — sem rastreadores publicitários.","cookie.ok":"Entendido",
+  "legal.link":"Aviso legal & privacidade","legal.h1":"Aviso legal & privacidade","legal.editorLbl":"Editor do site","legal.editor2":"Representação europeia: Lyon, França.","legal.hostLbl":"Alojamento","legal.dataLbl":"Dados pessoais","legal.data1":"Os únicos dados que recolhemos são os que nos transmite voluntariamente (formulário de cotação, email, WhatsApp): nome, país, email, telefone, conteúdo do seu pedido e eventual anexo. Servem apenas para preparar a sua cotação e nunca são vendidos ou partilhados com terceiros.","legal.cookieLbl":"Cookies","legal.cookie1":"Este site não utiliza cookies publicitários nem ferramentas de medição de audiência. Apenas dois armazenamentos técnicos: um memoriza a sua escolha de idioma e que viu esta mensagem, e nunca sai do seu navegador; o outro é colocado pela Chatbase, o serviço que faz funcionar o nosso assistente conversacional, unicamente para manter o fio da sua conversa. Se não abrir o assistente, nenhum dado lhe é transmitido.","legal.rightsLbl":"Os seus direitos","legal.rights1":"Em conformidade com o RGPD, pode solicitar o acesso, retificação ou eliminação dos seus dados a qualquer momento, escrevendo para contact@chanceleno.com.",
+  "cookie.text":"Apenas cookies técnicos essenciais — sem rastreadores publicitários. O nosso assistente conversacional é fornecido pela Chatbase.","cookie.ok":"Entendido",
   "hero.eyebrow":"Sourcing seguro · Europa · Ásia · África",
   "hero.h1":"Comprar do outro lado do mundo, <span class='accent'>sem pagar às cegas.</span>",
   "hero.sub":"Encontramos e verificamos os seus fornecedores na Europa, na Ásia e em África, e o seu pagamento só é libertado após a inspeção da mercadoria. Uma presença real no terreno — não uma simples intermediação.",
@@ -1192,8 +1149,6 @@ function applyLang(l){
  document.querySelectorAll('[data-i18n-html]').forEach(el=>{const k=el.getAttribute('data-i18n-html');if(T[l][k]!=null)el.innerHTML=T[l][k];});
  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{const k=el.getAttribute('data-i18n-ph');if(T[l][k]!=null)el.placeholder=T[l][k];});
  renderPoles();
- document.getElementById('ai-input').placeholder=T[l]["ai.placeholder"];
- document.getElementById('ai-status').textContent=T[l]["ai.online"];
  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.lang===l));
  try{localStorage.setItem('chanceleno_lang',l);}catch(e){}
 }
@@ -1233,49 +1188,6 @@ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
 /* WhatsApp */
 const wa=document.getElementById('wa');
 document.getElementById('wa-toggle').addEventListener('click',()=>wa.classList.toggle('open'));
-
-/* ---------- ASSISTANT (nécessite un backend pour répondre en ligne) ---------- */
-const aiFab=document.getElementById('ai-fab'),aiPanel=document.getElementById('ai-panel'),
-      aiBody=document.getElementById('ai-body'),aiInput=document.getElementById('ai-input'),aiSend=document.getElementById('ai-send');
-let history=[],greeted=false;
-function sysPrompt(){return "Tu es l'assistant virtuel de CHANCELENO, un opérateur de sourcing et de commerce intercontinental entre l'Europe (base : Lyon), l'Afrique subsaharienne (base : Luanda, Angola) et l'Asie. Quatre pôles : (1) Négoce & sourcing international, dans les deux sens entre l'Europe, l'Asie et l'Afrique ; (2) Santé & matériel médical ; (3) Pièces de rechange auto, camions et poids lourds, sourcées par référence constructeur OEM/OES ; (4) Matériel industriel — moteurs, pompes, variateurs, groupes électrogènes, outillage. Sourcing en Europe et en Asie, livraison en Afrique lusophone. Valeur : présence physique, conformité douanière, inspection avant paiement du fournisseur. Réponds de façon brève, professionnelle et chaleureuse, dans la langue du visiteur (actuellement : "+LANG.toUpperCase()+"). Pour toute demande concrète (devis, projet, partenariat), invite à remplir le formulaire de devis ou à écrire sur WhatsApp Europe +33 6 41 80 84 99 ou Afrique +244 928 424 849. Ne promets jamais de prix précis.";}
-function addMsg(txt,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=txt;aiBody.appendChild(d);aiBody.scrollTop=aiBody.scrollHeight;return d;}
-function renderChips(){
- const wrap=document.createElement('div');wrap.className='ai-chips';wrap.id='ai-chips';
- (T[LANG]["ai.chips"]||[]).forEach(c=>{
-  const b=document.createElement('button');b.className='ai-chip';b.textContent=c;
-  b.addEventListener('click',()=>{aiInput.value=c;sendAI();});
-  wrap.appendChild(b);
- });
- aiBody.appendChild(wrap);aiBody.scrollTop=aiBody.scrollHeight;
-}
-function openAI(){aiPanel.classList.add('open');if(!greeted){addMsg(T[LANG]["ai.greeting"],'bot');renderChips();greeted=true;}aiInput.focus();}
-aiFab.addEventListener('click',()=>{aiPanel.classList.contains('open')?aiPanel.classList.remove('open'):openAI();});
-document.getElementById('ai-x').addEventListener('click',()=>aiPanel.classList.remove('open'));
-
-async function sendAI(){
- const text=aiInput.value.trim();if(!text)return;aiInput.value='';
- const chips=document.getElementById('ai-chips');if(chips)chips.remove();
- addMsg(text,'me');history.push({role:'user',content:text});
- const typing=addMsg(T[LANG]["ai.typing"],'bot typing');
- try{
-  const res=await fetch("https://api.anthropic.com/v1/messages",{
-   method:"POST",headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:1000,system:sysPrompt(),messages:history})
-  });
-  const data=await res.json();
-  const reply=(data.content||[]).map(c=>c.type==='text'?c.text:'').filter(Boolean).join('\n')||'…';
-  typing.remove();addMsg(reply,'bot');history.push({role:'assistant',content:reply});
- }catch(err){
-  typing.remove();
-  const fb={fr:"Je ne peux pas répondre en direct pour le moment. Écrivez-nous sur WhatsApp : +33 6 41 80 84 99 (Europe) ou +244 928 424 849 (Afrique).",
-   en:"I can't answer live right now. Reach us on WhatsApp: +33 6 41 80 84 99 (Europe) or +244 928 424 849 (Africa).",
-   pt:"Não consigo responder ao vivo neste momento. Escreva-nos no WhatsApp: +33 6 41 80 84 99 (Europa) ou +244 928 424 849 (África)."};
-  addMsg(fb[LANG],'bot');
- }
-}
-aiSend.addEventListener('click',sendAI);
-aiInput.addEventListener('keydown',e=>{if(e.key==='Enter')sendAI();});
 
 /* init — langue mémorisée, sinon celle du navigateur */
 (function(){
@@ -1639,6 +1551,10 @@ const SUBJECT_PREFIX = {
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') overlay.classList.remove('open'); });
 })();
+</script>
+<!-- Assistant conversationnel Chatbase -->
+<script>
+(function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="zU9Yz1f_jgGyLCYf-8kVU";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
 </script>
 </body>
 </html>
