@@ -5,13 +5,61 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/"/>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-17</lastmod>
   </url>
   <url>
     <loc>https://chanceleno.com/pt/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/"/>
     <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/"/>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://chanceleno.com/articles/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/articles/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/artigos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chanceleno.com/en/articles/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/articles/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://chanceleno.com/pt/artigos/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/articles/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/artigos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chanceleno.com/en/articles/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/articles/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://chanceleno.com/en/articles/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/articles/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/artigos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chanceleno.com/en/articles/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/articles/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://chanceleno.com/articles/importer-pieces-camions-europe-angola/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/articles/importer-pieces-camions-europe-angola/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/artigos/importar-pecas-camioes-europa-angola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chanceleno.com/en/articles/importing-truck-parts-europe-angola/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/articles/importer-pieces-camions-europe-angola/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://chanceleno.com/pt/artigos/importar-pecas-camioes-europa-angola/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/articles/importer-pieces-camions-europe-angola/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/artigos/importar-pecas-camioes-europa-angola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chanceleno.com/en/articles/importing-truck-parts-europe-angola/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/articles/importer-pieces-camions-europe-angola/"/>
+    <lastmod>2026-10-17</lastmod>
+  </url>
+  <url>
+    <loc>https://chanceleno.com/en/articles/importing-truck-parts-europe-angola/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://chanceleno.com/articles/importer-pieces-camions-europe-angola/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://chanceleno.com/pt/artigos/importar-pecas-camioes-europa-angola/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://chanceleno.com/en/articles/importing-truck-parts-europe-angola/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://chanceleno.com/articles/importer-pieces-camions-europe-angola/"/>
+    <lastmod>2026-10-17</lastmod>
   </url>
 </urlset>
