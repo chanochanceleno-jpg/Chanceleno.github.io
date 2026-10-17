@@ -1207,6 +1207,25 @@ drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
 
 /* ---------- Forms ---------- */
 const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+/* Devis, fournisseur, partenaire : envoi classique (multipart) vers FormSubmit, seul mode qui transmet les pièces
+   jointes et l'accusé de réception (_autoresponse, captcha actif). FormSubmit redirige ensuite vers la page de
+   remerciement (_next) avec la référence. Le contact reste en AJAX (voir plus bas). */
+const FORM_POST=FORM_ENDPOINT.replace("/ajax/","/");
+const THANKS={fr:"https://chanceleno.com/merci/",pt:"https://chanceleno.com/pt/obrigado/",en:"https://chanceleno.com/en/thank-you/"};
+const ACK={
+  fr:(k,ref)=>"Bonjour,\n\nNous avons bien reçu "+{RFQ:"votre demande de devis",SUP:"votre candidature fournisseur",PAR:"votre demande de collaboration"}[k]+". Votre référence : "+ref+".\nConservez cette référence. Nous revenons vers vous par email, en général sous 48 heures ouvrées.\n\nCHANCELENO\ncontact@chanceleno.com · https://chanceleno.com",
+  pt:(k,ref)=>"Olá,\n\nRecebemos "+{RFQ:"o seu pedido de cotação",SUP:"a sua candidatura de fornecedor",PAR:"o seu pedido de colaboração"}[k]+". A sua referência: "+ref+".\nGuarde esta referência. Responderemos por email, geralmente em 48 horas úteis.\n\nCHANCELENO\ncontact@chanceleno.com · https://chanceleno.com/pt/",
+  en:(k,ref)=>"Hello,\n\nWe have received "+{RFQ:"your quote request",SUP:"your supplier application",PAR:"your collaboration enquiry"}[k]+". Your reference: "+ref+".\nKeep this reference. We will get back to you by email, usually within 48 business hours.\n\nCHANCELENO\ncontact@chanceleno.com · https://chanceleno.com"};
+function sendClassic(fd,toSend,ref,kind){
+  const l=["pt","en"].includes(document.documentElement.lang)?document.documentElement.lang:"fr";
+  const nf=document.createElement("form");nf.method="POST";nf.action=FORM_POST;nf.enctype="multipart/form-data";nf.acceptCharset="UTF-8";nf.hidden=true;
+  const add=(k,v)=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=v;nf.appendChild(i)};
+  for(const [k,v] of fd.entries())if(k!=="_captcha")add(k,v);
+  add("_next",THANKS[l]+"?ref="+encodeURIComponent(ref));add("_autoresponse",ACK[l](kind,ref));
+  if(toSend.length){const fi=document.createElement("input");fi.type="file";fi.name="upload";fi.multiple=true;const dt=new DataTransfer();toSend.forEach(f=>dt.items.add(f));fi.files=dt.files;nf.appendChild(fi)}
+  document.body.appendChild(nf);nf.submit()}
+/* Retour arrière depuis FormSubmit : réactiver les boutons restés sur « Envoi en cours… ». */
+window.addEventListener("pageshow",e=>{if(e.persisted)document.querySelectorAll("form[data-kind] button[type=submit]").forEach(b=>{if(b.dataset.label){b.disabled=false;b.textContent=b.dataset.label}})});
 document.querySelectorAll("form[data-kind]").forEach(form=>{
   form.addEventListener("submit",e=>{
     e.preventDefault();
@@ -1219,7 +1238,7 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
       inp.setAttribute("aria-invalid",bad);if(er){er.classList.toggle("show",bad);if(bad)inp.setAttribute("aria-describedby",er.id)}
       if(bad&&!first)first=inp});
     if(first){st.className="status bad show";st.textContent=window.__t("Certains champs sont à compléter. Vos informations saisies sont conservées.");first.focus();return}
-    const btn=form.querySelector("button[type=submit]");const label=btn.textContent;btn.disabled=true;btn.textContent=window.__t("Envoi en cours…");
+    const btn=form.querySelector("button[type=submit]");const label=btn.textContent;btn.dataset.label=label;btn.disabled=true;btn.textContent=window.__t("Envoi en cours…");
     const d=new Date(),pad=x=>String(x).padStart(2,"0");
     const ref="CH-"+form.dataset.kind+"-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-"+String(Math.floor(1000+Math.random()*9000));
     const fd=new FormData();
@@ -1233,8 +1252,9 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
       fd.append(key,val)});
     const toSend=form.id==="rfqForm"?files:Array.from((form.querySelector("input[type=file]")||{}).files||[]);
     if(toSend.reduce((n,f)=>n+f.size,0)>10*1024*1024){st.className="status bad show";st.textContent=window.__t("Vos fichiers dépassent 10 Mo au total. Retirez-en, ou envoyez-les par email à contact@chanceleno.com.");btn.disabled=false;btn.textContent=label;st.setAttribute("tabindex","-1");st.focus();return}
+    if(form.dataset.kind!=="CT"){sendClassic(fd,toSend,ref,form.dataset.kind);return}
     toSend.forEach(f=>fd.append("upload",f,f.name));
-    /* FormSubmit (point d'accès AJAX) répond en JSON : seul success:"true" vaut confirmation. */
+    /* Contact : FormSubmit (point d'accès AJAX) répond en JSON : seul success:"true" vaut confirmation. */
     const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),30000);
     fetch(FORM_ENDPOINT,{method:"POST",body:fd,headers:{Accept:"application/json"},signal:ctl.signal})
     .then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||String(j.success)!=="true")throw new Error(j.message||"HTTP "+r.status)}))

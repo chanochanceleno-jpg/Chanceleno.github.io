@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, follow">
+<title>Obrigado | CHANCELENO</title>
+<meta name="theme-color" content="#0A1622">
+<link rel="icon" href="/images/logo.png">
+<link rel="stylesheet" href="/assets/articles.css">
+<script>try{localStorage.setItem("ch_lang","pt")}catch(e){}</script>
+</head>
+<body>
+<a class="skip" href="#contenu">Ir para o conteúdo</a>
+<header class="site">
+  <div class="wrap hbar">
+    <a href="/pt/" class="brand" aria-label="CHANCELENO — Início"><img src="/images/logo.png" alt="Logótipo CHANCELENO"><span class="word">CHANCELENO</span></a>
+    <div class="hnav">
+      <a class="sec" href="/pt/artigos/">Artigos</a>
+      <nav class="lang" aria-label="Langue"><a href="/merci/" hreflang="fr" lang="fr">FR</a><a href="/en/thank-you/" hreflang="en" lang="en">EN</a><a href="/pt/obrigado/" hreflang="pt" lang="pt" aria-current="true">PT</a></nav>
+      <a href="/pt/#/devis" class="btn btn-primary btn-sm hcta">Pedir cotação</a>
+    </div>
+  </div>
+</header>
+<main id="contenu">
+<div class="pagehead"><div class="wrap">
+<h1>Obrigado</h1>
+<p class="lead" id="what">O seu envio foi recebido.</p>
+<p class="byline" id="refline" hidden>Referência: <code id="ref" style="color:#EFE7D8;font-size:16px"></code></p>
+</div></div>
+<div class="article">
+<p>Foi-lhe enviado um aviso de receção por email.</p>
+<p id="keep" hidden>Guarde esta referência. Responderemos por email, geralmente em 48 horas úteis.</p>
+<p style="margin-top:28px"><a class="btn btn-primary" href="/pt/">Voltar ao início</a></p>
+</div>
+</main>
+<script>
+(function(){
+  var KINDS={"RFQ": "O seu pedido de cotação foi enviado.", "SUP": "A sua candidatura foi enviada. O seu estado é «Candidato» até à avaliação.", "PAR": "O seu pedido de colaboração foi enviado."};
+  var ref=new URLSearchParams(location.search).get("ref")||"";
+  var m=/^CH-(RFQ|SUP|PAR)-\d{8}-\d{4}$/.exec(ref);
+  if(m){
+    document.getElementById("what").textContent=KINDS[m[1]];
+    document.getElementById("ref").textContent=ref;
+    document.getElementById("refline").hidden=false;
+    document.getElementById("keep").hidden=false;
+  }
+  document.querySelectorAll(".lang a").forEach(function(a){a.search=location.search});
+})();
+</script>
+<footer class="site">
+  <div class="wrap">
+    <ul class="flinks"><li><a href="/pt/">Início</a></li><li><a href="/pt/artigos/">Artigos</a></li><li><a href="/pt/#/mentions">Aviso legal</a></li><li><a href="/pt/#/confidentialite">Privacidade</a></li><li><a href="/pt/#/cookies">Cookies</a></li><li><a href="/pt/#/conditions">Informações contratuais</a></li><li><a href="https://www.linkedin.com/in/chanceleno" target="_blank" rel="noopener">LinkedIn</a></li></ul>
+    <div class="entities">
+      <div><strong>CHANCELENO – COMÉRCIO GERAL, (SU), LDA</strong><br>Luanda, Angola<br>NIF 5003018334<br><a href="https://wa.me/244928424849">+244 928 424 849</a></div>
+      <div><strong>CHANCELENO INTERNATIONAL</strong><br>Lyon, França — sociedade em constituição<br>Identificadores publicados após o registo<br><a href="https://wa.me/33641808499">+33 6 41 80 84 99</a></div>
+    </div>
+    <div class="fbot"><span>© 2026 CHANCELENO</span><span><a href="mailto:contact@chanceleno.com">contact@chanceleno.com</a></span></div>
+  </div>
+</footer>
+</body>
+</html>
