@@ -1,0 +1,53 @@
+<section class="page" data-page="fournisseurs" aria-labelledby="h-sup">
+  <div class="pagehead"><div class="wrap"><span class="crumb" data-i18n="nSup">Réseau fournisseurs</span><h2 id="h-sup" style="font-size:clamp(34px,5vw,60px);max-width:18ch">Rejoindre le réseau de fournisseurs CHANCELENO</h2><p class="lead">Nous consultons des fabricants et distributeurs évalués sur des besoins professionnels réels, en Afrique et dans le monde.</p></div></div>
+  <div class="band alt">
+    <div class="wrap">
+      <div class="hd"><h2>Pourquoi rejoindre CHANCELENO</h2></div>
+      <div class="caps">
+        <div class="cap"><h3>Inscription gratuite</h3><p>Déposer votre candidature ne vous coûte rien.</p></div>
+        <div class="cap"><h3>Des besoins réels</h3><p>Nous vous consultons sur des besoins professionnels réels, exprimés par des entreprises.</p></div>
+        <div class="cap"><h3>Des acheteurs en Afrique francophone et lusophone</h3><p>Nos clients sont des entreprises de ces marchés.</p></div>
+        <div class="cap"><h3>Un interlocuteur unique en Europe</h3><p>Vous traitez avec CHANCELENO, depuis Lyon.</p></div>
+        <div class="cap"><h3>Des commandes encadrées</h3><p>Chaque commande fait l'objet d'un contrat et d'une facture.</p></div>
+      </div>
+      <p style="margin-top:28px"><a href="#/fournisseurs?b=supForm" class="btn btn-primary btn-sm">Déposer ma candidature</a></p>
+    </div>
+  </div>
+  <div class="band">
+    <div class="wrap two">
+      <div>
+        <h2>Comment se passe la qualification</h2>
+        <div class="stepper" aria-label="Statuts fournisseur"><span>Candidat</span><span>En évaluation</span><span>Qualifié</span><span>Préféré</span></div>
+        <p class="muted">Un statut « Suspendu » ou « Refusé » peut également être appliqué.</p>
+        <p>Chaque candidature est étudiée. La qualification repose sur vos documents et vos capacités, puis, avec le temps, sur la qualité de vos réponses aux consultations.</p>
+        <p class="muted">Vos informations, vos offres et vos évaluations restent confidentielles.</p>
+        <p style="margin-top:24px"><a href="#/portail?t=sup" class="btn btn-ghost btn-sm">Voir l'aperçu du portail fournisseur (DEMO)</a></p>
+      </div>
+      <div class="panel">
+        <form id="supForm" novalidate data-kind="SUP">
+          <fieldset>
+            <legend>Candidature fournisseur</legend>
+            <div class="grid2">
+              <div><label for="s-co">Raison sociale</label><input id="s-co" name="co" required autocomplete="organization"><div class="err" id="e-s-co">Indiquez la raison sociale de l'entreprise.</div></div>
+              <div><label for="s-ct">Pays</label><input id="s-ct" name="ct" required autocomplete="country-name"><div class="err" id="e-s-ct">Indiquez le pays d'établissement.</div></div>
+            </div>
+          </fieldset>
+          <div class="grid2">
+            <div><label for="s-type">Type d'entreprise</label><select id="s-type" name="type"><option>Fabricant</option><option>Distributeur agréé</option><option>Distributeur</option><option>OEM</option><option>Spécialiste / prestataire</option></select></div>
+            <div><label for="s-sec">Secteur principal</label><select id="s-sec" name="sec" class="secSelect"></select></div>
+          </div>
+          <div><label for="s-cat">Familles de produits et marques <span class="opt">(facultatif)</span></label><textarea id="s-cat" name="cat" style="min-height:90px"></textarea></div>
+          <div class="grid2">
+            <div><label for="s-name">Nom du contact</label><input id="s-name" name="name" required autocomplete="name"><div class="err" id="e-s-name">Indiquez un nom de contact.</div></div>
+            <div><label for="s-mail">Email professionnel</label><input id="s-mail" name="mail" type="email" required autocomplete="email"><div class="err" id="e-s-mail">Indiquez une adresse email valide.</div></div>
+          </div>
+          <div><label for="s-doc">Documents de qualification <span class="opt">(facultatif : immatriculation, certifications, catalogue)</span></label><input id="s-doc" type="file" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,image/*"></div>
+          <input class="hp" tabindex="-1" autocomplete="off" name="_honey" aria-hidden="true">
+          <p class="privacy">Vos données sont utilisées par CHANCELENO pour évaluer votre candidature et, si elle est retenue, vous consulter sur des besoins pertinents. Durée de conservation et droits : voir la <a href="#/confidentialite">politique de confidentialité</a>.</p>
+          <div class="status" role="status" aria-live="polite"></div>
+          <button class="btn btn-primary" type="submit">Envoyer la candidature</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

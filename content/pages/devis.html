@@ -1,0 +1,62 @@
+<section class="page" data-page="devis" aria-labelledby="h-rfq">
+  <div class="pagehead"><div class="wrap"><span class="crumb" data-i18n="ctaRfq">Demander un devis</span><h2 id="h-rfq" style="font-size:clamp(34px,5vw,60px);max-width:18ch">Décrivez votre besoin, même incomplet</h2><p class="lead">Une référence, une liste de quantités (BOQ) ou une photo de plaque signalétique suffisent pour commencer.</p></div></div>
+  <div class="band">
+    <div class="wrap" style="max-width:860px">
+      <form id="rfqForm" novalidate data-kind="RFQ">
+        <fieldset>
+          <legend>1. Votre besoin</legend>
+          <div style="margin-bottom:18px"><label for="r-type">Type de demande</label><select id="r-type" name="Type de demande"><option value="rfq">Approvisionnement (devis produit ou équipement)</option><option value="audit1">Audit documentaire fournisseur (250 € HT, sous 48 h)</option><option value="audit2">Inspection physique sur site (sur devis)</option><option value="boq">Projet sur liste de quantités (BOQ)</option><option value="afrique">Achat de produits africains</option></select></div>
+          <div><label for="r-req">Produit, équipement ou service recherché</label><textarea id="r-req" required placeholder="Ex. : 4 pompes centrifuges pour eau industrielle, débit 80 m³/h, avec kit de pièces d'usure"></textarea><div class="err" id="e-r-req">Décrivez votre besoin, même en quelques mots.</div></div>
+          <div class="grid2" style="margin-top:18px">
+            <div><label for="r-sec">Secteur</label><select id="r-sec" class="secSelect"></select></div>
+            <div><label for="r-qty">Quantité <span class="opt">(facultatif)</span></label><input id="r-qty" inputmode="numeric" placeholder="Ex. : 4 unités"></div>
+          </div>
+          <div style="margin-top:18px"><label for="r-spec">Spécifications, marque, référence <span class="opt">(facultatif)</span></label><textarea id="r-spec" style="min-height:90px" placeholder="Fabricant, référence pièce, norme, dimensions…"></textarea>
+            <p class="hint"><label class="check" style="font-size:14px;margin:6px 0 0"><input type="checkbox" id="r-help" data-key="Aide demandée pour préciser les caractéristiques"> Je ne connais pas toutes les caractéristiques : CHANCELENO peut m'aider à les préciser.</label></p></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. Documents et photos</legend>
+          <div class="drop" id="drop">
+            <p style="margin:0 auto">Liste de quantités (BOQ), Excel, CSV, PDF, Word, fiches techniques, photos d'équipement ou de plaque signalétique. Une photo nette de la plaque suffit souvent à identifier la pièce.</p>
+            <div class="row">
+              <label class="btn btn-ghost btn-sm" style="margin:0">Photographier une plaque<input type="file" id="r-cam" accept="image/*" capture="environment" class="sr"></label>
+              <label class="btn btn-ghost btn-sm" style="margin:0">Ajouter des photos<input type="file" id="r-photos" multiple accept="image/*" class="sr"></label>
+              <label class="btn btn-ghost btn-sm" style="margin:0">Ajouter des fichiers<input type="file" id="r-files" multiple accept=".pdf,.xls,.xlsx,.csv,.doc,.docx" class="sr"></label>
+            </div>
+            <ul class="files" id="fileList" aria-live="polite"></ul>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. Livraison</legend>
+          <div class="grid2">
+            <div><label for="r-dest">Pays et ville de destination</label><input id="r-dest" required placeholder="Ex. : Luanda, Angola"><div class="err" id="e-r-dest">Indiquez la destination.</div></div>
+            <div><label for="r-urg">Urgence</label><select id="r-urg"><option>Standard</option><option>Prioritaire (sous 2 semaines)</option><option>Urgent (arrêt de production)</option></select></div>
+          </div>
+          <div class="grid2" style="margin-top:18px">
+            <div><label for="r-date">Date de livraison souhaitée <span class="opt">(facultatif)</span></label><input id="r-date" type="date"></div>
+            <div><label for="r-inc">Incoterm <span class="opt">(facultatif)</span></label><select id="r-inc"><option value="">Je ne sais pas</option><option>EXW</option><option>FCA</option><option>FOB</option><option>CFR</option><option>CIF</option><option>DAP</option><option>DDP</option></select></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>4. Vos coordonnées</legend>
+          <div class="grid2">
+            <div><label for="r-prof">Vous êtes</label><select id="r-prof"><option>Garage ou atelier mécanique</option><option>Pharmacie ou établissement de santé</option><option>Industrie ou mine</option><option>Distributeur ou revendeur</option><option>Administration ou organisme</option><option>Autre professionnel</option></select></div>
+            <div><label for="r-co">Entreprise ou nom commercial <span class="opt">(facultatif pour un artisan)</span></label><input id="r-co" autocomplete="organization"></div>
+            <div><label for="r-name">Nom et fonction</label><input id="r-name" required autocomplete="name"><div class="err" id="e-r-name">Indiquez votre nom.</div></div>
+            <div><label for="r-mail">Email professionnel</label><input id="r-mail" type="email" required autocomplete="email"><div class="err" id="e-r-mail">Indiquez une adresse email valide.</div></div>
+            <div><label for="r-tel">Téléphone ou WhatsApp <span class="opt">(facultatif)</span></label><input id="r-tel" type="tel" autocomplete="tel"></div>
+          </div>
+        </fieldset>
+        <input class="hp" tabindex="-1" autocomplete="off" name="_honey" aria-hidden="true">
+        <p class="privacy">Les services de CHANCELENO sont réservés aux professionnels.</p>
+        <p class="privacy">CHANCELENO utilise ces informations pour étudier votre demande et vous adresser une offre (mesures précontractuelles). Vos documents ne sont pas publiés et ne sont partagés avec des fournisseurs que dans la mesure nécessaire au sourcing. Durée de conservation et droits : voir la <a href="#/confidentialite">politique de confidentialité</a>.</p>
+        <div class="status" role="status" aria-live="polite" tabindex="-1"></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" type="submit">Envoyer ma demande de devis</button><a class="btn btn-ghost" href="https://wa.me/33641808499?text=Bonjour%2C%20je%20souhaite%20demander%20un%20devis." target="_blank" rel="noopener">Plutôt par WhatsApp</a></div>
+        <p class="fine" style="margin-top:10px">Réponse sous 48 h ouvrées</p>
+      </form>
+    </div>
+  </div>
+</section>

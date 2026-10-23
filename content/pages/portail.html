@@ -1,0 +1,58 @@
+<section class="page" data-page="portail" aria-labelledby="h-po">
+  <div class="pagehead"><div class="wrap"><span class="crumb">Portails</span><h2 id="h-po" style="font-size:clamp(34px,5vw,60px)">Aperçu des portails <span class="demo-tag" style="font-size:14px">DEMO</span></h2><p class="lead">Données entièrement fictives, pour illustrer le fonctionnement prévu. Aucun compte réel n'existe à ce stade.</p></div></div>
+  <div class="band">
+    <div class="wrap">
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tab-cli" aria-selected="true" aria-controls="pan-cli">Portail client</button>
+        <button role="tab" id="tab-sup" aria-selected="false" aria-controls="pan-sup" tabindex="-1">Portail fournisseur</button>
+      </div>
+      <div role="tabpanel" id="pan-cli" aria-labelledby="tab-cli">
+        <p class="muted">Client fictif : « Entreprise Démo, Luanda »</p>
+        <div class="scroll"><table>
+          <thead><tr><th>Référence</th><th>Besoin</th><th>Statut</th><th>Prochaine action</th></tr></thead>
+          <tbody>
+            <tr><td>CH-RFQ-DEMO-0017</td><td>Pompes centrifuges et pièces d'usure</td><td><span class="pill w">Offre</span></td><td>Votre décision attendue</td></tr>
+            <tr><td>CH-RFQ-DEMO-0014</td><td>Filtres pour groupe électrogène</td><td><span class="pill n">Sourcing</span></td><td>Consultation fournisseurs en cours</td></tr>
+            <tr><td>CH-RFQ-DEMO-0009</td><td>Câbles électriques basse tension</td><td><span class="pill ok">Livré</span></td><td>Documents de livraison disponibles</td></tr>
+          </tbody>
+        </table></div>
+        <div class="two" style="margin-top:36px">
+          <div class="panel">
+            <h3>Offre pour CH-RFQ-DEMO-0017</h3>
+            <p class="muted" style="margin-top:10px;font-size:15px">2 fournisseurs retenus après vérification. Comparaison des prix, délais et documents fournie par votre responsable CHANCELENO.</p>
+            <p style="font-size:15px">Documents : offre commerciale, fiches techniques, synthèse de vérification fournisseur.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary btn-sm" type="button" disabled title="Démonstration">Approuver l'offre</button><button class="btn btn-ghost btn-sm" type="button" disabled title="Démonstration">Demander une précision</button></div>
+          </div>
+          <div class="panel">
+            <h3>Suivi de CH-RFQ-DEMO-0009</h3>
+            <ol class="track" style="margin-top:14px">
+              <li class="done"><strong>Commande confirmée</strong></li>
+              <li class="done"><strong>Contrôle documentaire</strong></li>
+              <li class="done"><strong>Expédition</strong><small>Documents d'expédition disponibles</small></li>
+              <li class="done"><strong>Livraison</strong><small>Bon de livraison signé</small></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+      <div role="tabpanel" id="pan-sup" aria-labelledby="tab-sup" hidden>
+        <p class="muted">Fournisseur fictif : « Fournisseur Démo SA »</p>
+        <h3>Statut de la candidature</h3>
+        <div class="stepper"><span>Candidat</span><span class="on">En évaluation</span><span>Qualifié</span><span>Préféré</span></div>
+        <div class="two">
+          <div class="panel">
+            <h3>Documents de qualification</h3>
+            <ul style="padding-left:18px;margin-top:12px;font-size:15px">
+              <li>Immatriculation : <span class="pill ok">Reçu</span></li>
+              <li>Certificat ISO 9001 : <span class="pill w">À renouveler</span></li>
+              <li>Références export : <span class="pill n">Manquant</span></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h3>Consultations reçues</h3>
+            <p class="muted" style="font-size:15px;margin-top:10px">Aucune consultation tant que la qualification n'est pas terminée. Les consultations indiquent les exigences techniques, la destination, les documents requis et la date limite de réponse.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

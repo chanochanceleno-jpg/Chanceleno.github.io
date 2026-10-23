@@ -1,0 +1,7 @@
+{
+ "_aide": "Modèle : copier ce dossier sous un nouveau nom (sans _ au début), puis remplir. « adresse » = fin de l'adresse de l'article dans chaque langue (minuscules, tirets, sans accents). « date » = date de publication AAAA-MM-JJ ; ajouter « modifie » si l'article est mis à jour.",
+ "date": "2026-12-01",
+ "fr": {"adresse": "titre-court-en-francais", "titre": "Titre de l'article", "description": "Résumé en une ou deux phrases (environ 150 caractères), affiché dans Google et dans la liste des articles.", "fonction_auteur": "Fondateur"},
+ "en": {"adresse": "short-title-in-english", "titre": "Article title", "description": "One- or two-sentence summary (about 150 characters), shown in Google and in the article list.", "fonction_auteur": "Founder"},
+ "pt": {"adresse": "titulo-curto-em-portugues", "titre": "Título do artigo", "description": "Resumo numa ou duas frases (cerca de 150 caracteres), apresentado no Google e na lista de artigos.", "fonction_auteur": "Fundador"}
+}

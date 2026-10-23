@@ -1,0 +1,7 @@
+# Site généré par tools/build.py (jamais modifié à la main)
+_site/
+# Outils de test installés localement
+tests/node_modules/
+tests/package-lock.json
+__pycache__/
+.DS_Store
