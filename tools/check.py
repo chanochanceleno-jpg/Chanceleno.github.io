@@ -83,10 +83,20 @@ def target(path):
     return None
 
 
+def allowed_origins():
+    """Seuls domaines externes autorisés par la CSP : FormSubmit (formulaires) et le compte GoatCounter configuré."""
+    import yaml
+    with open(os.path.join(ROOT, "config", "site.yml"), encoding="utf-8") as f:
+        cfg = yaml.safe_load(f) or {}
+    code = str((cfg.get("statistiques") or {}).get("goatcounter") or "").strip()
+    return {"https://formsubmit.co"} | ({"https://%s.goatcounter.com" % code} if code else set())
+
+
 def main():
     if not os.path.isdir(OUT):
         sys.exit("Lancer d'abord : python3 tools/build.py")
     errors = []
+    allowed = allowed_origins()
     pages = {}
     for d, _, files in os.walk(OUT):
         for f in files:
@@ -105,6 +115,9 @@ def main():
         csp = p.metas.get("Content-Security-Policy", "")
         if "script-src 'self'" not in csp or "form-action 'self' https://formsubmit.co" not in csp:
             errors.append("%s : politique de sécurité (CSP) absente ou incomplète" % url)
+        extra = set(re.findall(r"https://[^\s;]+", csp)) - allowed
+        if extra:
+            errors.append("%s : domaine externe non prévu dans la CSP %s" % (url, sorted(extra)))
         if p.metas.get("referrer") != "strict-origin-when-cross-origin":
             errors.append("%s : balise referrer absente" % url)
         if p.scripts:

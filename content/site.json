@@ -1,5 +1,5 @@
 {
- "_aide": "Adresses, titres et descriptions des pages. « chemin » = adresse de la page ; « titre » = titre affiché dans l'onglet et dans Google ; « description » (facultative) = résumé pour Google. Sans description, le générateur reprend le texte d'introduction de la page. « goatcounter » = code du compte de statistiques GoatCounter (ex. chanceleno pour chanceleno.goatcounter.com) ; vide = aucun comptage.",
+ "_aide": "Adresses, titres et descriptions des pages. « chemin » = adresse de la page ; « titre » = titre affiché dans l'onglet et dans Google ; « description » (facultative) = résumé pour Google. Sans description, le générateur reprend le texte d'introduction de la page.",
  "domaine": "https://chanceleno.com",
  "og_image": {
   "fr": "/images/og-image.jpg",
@@ -234,6 +234,5 @@
    }
   }
  },
- "google_site_verification": "TP6AA36i00QmdXxqLJhOYIQWYzq7jIInhgUf7W5NVyA",
- "goatcounter": ""
+ "google_site_verification": "TP6AA36i00QmdXxqLJhOYIQWYzq7jIInhgUf7W5NVyA"
 }

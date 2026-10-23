@@ -1,5 +1,6 @@
-// Copie non modifiée de https://github.com/arp242/goatcounter/blob/master/public/count.js (récupérée le 2026-10-23),
-// hébergée sur le site pour que la CSP n'autorise aucun script externe. Chargée seulement si un code GoatCounter est configuré.
+// GoatCounter v2.7.0 : copie non modifiée de https://github.com/arp242/goatcounter/blob/v2.7.0/public/count.js
+// (SHA-256 030ad75a7c80a04107a9b91f79e4b1572da0a583a80a9b67e111b310da11cbe9), hébergée sur le site au lieu de gc.zgo.at
+// pour que la CSP n'autorise aucun script externe. Chargée seulement si un code GoatCounter est configuré (config/site.yml).
 // GoatCounter: https://www.goatcounter.com
 // This file is released under the ISC license: https://opensource.org/licenses/ISC
 ;(function() {
@@ -40,7 +41,6 @@
 		if (is_empty(data.r)) data.r = document.referrer
 		if (is_empty(data.t)) data.t = document.title
 		if (is_empty(data.p)) data.p = get_path()
-		if (vars.no_session) data.ns = (typeof(vars.no_session) === 'function' ? vars.no_session(false) : vars.no_session)
 
 		if (rcb) data.r = rcb(data.r)
 		if (tcb) data.t = tcb(data.t)
@@ -147,7 +147,7 @@
 		if (!url)
 			return warn('not counting because path callback returned null')
 
-		if (!navigator || !navigator.sendBeacon || !navigator.sendBeacon(url)) {
+		if (!navigator.sendBeacon(url)) {
 			// This mostly fails due to being blocked by CSP; try again with an
 			// image-based fallback.
 			var img = document.createElement('img')
@@ -182,11 +182,10 @@
 		var send = function(elem) {
 			return function() {
 				goatcounter.count({
-					event:      true,
-					path:       (elem.dataset.goatcounterClick || elem.name || elem.id || ''),
-					title:      (elem.dataset.goatcounterTitle || elem.title || (elem.innerHTML || '').substr(0, 200) || ''),
-					referrer:   (elem.dataset.goatcounterReferrer || elem.dataset.goatcounterReferral || ''),
-					no_session: ['1', 't', 'true'].indexOf((elem.dataset.goatcounterNoSession || '').toLowerCase()) !== -1,
+					event:    true,
+					path:     (elem.dataset.goatcounterClick || elem.name || elem.id || ''),
+					title:    (elem.dataset.goatcounterTitle || elem.title || (elem.innerHTML || '').substr(0, 200) || ''),
+					referrer: (elem.dataset.goatcounterReferrer || elem.dataset.goatcounterReferral || ''),
 				})
 			}
 		}

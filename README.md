@@ -8,6 +8,7 @@ reconstruit tout seul à chaque mise en ligne.
 
 | Dossier / fichier | Contenu |
 |---|---|
+| `config/site.yml` | Les **données que vous modifiez vous-même** (aujourd'hui : le code des statistiques ; d'autres rubriques au lot 5) |
 | `content/pages/` | Le texte **français** de chaque rubrique (un fichier par page : `devis.html`, `partenaires.html`…) |
 | `content/i18n.json` | Les **traductions** : chaque phrase française avec sa version anglaise (`en`) et portugaise (`pt`) |
 | `content/data.json` | Les listes : 6 capacités, 8 secteurs, **cartes de la page Marchés**, suivi DEMO |
@@ -18,6 +19,7 @@ reconstruit tout seul à chaque mise en ligne.
 | `static/` | Images, polices, styles, scripts, `robots.txt`, `.well-known/security.txt`, fichier Google |
 | `tools/build.py` | Le générateur (ne pas modifier sauf évolution du site) |
 | `tools/check.py` | Les contrôles automatiques (liens, sécurité, référencement) |
+| `tools/requirements.txt` | Le module Python nécessaire (PyYAML), installé automatiquement par GitHub Actions |
 
 ## Modifier un texte
 
@@ -58,7 +60,13 @@ trois textes dans `content/i18n.json`, comme pour n'importe quel texte.
 
 ## Voir le résultat sur votre ordinateur
 
-Il faut Python 3 (déjà installé sur Mac). Dans un terminal, à la racine du dossier :
+Il faut Python 3 (déjà installé sur Mac). Dans un terminal, à la racine du dossier, la première fois :
+
+```
+python3 -m pip install -r tools/requirements.txt
+```
+
+puis, à chaque fois :
 
 ```
 python3 tools/build.py --serve
@@ -78,13 +86,23 @@ puis ouvrez http://localhost:8000. Pour vérifier les liens et la sécurité : `
 ## Statistiques de visite (GoatCounter)
 
 Le site mesure sa fréquentation avec **GoatCounter**, un outil gratuit **sans cookie** qui ne conserve pas les
-adresses IP : aucun bandeau de consentement n'est affiché. Le script est hébergé sur le site
-(`static/assets/count.js`).
+adresses IP : aucun bandeau de consentement n'est affiché.
 
-**Activer le comptage** (une seule fois) :
-1. Créez un compte gratuit sur https://www.goatcounter.com (« Sign up ») et choisissez un code, par exemple `chanceleno`.
-2. Dans `content/site.json`, remplissez le champ : `"goatcounter": "chanceleno"`.
-3. Mergez : le comptage démarre au déploiement suivant. Tant que le champ est vide, rien n'est chargé ni compté.
+- **Script** : `static/assets/count.js` (publié à l'adresse `/assets/count.js`), copie non modifiée du fichier
+  officiel de **GoatCounter v2.7.0** (https://github.com/arp242/goatcounter/blob/v2.7.0/public/count.js,
+  SHA-256 `030ad75a7c80a04107a9b91f79e4b1572da0a583a80a9b67e111b310da11cbe9`). Il n'est pas chargé depuis
+  gc.zgo.at : aucun script externe n'est autorisé.
+- **Sécurité** : la politique de sécurité du contenu n'autorise l'envoi des statistiques que vers
+  `https://chanceleno.goatcounter.com` (en plus de FormSubmit pour les formulaires). `tools/check.py` refuse
+  toute page qui autoriserait un autre domaine.
+- **Réglage** : dans `config/site.yml`, rubrique `statistiques` :
+  ```yaml
+  statistiques:
+    goatcounter: chanceleno
+  ```
+  Mettez `goatcounter: ""` pour arrêter complètement le comptage (le script n'est alors plus chargé).
+- **Mise à jour du script** (rarement utile) : remplacer `static/assets/count.js` par le fichier d'une nouvelle
+  version officielle, en gardant l'en-tête qui indique sa version, et mettre à jour ce paragraphe.
 
 **Consulter les statistiques** : connectez-vous sur `https://chanceleno.goatcounter.com` (avec votre code).
 Vous y voyez, jour par jour :
@@ -109,10 +127,13 @@ appareil donné, vous pouvez aussi cliquer sur « Ne pas compter mes visites » 
 
 ## Tests navigateur (facultatif)
 
-`tests/site.test.js` vérifie toutes les pages à 360, 412 et 1440 px, les formulaires (sans rien envoyer), les
+`tests/site.test.js` vérifie toutes les pages à 360, 412, 1024, 1280 et 1440 px, les formulaires (sans rien envoyer), les
 anciennes adresses, la langue mémorisée, l'assistant et WhatsApp :
 
 ```
 python3 tools/build.py && (cd _site && python3 -m http.server 8765 &)
 cd tests && npm install && npx playwright install chromium && npm test
 ```
+
+`tests/stats.test.js` vérifie les statistiques (pages vues, événements, « Ne pas compter mes visites ») sans rien
+envoyer : `GC=chanceleno node stats.test.js`.

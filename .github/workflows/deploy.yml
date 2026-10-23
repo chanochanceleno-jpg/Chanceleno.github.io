@@ -21,10 +21,16 @@ jobs:
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v7
+      - name: Installer Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Installer les modules Python (PyYAML)
+        run: python -m pip install -r tools/requirements.txt
       - name: Générer le site
-        run: python3 tools/build.py
+        run: python tools/build.py
       - name: Contrôler le site généré
-        run: python3 tools/check.py
+        run: python tools/check.py
       - name: Préparer GitHub Pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v6

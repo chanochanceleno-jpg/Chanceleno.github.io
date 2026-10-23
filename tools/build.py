@@ -18,6 +18,7 @@ import sys
 from html.parser import HTMLParser
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CONFIG = os.path.join(ROOT, "config", "site.yml")
 CONTENT = os.path.join(ROOT, "content")
 STATIC = os.path.join(ROOT, "static")
 OUT = os.path.join(ROOT, "_site")
@@ -59,6 +60,22 @@ def norm(t):
     return re.sub(r"\s+", " ", t).strip()
 
 
+def load_config():
+    """Données modifiables par l'utilisateur : config/site.yml (format YAML, lu avec PyYAML)."""
+    try:
+        import yaml
+    except ImportError:
+        raise SystemExit("Le module PyYAML est nécessaire : python3 -m pip install -r tools/requirements.txt")
+    try:
+        with open(CONFIG, encoding="utf-8") as f:
+            cfg = yaml.safe_load(f) or {}
+    except yaml.YAMLError as e:
+        raise SystemExit("config/site.yml n'est pas un fichier YAML valide :\n%s" % e)
+    if not isinstance(cfg, dict):
+        raise SystemExit("config/site.yml doit contenir des rubriques (clé: valeur)")
+    return cfg
+
+
 class Site:
     """Toutes les sources chargées, et les erreurs relevées pendant la génération."""
 
@@ -68,10 +85,11 @@ class Site:
         self.data = rjson(CONTENT, "data.json")
         self.light = rjson(CONTENT, "layout", "light.json")
         self.domain = self.site["domaine"]
+        self.config = load_config()
         # statistiques GoatCounter : code du compte (ex. « chanceleno »), vide = aucun comptage
-        code = self.site.get("goatcounter", "").strip()
+        code = str((self.config.get("statistiques") or {}).get("goatcounter") or "").strip()
         if code and not re.match(r"^[a-z0-9-]+$", code):
-            raise SystemExit("Code GoatCounter invalide dans content/site.json : %r" % code)
+            raise SystemExit("Code GoatCounter invalide dans config/site.yml : %r" % code)
         self.stats = "https://%s.goatcounter.com" % code if code else ""
         self.missing = {}          # texte français sans traduction -> pages concernées
         self.pages = {}            # identifiant de page -> {langue: chemin}
