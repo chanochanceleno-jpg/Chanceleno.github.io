@@ -1,0 +1,2 @@
+# Modules Python utilisés par tools/build.py (installés automatiquement par GitHub Actions)
+pyyaml==6.0.3

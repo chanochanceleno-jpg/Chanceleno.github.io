@@ -1,4 +1,4 @@
-// Tests navigateur du site généré (_site/), à 360, 412 et 1440 px, en FR, EN et PT.
+// Tests navigateur du site généré (_site/), à 360, 412, 1024, 1280 et 1440 px, en FR, EN et PT.
 // Aucun formulaire n'est réellement envoyé : les requêtes vers FormSubmit sont interceptées.
 //
 //   python3 tools/build.py
@@ -11,7 +11,7 @@ const fs = require("fs");
 const path = require("path");
 
 const BASE = process.env.BASE || "http://localhost:8765";
-const WIDTHS = (process.env.WIDTHS || "360,412,1440").split(",").map(Number);
+const WIDTHS = (process.env.WIDTHS || "360,412,1024,1280,1440").split(",").map(Number);
 const SHOTS = process.env.SHOTS || "";
 const MAIL = "contact@chanceleno.com";
 const SITE = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "content", "site.json"), "utf8"));
@@ -172,7 +172,14 @@ async function main() {
     ok(JSON.stringify(navHrefs) === JSON.stringify(["solutions", "secteurs", "fournisseurs", "partenaires", "a-propos", "contact"].map(x => U(x, lang))), L + " liens du menu");
     const foot = await p.$$eval("footer.site a", a => a.map(x => x.getAttribute("href")));
     ok([U("methode", lang), U("marches", lang)].every(h => foot.includes(h)) && foot.some(h => /articles|artigos/.test(h)), L + " pied de page : Méthode, Marchés, Articles");
-    if (w <= 1080) { await p.click("#menuBtn"); ok((await p.$eval("nav.main .nav-cta a", a => a.textContent.trim())) === t.cta, L + " bouton devis du menu mobile"); await p.click("#menuBtn"); }
+    // en-tête : menu complet sur une ligne dès 1024 px, menu replié (☰) en dessous
+    const hd = await p.evaluate(() => { const vis = s => getComputedStyle(document.querySelector(s)).display !== "none";
+      const r = s => document.querySelector(s).getBoundingClientRect();
+      return { btn: vis("#menuBtn"), nav: vis("nav.main"), cta: vis(".hcta"), h: Math.round(r(".hbar").height),
+        right: Math.round(Math.max(r(".hcta").right, r(".lang").right)), navTop: Math.round(r("nav.main ul").top), ctaTop: Math.round(r(".hcta").top) }; });
+    if (w >= 1024) ok(!hd.btn && hd.nav && hd.cta && hd.h <= 70 && hd.right <= w && Math.abs(hd.navTop - hd.ctaTop) < 20, L + " en-tête ordinateur sur une ligne " + JSON.stringify(hd));
+    else ok(hd.btn && !hd.nav, L + " menu replié " + JSON.stringify(hd));
+    if (w < 1024) { await p.click("#menuBtn"); ok((await p.$eval("nav.main .nav-cta a", a => a.textContent.trim())) === t.cta, L + " bouton devis du menu mobile"); await p.click("#menuBtn"); }
     else { const h = await p.$eval(".hcta", a => [a.textContent.trim(), getComputedStyle(a).display, a.getBoundingClientRect().width]);
       ok(h[0] === t.cta && h[1] !== "none" && h[2] > 0 && (await p.$eval(".nav-cta", e => getComputedStyle(e).display)) === "none", L + " bouton devis de l'en-tête " + h); }
     ok(await p.$eval(".brand", e => e.classList.contains("has-logo")), L + " logo");

@@ -1,0 +1,9 @@
+# Configuration du site chanceleno.com : les données que vous pouvez modifier vous-même.
+# Après une modification, le site est régénéré et publié automatiquement au merge (voir README.md).
+# D'autres rubriques s'ajouteront ici au lot 5 (identité et Kbis, coordonnées, tarifs, cartes Marchés…).
+
+# Statistiques de visite GoatCounter, sans cookie.
+# « goatcounter » = code du compte (tableau de bord : https://chanceleno.goatcounter.com).
+# Laisser vide ( goatcounter: "" ) pour désactiver complètement le comptage.
+statistiques:
+  goatcounter: chanceleno
