@@ -106,7 +106,7 @@ nav.main a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--gold)}
   .hcta{display:none}
 }
 @media (min-width:1081px) and (max-width:1399px){.hcta{display:inline-flex}}
-@media (max-width:520px){.word{font-size:13px;letter-spacing:.1em}.lang button{min-width:32px;padding:8px 6px}}
+@media (max-width:520px){.hbar{gap:8px}.word{font-size:13px;letter-spacing:.1em}.lang button{min-width:28px;padding:8px 6px}}
 
 /* Brand signature animation */
 .brand.has-logo img{animation:logoIn 1.1s .15s cubic-bezier(.6,0,.2,1) both}
@@ -119,7 +119,7 @@ nav.main a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--gold)}
 .word span{display:inline-block;opacity:0;animation:fade .5s 1.45s forwards}
 .word::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,rgba(214,176,112,.75) 50%,transparent 70%);transform:translateX(-120%);animation:sweepLoop 9s 1.6s ease-in-out infinite}
 @keyframes sweepLoop{0%{transform:translateX(-120%)}11%{transform:translateX(120%)}100%{transform:translateX(120%)}}
-.brand{position:relative}
+.brand{position:relative;overflow:hidden}
 .brand.has-logo::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(240,205,150,.55) 50%,transparent 65%);transform:translateX(-120%);animation:sweepLoop 9s 1.6s ease-in-out infinite;mix-blend-mode:screen}
 .sig .s-node{transform-box:fill-box;transform-origin:center;animation:fade .3s 1.1s forwards,nodePulse 9s 2.4s ease-in-out infinite}
 @keyframes nodePulse{0%,100%{transform:scale(1)}6%{transform:scale(1.55)}12%{transform:scale(1)}}
