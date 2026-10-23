@@ -1,0 +1,238 @@
+{
+ "_aide": "Adresses, titres et descriptions des pages. « chemin » = adresse de la page ; « titre » = titre affiché dans l'onglet et dans Google ; « description » (facultative) = résumé pour Google. Sans description, le générateur reprend le texte d'introduction de la page.",
+ "domaine": "https://chanceleno.com",
+ "og_image": {
+  "fr": "/images/og-image.jpg",
+  "en": "/images/og-image-en.jpg",
+  "pt": "/images/og-image-pt.jpg"
+ },
+ "og_image_alt": {
+  "fr": "Logo CHANCELENO et slogan : acheter à l'autre bout du monde, sans payer à l'aveugle",
+  "en": "CHANCELENO logo and tagline: buy from the other side of the world without paying blind",
+  "pt": "Logótipo CHANCELENO e slogan: comprar do outro lado do mundo, sem pagar às cegas"
+ },
+ "secteurs_base": {
+  "fr": "/secteurs/",
+  "en": "/en/industries/",
+  "pt": "/pt/setores/"
+ },
+ "pages": {
+  "home": {
+   "fr": {
+    "chemin": "/",
+    "titre": "CHANCELENO — Achats internationaux vérifiés entre l’Europe, l’Asie et l’Afrique",
+    "description": "CHANCELENO achète pour vous auprès de fournisseurs vérifiés en Europe, en Asie et en Afrique, et vous livre. Un seul interlocuteur, un seul contrat, une seule facture.",
+    "og_titre": "CHANCELENO — Acheter à l'autre bout du monde, sans payer à l'aveugle"
+   },
+   "en": {
+    "chemin": "/en/",
+    "titre": "CHANCELENO — Verified international procurement between Europe, Asia and Africa",
+    "description": "CHANCELENO buys for you from verified suppliers in Europe, Asia and Africa, and delivers to you. One contact, one contract, one invoice.",
+    "og_titre": "CHANCELENO — Buy from the other side of the world without paying blind"
+   },
+   "pt": {
+    "chemin": "/pt/",
+    "titre": "CHANCELENO — Compras internacionais verificadas entre a Europa, a Ásia e África",
+    "description": "A CHANCELENO compra por si junto de fornecedores verificados na Europa, na Ásia e em África, e entrega-lhe a mercadoria. Um único interlocutor, um único contrato, uma única fatura.",
+    "og_titre": "CHANCELENO — Comprar do outro lado do mundo, sem pagar às cegas"
+   }
+  },
+  "solutions": {
+   "fr": {
+    "chemin": "/solutions/",
+    "titre": "Solutions : sourcing, achats, vérification, logistique | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/solutions/",
+    "titre": "Solutions: sourcing, procurement, verification, logistics | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/solucoes/",
+    "titre": "Soluções: sourcing, compras, verificação, logística | CHANCELENO"
+   }
+  },
+  "secteurs": {
+   "fr": {
+    "chemin": "/secteurs/",
+    "titre": "Secteurs : huit secteurs, une même méthode | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/industries/",
+    "titre": "Industries: eight industries, one method | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/setores/",
+    "titre": "Setores: oito setores, um só método | CHANCELENO"
+   }
+  },
+  "methode": {
+   "fr": {
+    "chemin": "/methode/",
+    "titre": "Méthode : de votre besoin à la livraison | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/method/",
+    "titre": "Method: from your requirement to delivery | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/metodo/",
+    "titre": "Método: da sua necessidade à entrega | CHANCELENO"
+   }
+  },
+  "fournisseurs": {
+   "fr": {
+    "chemin": "/fournisseurs/",
+    "titre": "Devenir fournisseur | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/suppliers/",
+    "titre": "Become a supplier | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/fornecedores/",
+    "titre": "Tornar-se fornecedor | CHANCELENO"
+   }
+  },
+  "partenaires": {
+   "fr": {
+    "chemin": "/partenaires/",
+    "titre": "Fabricants, OEM et partenaires | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/partners/",
+    "titre": "Manufacturers, OEMs and partners | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/parceiros/",
+    "titre": "Fabricantes, OEM e parceiros | CHANCELENO"
+   }
+  },
+  "a-propos": {
+   "fr": {
+    "chemin": "/a-propos/",
+    "titre": "À propos : le fondateur et la méthode | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/about/",
+    "titre": "About: the founder and the method | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/sobre/",
+    "titre": "Sobre nós: o fundador e o método | CHANCELENO"
+   }
+  },
+  "marches": {
+   "fr": {
+    "chemin": "/marches/",
+    "titre": "Marchés : Angola, Afrique centrale, Europe | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/markets/",
+    "titre": "Markets: Angola, Central Africa, Europe | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/mercados/",
+    "titre": "Mercados: Angola, África Central, Europa | CHANCELENO"
+   }
+  },
+  "contact": {
+   "fr": {
+    "chemin": "/contact/",
+    "titre": "Contact | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/contact/",
+    "titre": "Contact | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/contacto/",
+    "titre": "Contacto | CHANCELENO"
+   }
+  },
+  "devis": {
+   "fr": {
+    "chemin": "/devis/",
+    "titre": "Demander un devis | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/quote/",
+    "titre": "Request a quote | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/cotacao/",
+    "titre": "Pedir cotação | CHANCELENO"
+   }
+  },
+  "portail": {
+   "fr": {
+    "chemin": "/portail/",
+    "titre": "Aperçu des portails (DEMO) | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/portal/",
+    "titre": "Portal preview (DEMO) | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/portal/",
+    "titre": "Pré-visualização dos portais (DEMO) | CHANCELENO"
+   }
+  },
+  "mentions": {
+   "fr": {
+    "chemin": "/mentions-legales/",
+    "titre": "Mentions légales | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/legal-notice/",
+    "titre": "Legal notice | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/aviso-legal/",
+    "titre": "Aviso legal | CHANCELENO"
+   }
+  },
+  "confidentialite": {
+   "fr": {
+    "chemin": "/confidentialite/",
+    "titre": "Politique de confidentialité | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/privacy/",
+    "titre": "Privacy policy | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/privacidade/",
+    "titre": "Política de privacidade | CHANCELENO"
+   }
+  },
+  "cookies": {
+   "fr": {
+    "chemin": "/cookies/",
+    "titre": "Cookies | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/cookies/",
+    "titre": "Cookies | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/cookies/",
+    "titre": "Cookies | CHANCELENO"
+   }
+  },
+  "conditions": {
+   "fr": {
+    "chemin": "/conditions/",
+    "titre": "Informations contractuelles | CHANCELENO"
+   },
+   "en": {
+    "chemin": "/en/terms/",
+    "titre": "Contractual information | CHANCELENO"
+   },
+   "pt": {
+    "chemin": "/pt/condicoes/",
+    "titre": "Informações contratuais | CHANCELENO"
+   }
+  }
+ },
+ "google_site_verification": "TP6AA36i00QmdXxqLJhOYIQWYzq7jIInhgUf7W5NVyA"
+}

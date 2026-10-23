@@ -1,0 +1,52 @@
+# Génère le site depuis content/ et static/ (tools/build.py), le contrôle (tools/check.py),
+# puis le publie sur GitHub Pages à chaque merge sur main. Sur une pull request : génération et contrôles seulement.
+name: Générer et publier le site
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+      - name: Générer le site
+        run: python3 tools/build.py
+      - name: Contrôler le site généré
+        run: python3 tools/check.py
+      - name: Préparer GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v6
+      - name: Envoyer le site généré
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+          # indispensable pour publier /.well-known/security.txt (dossier commençant par un point)
+          include-hidden-files: true
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publier sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

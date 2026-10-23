@@ -1,0 +1,7 @@
+{
+  "name": "chanceleno-tests",
+  "private": true,
+  "description": "Tests navigateur du site généré (voir site.test.js)",
+  "scripts": { "test": "node site.test.js" },
+  "devDependencies": { "playwright": "1.56.1" }
+}

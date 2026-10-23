@@ -1,0 +1,190 @@
+{
+ "_aide": "Listes affichées sur le site. Les textes sont en français ; leurs traductions sont dans i18n.json.",
+ "capacites": [
+  {
+   "titre": "Sourcing international",
+   "texte": "Identification de fabricants et distributeurs adaptés à votre besoin, en Europe, en Asie et au-delà."
+  },
+  {
+   "titre": "Achats & approvisionnement",
+   "texte": "Consultation, comparaison des offres, négociation et gestion de la commande."
+  },
+  {
+   "titre": "Approvisionnement de projets",
+   "texte": "Approvisionnement structuré de projets à partir d'une liste de quantités (BOQ), lot par lot."
+  },
+  {
+   "titre": "Vérification fournisseurs",
+   "texte": "Contrôles d'identité, documentaires et commerciaux, proportionnés au risque."
+  },
+  {
+   "titre": "Coordination logistique",
+   "texte": "Enlèvement, consolidation, documents et transport avec des prestataires autorisés."
+  },
+  {
+   "titre": "Accès marché",
+   "texte": "Représentation de fabricants en Afrique francophone et lusophone, et accompagnement des entreprises africaines vers les marchés internationaux."
+  }
+ ],
+ "secteurs": [
+  {
+   "titre": "Automobile, poids lourds & flottes",
+   "besoins": "Pièces auto et poids lourds, d'origine ou de qualité d'origine, pièces de flotte.",
+   "enjeux": "Correspondance exacte des références et contrefaçons.",
+   "adresse": {
+    "fr": "automobile-poids-lourds-flottes",
+    "en": "automotive-trucks-fleets",
+    "pt": "automovel-pesados-frotas"
+   }
+  },
+  {
+   "titre": "Pétrole, gaz & sécurité HSE",
+   "besoins": "EPI ignifugés, détection gaz (H2S), protection respiratoire, sauvetage, matériel ATEX, vannes et pièces certifiées.",
+   "enjeux": "Certificats exigés à chaque livraison : normes EN, ATEX, IECEx, SOLAS.",
+   "adresse": {
+    "fr": "petrole-gaz-securite-hse",
+    "en": "oil-gas-hse-safety",
+    "pt": "petroleo-gas-seguranca-hse"
+   }
+  },
+  {
+   "titre": "Industrie & maintenance (MRO)",
+   "besoins": "Pièces d'usure, roulements, transmissions, outillage, consommables de maintenance.",
+   "enjeux": "Arrêts de production coûteux, références obsolètes, délais longs.",
+   "adresse": {
+    "fr": "industrie-maintenance-mro",
+    "en": "industrial-mro",
+    "pt": "industria-manutencao-mro"
+   }
+  },
+  {
+   "titre": "Mines & ressources",
+   "besoins": "Pièces pour engins, équipements de traitement, EPI, consommables.",
+   "enjeux": "Sites éloignés, logistique complexe, criticité des pièces.",
+   "adresse": {
+    "fr": "mines-ressources",
+    "en": "mining-resources",
+    "pt": "minas-recursos"
+   }
+  },
+  {
+   "titre": "Santé & laboratoire",
+   "besoins": "Équipements de laboratoire, consommables, dispositifs médicaux, parapharmacie.",
+   "enjeux": "Réglementation, traçabilité et conditions de transport.",
+   "adresse": {
+    "fr": "sante-laboratoire",
+    "en": "healthcare-laboratory",
+    "pt": "saude-laboratorio"
+   }
+  },
+  {
+   "titre": "Électricité, eau & énergie solaire",
+   "besoins": "Pompes, câbles, transformateurs, panneaux solaires, batteries, onduleurs.",
+   "enjeux": "Conformité technique, garanties et continuité de service.",
+   "adresse": {
+    "fr": "electricite-eau-energie-solaire",
+    "en": "power-water-solar-energy",
+    "pt": "eletricidade-agua-energia-solar"
+   }
+  },
+  {
+   "titre": "Agroalimentaire & équipement agricole",
+   "besoins": "Machines de transformation et de conditionnement, équipements agricoles.",
+   "enjeux": "Choix technique adapté, pièces et maintenance disponibles sur la durée.",
+   "adresse": {
+    "fr": "agroalimentaire-equipement-agricole",
+    "en": "agri-food-farm-equipment",
+    "pt": "agroindustria-equipamento-agricola"
+   }
+  },
+  {
+   "titre": "Informatique, télécoms & technologie",
+   "besoins": "Équipements réseau, matériel informatique, infrastructures passives.",
+   "enjeux": "Authenticité des produits et garanties constructeur.",
+   "adresse": {
+    "fr": "informatique-telecoms-technologie",
+    "en": "it-telecom-technology",
+    "pt": "informatica-telecomunicacoes-tecnologia"
+   }
+  }
+ ],
+ "suivi_demo": [
+  {
+   "etape": "Besoin reçu",
+   "etat": 1
+  },
+  {
+   "etape": "Clarification technique",
+   "etat": 1
+  },
+  {
+   "etape": "Sourcing",
+   "etat": 1
+  },
+  {
+   "etape": "Vérification fournisseurs",
+   "etat": 1
+  },
+  {
+   "etape": "Offre",
+   "etat": 2
+  },
+  {
+   "etape": "Décision client",
+   "etat": 0
+  },
+  {
+   "etape": "Commande",
+   "etat": 0
+  },
+  {
+   "etape": "Contrôle",
+   "etat": 0
+  },
+  {
+   "etape": "Expédition",
+   "etat": 0
+  },
+  {
+   "etape": "Livraison",
+   "etat": 0
+  }
+ ],
+ "marches": [
+  {
+   "role": "Base Europe · siège",
+   "titre": "Lyon, France",
+   "texte": "CHANCELENO INTERNATIONAL, société en cours d'immatriculation. Base administrative et logistique pour l'Europe et les pays francophones."
+  },
+  {
+   "role": "Base Afrique · pays relais",
+   "titre": "Luanda, Angola",
+   "texte": "CHANCELENO – COMÉRCIO GERAL, (SU), LDA. Base pour l'Afrique et les pays lusophones, marché africain prioritaire."
+  },
+  {
+   "role": "Pays relais · partenaire local",
+   "titre": "Pointe-Noire, République du Congo",
+   "texte": "Un partenaire sur place pour la prospection et le suivi des opérations."
+  },
+  {
+   "role": "Pays relais · partenaire local",
+   "titre": "Kinshasa, RD Congo",
+   "texte": "Un partenaire sur place pour la prospection et le suivi des opérations."
+  },
+  {
+   "role": "Marchés servis · monde lusophone",
+   "titre": "Angola, Mozambique, Cap-Vert, Guinée-Bissau, São Tomé-et-Príncipe, Brésil, Portugal, Timor oriental",
+   "texte": "Nous travaillons en portugais avec les acheteurs de tous les pays lusophones, à partir de notre base angolaise et de notre siège européen."
+  },
+  {
+   "role": "Marchés d'approvisionnement",
+   "titre": "Asie, Europe, Afrique, Moyen-Orient",
+   "texte": "Sourcing selon le besoin, le produit et le niveau de risque acceptable. Nous restons ouverts à d'autres régions."
+  },
+  {
+   "role": "Devises et unités",
+   "titre": "EUR, USD, AOA, XAF, CDF",
+   "texte": "Les offres peuvent être établies dans la devise adaptée à l'opération."
+  }
+ ]
+}
