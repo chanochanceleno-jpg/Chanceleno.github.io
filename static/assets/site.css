@@ -63,7 +63,8 @@ nav.main a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--gold)}
 .btn-ghost:hover{background:rgba(200,160,100,.12)}
 .btn-sm{min-height:40px;padding:8px 14px;font-size:14px}
 .menu-btn{display:none;background:none;border:1px solid rgba(239,231,216,.25);color:#EFE7D8;min-height:44px;min-width:44px;border-radius:3px;cursor:pointer}
-@media (max-width:1399px){
+/* Menu replié (bouton ☰) sous 1024 px ; menu complet dans l'en-tête à partir de 1024 px */
+@media (max-width:1023px){
   nav.main{position:fixed;inset:0;top:0;background:var(--ink);padding:calc(env(safe-area-inset-top,0px) + 84px) 24px 40px;display:none;overflow:auto}
   nav.main.open{display:block}
   nav.main ul{flex-direction:column;gap:2px}
@@ -72,10 +73,11 @@ nav.main a[aria-current="page"]{box-shadow:inset 0 -2px 0 var(--gold)}
   .hright{position:relative;z-index:2}
   .hcta{display:none}
 }
-@media (min-width:1081px) and (max-width:1399px){.hcta{display:inline-flex}}
+/* 1024 à 1279 px : en-tête resserré pour que logo, menu, FR/EN/PT et « Demander un devis » tiennent sur une ligne */
+@media (min-width:1024px) and (max-width:1279px){.hbar{gap:12px}nav.main a{padding:10px 6px;font-size:13.5px}.word{font-size:14px;letter-spacing:.12em}}
 /* Bouton devis dans le menu déroulant, là où celui de l'en-tête est masqué */
 .nav-cta{display:none}
-@media (max-width:1080px){nav.main .nav-cta{display:block;margin-top:18px}nav.main .nav-cta a{display:inline-flex;font:600 16px var(--sans);padding:12px 22px;color:#FFF8EE;background:var(--copper)}nav.main .nav-cta a:hover{background:#8F552C;color:#FFF8EE}}
+@media (max-width:1023px){nav.main .nav-cta{display:block;margin-top:18px}nav.main .nav-cta a{display:inline-flex;font:600 16px var(--sans);padding:12px 22px;color:#FFF8EE;background:var(--copper)}nav.main .nav-cta a:hover{background:#8F552C;color:#FFF8EE}}
 @media (max-width:520px){.hbar{gap:8px}.word{font-size:13px;letter-spacing:.1em}.lang a{min-width:28px;padding:8px 6px}}
 
 /* Brand signature animation */
