@@ -57,12 +57,12 @@
         <div>
           <h3>Un rapport écrit avant votre décision</h3>
           <p class="muted" style="margin-top:12px;font-size:15.5px">Usine en Chine, distributeur en Europe ou fournisseur en Afrique : nous vérifions qu'il existe, qu'il est autorisé à exporter et que ses coordonnées bancaires correspondent à l'entité déclarée. Vous décidez ensuite, en connaissance de cause.</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><a href="#/devis?t=audit1" class="btn btn-primary btn-sm">Commander un audit</a><a href="https://wa.me/33641808499?text=Bonjour%2C%20je%20souhaite%20faire%20v%C3%A9rifier%20un%20fournisseur." class="btn btn-ghost btn-sm" target="_blank" rel="noopener">En parler sur WhatsApp</a></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><a href="#/devis?t=audit1" class="btn btn-primary btn-sm">Commander un audit</a><a href="https://wa.me/{{wa_europe_num}}?text=Bonjour%2C%20je%20souhaite%20faire%20v%C3%A9rifier%20un%20fournisseur." class="btn btn-ghost btn-sm" target="_blank" rel="noopener">En parler sur WhatsApp</a></div>
         </div>
         <div>
           <span class="lvl">Niveau 1, sur pièces</span>
           <h3 style="margin-top:6px">Audit documentaire</h3>
-          <p class="price">250 € HT</p><p class="muted" style="font-size:14.5px;margin:0">Rapport sous 48 h ouvrées</p>
+          <p class="price">{{prix_audit}}</p><p class="muted" style="font-size:14.5px;margin:0">Rapport sous {{delai_rapport}} h ouvrées</p>
           <ul><li>Existence légale de la société</li><li>Licences d'exportation</li><li>Registres officiels</li><li>Cohérence des coordonnées bancaires</li></ul>
         </div>
         <div>
@@ -119,10 +119,12 @@
         <h2>Chano Chanceleno</h2>
         <p class="lead" style="margin-top:18px">Vingt ans dans les achats et la logistique, entre l'Angola et la France, notamment chez Sodexo, ICAP, G4S, Huiles Berliet et Iris Inspection Machine.</p>
         <p>Il connaît les deux côtés du conteneur : ce qu'un fournisseur exige avant d'expédier, et ce qu'un acheteur risque en payant d'avance. C'est lui qui suit personnellement chaque demande. Il travaille en français, en portugais, en anglais et en espagnol.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px"><a href="#/a-propos" class="btn btn-ghost btn-sm">Son parcours</a><a href="https://wa.me/33641808499" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Lui écrire sur WhatsApp</a><a href="https://www.linkedin.com/in/chanceleno" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">LinkedIn</a></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px"><a href="#/a-propos" class="btn btn-ghost btn-sm">Son parcours</a><a href="https://wa.me/{{wa_europe_num}}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Lui écrire sur WhatsApp</a><a href="{{linkedin_profil}}" data-si="linkedin_profil" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">LinkedIn</a></div>
       </div>
     </div>
   </div>
+
+  <!--REFERENCES-->
 
   <div class="band alt">
     <div class="wrap cta-band">

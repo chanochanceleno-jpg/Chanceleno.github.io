@@ -5,7 +5,8 @@
 
 S'arrête avec une erreur si : un lien interne est cassé, une page n'a pas la politique de sécurité (CSP),
 contient un script en ligne ou l'adresse email en clair, n'a pas exactement un titre h1, si les liens entre
-langues (hreflang) ne sont pas réciproques ou si le plan du site (sitemap.xml) est incohérent.
+langues (hreflang) ne sont pas réciproques, si le plan du site (sitemap.xml) est incohérent, si un marqueur {{nom}}
+n'a pas été remplacé ou si config/site.yml contient une erreur.
 """
 import html
 import os
@@ -17,7 +18,11 @@ from urllib.parse import urlsplit, unquote
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "_site")
 DOMAIN = "https://chanceleno.com"
-EMAIL = "contact@chanceleno.com"
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import config as configfile  # noqa: E402  (tools/config.py)
+CONFIG = configfile.load()
+EMAIL = CONFIG["email"]
+EAGER = {"/images/logo.webp", "/images/accueil.webp"}   # haut de page : logo et photo de l'accueil
 IGNORED = {"google8a6c94d578320138.html"}   # fichier de vérification Google, servi tel quel
 
 
@@ -88,10 +93,7 @@ def target(path):
 
 def allowed_origins():
     """Seuls domaines externes autorisés par la CSP : FormSubmit (formulaires) et le compte GoatCounter configuré."""
-    import yaml
-    with open(os.path.join(ROOT, "config", "site.yml"), encoding="utf-8") as f:
-        cfg = yaml.safe_load(f) or {}
-    code = str((cfg.get("statistiques") or {}).get("goatcounter") or "").strip()
+    code = CONFIG["goatcounter"]
     return {"https://formsubmit.co"} | ({"https://%s.goatcounter.com" % code} if code else set())
 
 
@@ -109,6 +111,8 @@ def main():
                 txt = open(full, encoding="utf-8").read()
                 if EMAIL in txt and rel != "/.well-known/security.txt":
                     errors.append("%s : adresse email en clair" % rel)
+                for m in sorted(set(re.findall(r"\{\{[a-z_]+\}\}|data-si=", txt))):
+                    errors.append("%s : marqueur non remplacé %s" % (rel, m))
             if f.endswith(".html") and f not in IGNORED:
                 p = Page()
                 p.feed(open(full, encoding="utf-8").read())
@@ -133,7 +137,7 @@ def main():
                 errors.append("%s : image sans dimensions ou sans texte alternatif (%s)" % (url, src))
             if src.endswith((".jpg", ".jpeg", ".png")):
                 errors.append("%s : image non convertie en WebP (%s)" % (url, src))
-            if src != "/images/logo.webp" and img.get("loading") != "lazy":
+            if src not in EAGER and img.get("loading") != "lazy":
                 errors.append("%s : image hors haut de page sans chargement différé (%s)" % (url, src))
         if p.h1 != 1:
             errors.append("%s : %d titre(s) h1 au lieu d'un" % (url, p.h1))

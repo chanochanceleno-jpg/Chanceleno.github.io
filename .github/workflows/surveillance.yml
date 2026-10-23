@@ -1,0 +1,52 @@
+# Surveillance hebdomadaire de chanceleno.com (tools/surveillance.py) : configuration, liens internes et vers
+# d'autres sites, pages en ligne en FR, EN et PT, plan du site. En cas de problème, une issue GitHub étiquetée
+# « surveillance » est ouverte (ou complétée si elle existe déjà) : GitHub vous l'envoie par email.
+# Elle est fermée automatiquement au premier contrôle sans problème. Lancement à la main : onglet Actions,
+# « Surveillance hebdomadaire du site », bouton « Run workflow ».
+name: Surveillance hebdomadaire du site
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"     # chaque lundi à 6 h 17 UTC (7 h 17 à Paris en hiver, 8 h 17 en été)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  surveillance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le dépôt
+        uses: actions/checkout@v7
+      - name: Installer Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Installer les modules Python (PyYAML, Pillow)
+        run: python -m pip install -r tools/requirements.txt
+      - name: Contrôler le site
+        id: controle
+        continue-on-error: true
+        run: python tools/surveillance.py --rapport rapport.md
+      - name: Ouvrir ou compléter l'issue « surveillance »
+        if: steps.controle.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          test -s rapport.md || echo "La surveillance n'a pas pu s'exécuter : voir le détail dans l'onglet Actions." > rapport.md
+          { echo "@${{ github.repository_owner }}"; echo; cat rapport.md; echo; echo "Détail : ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"; } > corps.md
+          gh label create surveillance --color B60205 --description "Problème détecté par la surveillance hebdomadaire" --force
+          n=$(gh issue list --label surveillance --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh issue comment "$n" --body-file corps.md
+          else gh issue create --title "Surveillance du site : problème détecté" --label surveillance --body-file corps.md; fi
+      - name: Fermer l'issue « surveillance » si tout est correct
+        if: steps.controle.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          n=$(gh issue list --label surveillance --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then gh issue close "$n" --comment "Contrôle du $(date +%d/%m/%Y) : tout est de nouveau correct. Issue fermée automatiquement."; fi

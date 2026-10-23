@@ -1,5 +1,5 @@
 /* Statistiques de visite GoatCounter (sans cookie) : événements comptés en plus des pages vues.
-   Sans code GoatCounter configuré (content/site.json), count.js n'est pas chargé et rien n'est envoyé. */
+   Sans code GoatCounter configuré (config/site.yml), count.js n'est pas chargé et rien n'est envoyé. */
 (function(){
   function stat(name){
     try{var g=window.goatcounter;if(g&&g.count)g.count({path:name,title:name+" ("+document.documentElement.lang+")",event:true})}catch(e){}
@@ -9,6 +9,6 @@
      (selon la langue) dans son propre gestionnaire, juste avant. */
   document.addEventListener("click",function(e){
     var a=e.target.closest&&e.target.closest('a[href*="wa.me/"]');if(!a)return;
-    stat(a.href.indexOf("wa.me/244")>-1?"whatsapp-afrique":"whatsapp-europe");
+    stat(a.href.indexOf("wa.me/{{wa_afrique_num}}")>-1?"whatsapp-afrique":"whatsapp-europe");
   });
 })();

@@ -232,6 +232,23 @@
     "chemin": "/pt/condicoes/",
     "titre": "Informações contratuais | CHANCELENO"
    }
+  },
+  "cgv": {
+   "fr": {
+    "chemin": "/cgv/",
+    "titre": "Conditions générales de vente | CHANCELENO",
+    "description": "Conditions générales de vente de CHANCELENO, applicables aux opérations conclues entre professionnels."
+   },
+   "en": {
+    "chemin": "/en/terms-of-sale/",
+    "titre": "General terms and conditions of sale | CHANCELENO",
+    "description": "CHANCELENO general terms and conditions of sale, applicable to operations between businesses."
+   },
+   "pt": {
+    "chemin": "/pt/condicoes-gerais-de-venda/",
+    "titre": "Condições gerais de venda | CHANCELENO",
+    "description": "Condições gerais de venda da CHANCELENO, aplicáveis às operações entre profissionais."
+   }
   }
  },
  "google_site_verification": "TP6AA36i00QmdXxqLJhOYIQWYzq7jIInhgUf7W5NVyA"

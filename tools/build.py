@@ -7,8 +7,11 @@ puis écrit le site complet, en français, anglais et portugais, dans le dossier
     python3 tools/build.py            # génère _site/
     python3 tools/build.py --serve    # génère puis affiche le site sur http://localhost:8000
 
-Aucune installation : uniquement la bibliothèque standard de Python 3.
+Données modifiables (identité, coordonnées, tarifs, cartes Marchés, références…) : config/site.yml, lu et vérifié
+par tools/config.py. Dans les textes, un marqueur {{nom}} est remplacé par la valeur correspondante (voir TOKENS).
+Modules nécessaires : python3 -m pip install -r tools/requirements.txt (PyYAML, Pillow).
 """
+import datetime
 import html
 import json
 import os
@@ -17,8 +20,10 @@ import shutil
 import sys
 from html.parser import HTMLParser
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import config as configfile  # noqa: E402  (tools/config.py)
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG = os.path.join(ROOT, "config", "site.yml")
 CONTENT = os.path.join(ROOT, "content")
 STATIC = os.path.join(ROOT, "static")
 OUT = os.path.join(ROOT, "_site")
@@ -45,10 +50,31 @@ def rjson(*p):
 
 # Images affichées dans les pages : converties en WebP et redimensionnées à la génération (Pillow), avec leurs
 # dimensions et un chargement différé. Taille maximale = 2 fois la taille affichée (écrans haute densité) ;
-# par défaut 1600 px de large. Les originaux restent publiés (icône, données structurées, partage).
+# par défaut 1600 px de large. Les originaux restent publiés (icône, données structurées, partage), sauf ceux des
+# emplacements photo ci-dessous (PHOTO_DIRS), souvent lourds, dont seule la version WebP est publiée.
 IMAGE_SIZES = {"/images/logo.png": {"hauteur": 68}, "/images/fondateur.jpg": {"largeur": 680}}
 EAGER = {"/images/logo.png"}   # images du haut de page, chargées immédiatement
 _webp = {}
+# Emplacements photo (voir config/site.yml, rubrique photos) : fichier présent = photo affichée.
+PHOTO_EXT = (".jpg", ".jpeg", ".png")
+PHOTO_SIZES = {"accueil": {"largeur": 1200}, "secteurs": {"largeur": 1600}, "marches": {"largeur": 900},
+               "references": {"largeur": 240}}
+PHOTO_DIRS = ["secteurs", "marches", "references"]
+
+
+def photo(name):
+    """Adresse de la photo static/images/<name>.jpg|jpeg|png si elle existe (majuscules acceptées), sinon None."""
+    folder, base = os.path.split(name)
+    d = os.path.join(STATIC, "images", folder)
+    if not os.path.isdir(d):
+        return None
+    for f in sorted(os.listdir(d)):
+        stem, ext = os.path.splitext(f)
+        if stem.lower() == base.lower() and ext.lower() in PHOTO_EXT:
+            src = "/images/" + (folder + "/" if folder else "") + f
+            IMAGE_SIZES.setdefault(src, PHOTO_SIZES[folder or base])
+            return src
+    return None
 
 
 def webp(src):
@@ -58,7 +84,13 @@ def webp(src):
             from PIL import Image
         except ImportError:
             raise SystemExit("Le module Pillow est nécessaire : python3 -m pip install -r tools/requirements.txt")
-        im = Image.open(os.path.join(STATIC, src.lstrip("/")))
+        from PIL import ImageOps
+        try:
+            im = ImageOps.exif_transpose(Image.open(os.path.join(STATIC, src.lstrip("/"))))
+        except OSError as e:
+            raise SystemExit("Image illisible : static%s (%s). Enregistrez-la à nouveau en JPG ou PNG." % (src, e))
+        if im.mode not in ("RGB", "RGBA"):
+            im = im.convert("RGBA" if "A" in im.mode or "transparency" in im.info else "RGB")
         w, h = im.size
         size = IMAGE_SIZES.get(src, {"largeur": 1600})
         if "hauteur" in size and h > size["hauteur"]:
@@ -92,12 +124,18 @@ def optimize_images(page):
     return re.sub(r"<img\b[^>]*>", one_img, page)
 
 
+SITE = None   # sources chargées (Site), pour le remplacement des marqueurs dans wr()
+
+
 def wr(path, s):
     full = os.path.join(OUT, path.lstrip("/"))
     if full.endswith("/"):
         full += "index.html"
     if full.endswith(".html"):
-        s = optimize_images(s)
+        lang = re.search(r'<html lang="([a-z]+)"', s)
+        s = optimize_images(SITE.fill(s, lang.group(1) if lang else None))
+    elif SITE:
+        s = SITE.fill(s, None)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, "w", encoding="utf-8") as f:
         f.write(s)
@@ -111,20 +149,44 @@ def norm(t):
     return re.sub(r"\s+", " ", t).strip()
 
 
-def load_config():
-    """Données modifiables par l'utilisateur : config/site.yml (format YAML, lu avec PyYAML)."""
-    try:
-        import yaml
-    except ImportError:
-        raise SystemExit("Le module PyYAML est nécessaire : python3 -m pip install -r tools/requirements.txt")
-    try:
-        with open(CONFIG, encoding="utf-8") as f:
-            cfg = yaml.safe_load(f) or {}
-    except yaml.YAMLError as e:
-        raise SystemExit("config/site.yml n'est pas un fichier YAML valide :\n%s" % e)
-    if not isinstance(cfg, dict):
-        raise SystemExit("config/site.yml doit contenir des rubriques (clé: valeur)")
-    return cfg
+def mask(email):
+    """Adresse email écrite « nom(at)domaine » dans le code des pages (reconstituée par assets/mail.js)."""
+    return email.replace("@", "(at)")
+
+
+def cgv_text(lang):
+    """Texte des CGV (content/legal/cgv.<langue>.html), sans les commentaires. Vide = page non publiée."""
+    p = os.path.join(CONTENT, "legal", "cgv.%s.html" % lang)
+    t = rd(p) if os.path.isfile(p) else ""
+    return re.sub(r"<!--.*?-->", "", t, flags=re.S).strip()
+
+
+def drop_empty(page, values):
+    """Élément marqué data-si="clé" : retiré (avec son contenu) si la valeur de la clé est vide ; sinon seul
+    l'attribut est retiré. Sert aux liens facultatifs (réseaux sociaux, CGV)."""
+    while True:
+        m = re.search(r'<([a-z0-9]+)\b[^>]*?( data-si="([a-z_]+)")[^>]*>', page)
+        if not m:
+            return page
+        tag, key = m.group(1), m.group(3)
+        if key not in values:
+            raise SystemExit("data-si inconnu : %r" % key)
+        if values[key]:
+            page = page[:m.start(2)] + page[m.end(2):]
+            continue
+        depth, pos = 1, m.end()
+        for t in re.finditer(r"<(/?)%s\b[^>]*>" % tag, page[m.end():]):
+            depth += -1 if t.group(1) else 1
+            if depth == 0:
+                pos = m.end() + t.end()
+                break
+        else:
+            raise SystemExit("Balise <%s data-si> non fermée" % tag)
+        start = m.start()
+        line = re.search(r"\n[ \t]*$", page[:start])
+        if line and (pos == len(page) or page[pos] == "\n"):
+            start = line.start()     # élément seul sur sa ligne : la ligne entière disparaît
+        page = page[:start] + page[pos:]
 
 
 class Site:
@@ -135,13 +197,20 @@ class Site:
         self.i18n = {k: v for k, v in rjson(CONTENT, "i18n.json").items()}
         self.data = rjson(CONTENT, "data.json")
         self.light = rjson(CONTENT, "layout", "light.json")
+        self.blocs = rjson(CONTENT, "layout", "blocs.json")
         self.domain = self.site["domaine"]
-        self.config = load_config()
+        self.config = c = configfile.load()
+        self.year = datetime.date.today().year
         # statistiques GoatCounter : code du compte (ex. « chanceleno »), vide = aucun comptage
-        code = str((self.config.get("statistiques") or {}).get("goatcounter") or "").strip()
-        if code and not re.match(r"^[a-z0-9-]+$", code):
-            raise SystemExit("Code GoatCounter invalide dans config/site.yml : %r" % code)
-        self.stats = "https://%s.goatcounter.com" % code if code else ""
+        self.stats = "https://%s.goatcounter.com" % c["goatcounter"] if c["goatcounter"] else ""
+        # CGV : publiées seulement quand le texte existe dans les trois langues
+        cgv = {l: cgv_text(l) for l in LANGS}
+        if any(cgv.values()) and not all(cgv.values()):
+            raise SystemExit("CGV : texte présent en %s mais absent en %s (content/legal/cgv.<langue>.html). Les trois langues "
+                             "sont nécessaires pour publier la page." % (", ".join(l for l in LANGS if cgv[l]),
+                                                                         ", ".join(l for l in LANGS if not cgv[l])))
+        self.cgv = cgv if all(cgv.values()) else None
+        self.used = set()          # textes de i18n.json réellement utilisés
         self.missing = {}          # texte français sans traduction -> pages concernées
         self.pages = {}            # identifiant de page -> {langue: chemin}
         for pid, p in self.site["pages"].items():
@@ -153,11 +222,131 @@ class Site:
     def url(self, pid, lang):
         return self.pages[pid][lang]
 
+    # --- valeurs de config/site.yml utilisables dans les textes : {{nom}}
+    def tokens(self, lang):
+        c, f = self.config, self.config["france"]
+        v = {"email": mask(c["email"]), "email_nom": c["email"].split("@")[0], "email_domaine": c["email"].split("@")[1],
+             "formsubmit": c["formsubmit"], "wa_europe": c["wa_europe"], "wa_afrique": c["wa_afrique"],
+             "wa_europe_num": re.sub(r"\D", "", c["wa_europe"]), "wa_afrique_num": re.sub(r"\D", "", c["wa_afrique"]),
+             "delai_rapport": str(c["delai_rapport"]), "delai_reponse": str(c["delai_reponse"]), "annee": str(self.year),
+             "france_nom": f["denomination"], "angola_nom": c["angola"]["denomination"], "cgv": "oui" if self.cgv else ""}
+        v.update(c["reseaux"])
+        if lang:
+            B = self.blocs[lang]
+            n = c["prix_audit"]
+            amount = "{:,}".format(n) if isinstance(n, int) else ("%.2f" % n)
+            if lang != "en":
+                amount = amount.replace(",", "\u202f").replace(".", ",")
+            v["prix_audit"] = B["prix"].format(montant=amount)
+            v["france_statut"] = B["statut_immatriculee"].format(**self.france_display()) if f["immatriculee"] else B["statut_attente"]
+            v["accueil_description"] = c["accueil_description"][lang]
+        return v
+
+    def fill(self, page, lang):
+        """Après traduction : blocs construits depuis config/site.yml, liens facultatifs, puis marqueurs {{nom}}."""
+        if lang:
+            for name, fn in (("MARCHES", self.markets_html), ("IDENTITE", self.legal_html), ("ENTITES", self.entities_html),
+                             ("REFERENCES", self.references_html), ("CGV", lambda l: self.cgv[l] if self.cgv else "")):
+                if "<!--%s-->" % name in page:
+                    block = fn(lang)
+                    # bloc vide : la ligne du repère disparaît aussi (page identique à une page sans ce bloc)
+                    page = page.replace("<!--%s-->" % name, block) if block else re.sub(r"[ \t]*<!--%s-->\n*" % name, "", page)
+        values = self.tokens(lang)
+        page = drop_empty(page, values)
+
+        def one(m):
+            if m.group(1) not in values:
+                raise SystemExit("Marqueur inconnu {{%s}} : voir la liste dans README.md" % m.group(1))
+            return esc(values[m.group(1)]).replace("&#x27;", "'")
+        return re.sub(r"\{\{([a-z_]+)\}\}", one, page)
+
+    # --- blocs construits depuis config/site.yml
+    def entity_text(self, which, lang):
+        """Une entité, en une phrase (mentions légales)."""
+        c, B = self.config, self.blocs[lang]
+        if which == "angola":
+            a = c["angola"]
+            parts = [B["nif"].format(nif=a["nif"]), B["siege"].format(adresse=a["adresse"]), B["tel"].format(tel=c["wa_afrique"])]
+            return a["denomination"] + " — " + " — ".join(parts) + "."
+        f = self.france_display()
+        if not f["immatriculee"]:
+            return B["france_attente"].format(nom=f["denomination"], ville=f["ville"])
+        parts = [B["capital"].format(**f), B["siren"].format(**f), B["rcs"].format(**f)] + \
+            ([B["tva"].format(**f)] if f["tva"] else []) + \
+            [B["siege"].format(adresse=f["adresse"]), B["president"].format(**f), B["tel"].format(tel=c["wa_europe"])]
+        return f["denomination"] + " — " + " — ".join(parts) + "."
+
+    def france_display(self):
+        """Société française, avec des espaces insécables dans les numéros (SIREN, RCS, capital non coupés en fin de ligne)."""
+        f = dict(self.config["france"])
+        for k in ("siren", "rcs", "capital"):
+            f[k] = re.sub(r"(?<=\d) (?=\d)|(?<=\d) (?=€)|(?<=[A-Za-z]) (?=\d)", "\u00a0", f[k])
+        return f
+
+    def legal_html(self, lang):
+        c, B = self.config, self.blocs[lang]
+        ed = c["editeur"]
+        other = "france" if ed == "angola" else "angola"
+        pub = B["publication"].format(directeur=c["directeur"], email=mask(c["email"]))
+        e = lambda t: esc(t).replace("&#x27;", "'")
+        return "<h3>%s</h3><p>%s %s</p><h3>%s</h3><p>%s</p>" % (
+            e(B["h_editeur"]), e(self.entity_text(ed, lang)), e(pub), e(B["h_autre"][other]), e(self.entity_text(other, lang)))
+
+    def entities_html(self, lang):
+        """Les deux entités, dans le pied de page."""
+        c, B = self.config, self.blocs[lang]
+        a, f = c["angola"], self.france_display()
+        e = lambda t: esc(t).replace("&#x27;", "'")
+        tel = lambda n: '<a href="https://wa.me/%s">%s</a>' % (re.sub(r"\D", "", n), e(n))
+        ao = [e(a["ville"] + ", " + B["pays"]["AO"]), e(B["nif"].format(nif=a["nif"])), tel(c["wa_afrique"])]
+        if f["immatriculee"]:
+            fr = [e(f["ville"] + ", " + B["pays"]["FR"]), e(B["siren"].format(**f) + " · " + B["rcs"].format(**f))] + \
+                ([e(B["tva"].format(**f))] if f["tva"] else []) + [tel(c["wa_europe"])]
+        else:
+            fr = [e(f["ville"] + ", " + B["pays"]["FR"] + " — " + B["statut_attente"]), e(B["pied_attente"]), tel(c["wa_europe"])]
+        return "\n      ".join("<div><strong>%s</strong><br>%s</div>" % (e(n), "<br>".join(lines))
+                                for n, lines in ((a["denomination"], ao), (f["denomination"], fr)))
+
+    def markets_html(self, lang):
+        e = lambda t: esc(t).replace("&#x27;", "'")
+        out = []
+        for c in self.config["marches"]:
+            if not c["affiche"]:
+                continue
+            src = photo("marches/" + c["id"])
+            img = '<img class="node-photo" src="%s" alt="%s">' % (src, e(c["titre"][lang])) if src else ""
+            out.append('<div>%s<span class="role">%s</span><h3>%s</h3><p class="muted">%s</p></div>' % (
+                img, e(c["role"][lang]), e(c["titre"][lang]), e(c["texte"][lang])))
+        return "\n      ".join(out)
+
+    def references_html(self, lang):
+        """Section « Ils nous font confiance » : seulement les références autorisées, traduites dans cette langue."""
+        e = lambda t: esc(t).replace("&#x27;", "'")
+        refs = [r for r in self.config["references"] if r["autorisation"] and r["temoignage"][lang]]
+        if not refs:
+            return ""
+        items = []
+        for r in refs:
+            img = ""
+            if r["photo"]:
+                src = photo("references/" + os.path.splitext(r["photo"])[0])
+                img = '<img src="%s" alt="%s">' % (src, e(r["nom"]))
+            meta = " · ".join(x for x in (r["secteur"][lang], r["pays"][lang]) if x)
+            items.append('<figure class="ref">%s<blockquote><p>%s</p></blockquote><figcaption><strong>%s</strong>%s</figcaption></figure>' % (
+                img, e(r["temoignage"][lang]), e(r["nom"]), "<span>%s</span>" % e(meta) if meta else ""))
+        return ('<div class="band dark" id="references">\n    <div class="wrap">\n      <h2>%s</h2>\n      <div class="refs">%s</div>\n'
+                '    </div>\n  </div>' % (e(self.blocs[lang]["references_titre"]), "".join(items)))
+
+    def same_as(self):
+        r = self.config["reseaux"]
+        return [r[k] for k in ("linkedin_profil", "linkedin_page", "instagram", "tiktok") if r[k]]
+
     def tr(self, fr, lang, where=""):
         """Traduction d'un texte isolé (titres, descriptions…)."""
         if lang == "fr":
             return fr
         e = self.i18n.get(norm(fr))
+        self.used.add(norm(fr))
         if not e or not e.get(lang):
             self.missing.setdefault(norm(fr), set()).add(where)
             return fr
@@ -193,6 +382,7 @@ class Rewriter(HTMLParser):
             self.out.append(raw)
             return
         e = self.s.i18n.get(key)
+        self.s.used.add(key)
         if e is None or not e.get("en") or not e.get("pt"):
             self.s.missing.setdefault(key, set()).add(self.where)
         if self.lang == "fr" or not e or not e.get(self.lang):
@@ -260,6 +450,7 @@ class Rewriter(HTMLParser):
             for k in ATTR_TR:
                 v = a.get(k)
                 if v and norm(v) in self.s.i18n and self.s.i18n[norm(v)].get(self.lang):
+                    self.s.used.add(norm(v))
                     a[k] = self.s.i18n[norm(v)][self.lang]
                     changed = True
         if not changed:
@@ -299,12 +490,15 @@ def translate(site, source, lang, page_id, where):
 # ---------------------------------------------------------------------------------------------------------------
 # Préparation des sources françaises (avant traduction)
 # ---------------------------------------------------------------------------------------------------------------
-def prepare_forms(src):
+def prepare_forms(site, src):
     """Les emails reçus doivent garder des noms de champs français, quelle que soit la langue du visiteur :
-    chaque champ reçoit son libellé français (data-key) et chaque option sa valeur française (data-fr)."""
+    chaque champ reçoit son libellé français (data-key) et chaque option sa valeur française (data-fr), marqueurs
+    {{nom}} compris (remplacés ici par leur valeur française)."""
+    fr = site.tokens("fr")
+    french = lambda t: re.sub(r"\{\{([a-z_]+)\}\}", lambda m: fr[m.group(1)], t)
     labels = {}
     for fid, inner in re.findall(r'<label for="([^"]+)">(.*?)</label>', src, re.S):
-        labels[fid] = norm(html.unescape(inner.split("<")[0]))
+        labels[fid] = french(norm(html.unescape(inner.split("<")[0])))
 
     def add_key(m):
         t = m.group(0)
@@ -317,7 +511,7 @@ def prepare_forms(src):
     def add_fr(m):
         if "data-fr=" in m.group(1):
             return m.group(0)
-        return '<option%s data-fr="%s">%s</option>' % (m.group(1), esc(norm(html.unescape(m.group(2)))), m.group(2))
+        return '<option%s data-fr="%s">%s</option>' % (m.group(1), esc(french(norm(html.unescape(m.group(2))))), m.group(2))
     return re.sub(r"<option([^>]*)>([^<]*)</option>", add_fr, src)
 
 
@@ -350,26 +544,37 @@ def fill_lists(site, src):
     track = "".join('<li class="%s"><strong>%s</strong>%s</li>' % (
         "done" if t["etat"] == 1 else "now" if t["etat"] == 2 else "", t["etape"],
         "<small>Étape en cours</small>" if t["etat"] == 2 else "") for t in d["suivi_demo"])
-    src = src.replace('<ol class="track" id="demoTrack"></ol>', '<ol class="track" id="demoTrack">%s</ol>' % track)
-    cards = "\n".join('      <div><span class="role">%s</span><h3>%s</h3><p class="muted">%s</p></div>' % (c["role"], c["titre"], c["texte"])
-                      for c in d["marches"])
-    return src.replace("      <!--MARCHES-->", cards)
+    return src.replace('<ol class="track" id="demoTrack"></ol>', '<ol class="track" id="demoTrack">%s</ol>' % track)
+
+
+def home_photo(src):
+    """Photo de l'accueil (static/images/accueil.jpg) : remplace l'illustration du globe, même emplacement."""
+    p = photo("accueil")
+    if not p:
+        return src
+    EAGER.add(p)
+    fig = '<figure class="hero-photo"><img src="%s" alt="{{accueil_description}}" fetchpriority="high"></figure>' % p
+    out = re.sub(r'<figure class="globe-wrap".*?</figure>', fig, src, count=1, flags=re.S)
+    assert out != src
+    return out
 
 
 def sector_page(site, i):
     s = site.data["secteurs"][i]
+    p = photo("secteurs/" + s["adresse"]["fr"])
+    img = '<figure class="sector-photo"><img src="%s" alt="%s"></figure>' % (p, s["titre"]) if p else ""
     others = "".join('<li><a href="#/secteur-%d">%s</a></li>' % (j, o["titre"]) for j, o in enumerate(site.data["secteurs"]) if j != i)
     return (
         '<section class="page" data-page="secteur" aria-labelledby="h-secteur">\n'
         '  <div class="pagehead"><div class="wrap"><span class="crumb"><a href="#/secteurs">Secteurs</a></span>'
         '<h1 id="h-secteur" style="font-size:clamp(34px,5vw,60px);max-width:18ch">%s</h1></div></div>\n'
-        '  <div class="band"><div class="wrap"><article class="sector-detail"><dl>'
+        '  <div class="band"><div class="wrap">%s<article class="sector-detail"><dl>'
         '<div><dt>Besoins typiques</dt><dd>%s</dd></div><div><dt>Enjeux fréquents</dt><dd>%s</dd></div>'
         '<div><dt>Ce que nous apportons</dt><dd>Sourcing ciblé, vérification proportionnée au risque, comparaison documentée des offres.</dd></div>'
         '<div><dt>Prochaine étape</dt><dd><a href="#/devis?s=%d" class="btn btn-primary btn-sm">Envoyer un besoin dans ce secteur</a></dd></div>'
         '</dl></article></div></div>\n'
         '  <div class="band alt"><div class="wrap"><h2>Huit secteurs, une même méthode</h2><ul class="sector-links">%s</ul></div></div>\n'
-        '</section>\n') % (s["titre"], s["besoins"], s["enjeux"], i, others)
+        '</section>\n') % (s["titre"], img, s["besoins"], s["enjeux"], i, others)
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -428,29 +633,46 @@ def head(site, lang, pid, title, desc, *, og_title=None, og_type="website", robo
 
 
 def organization(site, lang):
-    """Données structurées : la marque CHANCELENO et ses deux entités (informations déjà publiées sur le site)."""
+    """Données structurées : la marque CHANCELENO et ses deux entités (valeurs de config/site.yml)."""
     D = site.domain
+    c = site.config
+    a, f = c["angola"], c["france"]
     desc = site.site["pages"]["home"][lang]["description"]
-    statut = {"fr": "Société en cours de formation", "en": "Company being incorporated", "pt": "Sociedade em constituição"}[lang]
-    return {
+    wa_eu, wa_af = "+" + re.sub(r"\D", "", c["wa_europe"]), "+" + re.sub(r"\D", "", c["wa_afrique"])
+    ao = {"@type": "Organization", "name": a["denomination"], "legalName": a["denomination"]}
+    if a["date_creation"]:
+        ao["foundingDate"] = a["date_creation"]
+    ao.update({"taxID": a["nif"], "telephone": wa_af,
+               "address": {"@type": "PostalAddress", "streetAddress": a["adresse"].split(", " + a["ville"])[0],
+                           "addressLocality": a["ville"], "addressCountry": "AO"}})
+    fr = {"@type": "Organization", "name": f["denomination"]}
+    if f["immatriculee"]:
+        fr.update({"legalName": f["denomination"], "taxID": f["siren"].replace(" ", "")})
+        if f["tva"]:
+            fr["vatID"] = f["tva"].replace(" ", "")
+        if f["date_immatriculation"]:
+            fr["foundingDate"] = f["date_immatriculation"]
+    else:
+        statut = site.blocs[lang]["statut_attente"]
+        fr["description"] = statut[0].upper() + statut[1:]
+    fr["telephone"] = wa_eu
+    fr["address"] = {"@type": "PostalAddress", "addressLocality": f["ville"], "addressCountry": "FR"}
+    if f["immatriculee"] and f["adresse"]:
+        fr["address"]["streetAddress"] = f["adresse"].split(", ")[0]
+    org = {
         "@context": "https://schema.org", "@type": "Organization", "@id": D + "/#organisation",
         "name": "CHANCELENO", "url": D + "/", "logo": D + "/images/logo.png", "description": desc,
         "founder": {"@type": "Person", "name": "Chano Ndandu Chanceleno"},
         "contactPoint": [
-            {"@type": "ContactPoint", "telephone": "+33641808499", "contactType": "sales",
+            {"@type": "ContactPoint", "telephone": wa_eu, "contactType": "sales",
              "areaServed": ["FR", "BE", "CH", "CG", "CD"], "availableLanguage": ["fr", "en"]},
-            {"@type": "ContactPoint", "telephone": "+244928424849", "contactType": "sales",
+            {"@type": "ContactPoint", "telephone": wa_af, "contactType": "sales",
              "areaServed": ["AO", "MZ", "CV", "GW", "ST", "BR", "PT"], "availableLanguage": ["pt", "es"]}],
-        "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es"],
-        "sameAs": ["https://www.linkedin.com/in/chanceleno"],
-        "subOrganization": [
-            {"@type": "Organization", "name": "CHANCELENO – COMÉRCIO GERAL, (SU), LDA",
-             "legalName": "CHANCELENO – COMÉRCIO GERAL, (SU), LDA", "foundingDate": "2026-04-17", "taxID": "5003018334",
-             "telephone": "+244928424849",
-             "address": {"@type": "PostalAddress", "streetAddress": "Bairro Quarteirão V6, Rua V6, Kilamba",
-                         "addressLocality": "Luanda", "addressCountry": "AO"}},
-            {"@type": "Organization", "name": "CHANCELENO INTERNATIONAL", "description": statut, "telephone": "+33641808499",
-             "address": {"@type": "PostalAddress", "addressLocality": "Lyon", "addressCountry": "FR"}}]}
+        "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es"]}
+    if site.same_as():
+        org["sameAs"] = site.same_as()
+    org["subOrganization"] = [ao, fr]
+    return org
 
 
 def first_text(src, pattern):
@@ -481,7 +703,10 @@ def build_main(site):
     assert "<!--LANGUES-->" in header
     sources = {}
     for pid in site.site["pages"]:
-        sources[pid] = first_heading_h1(prepare_forms(fill_lists(site, rd(CONTENT, "pages", pid + ".html"))))
+        if pid == "cgv" and not site.cgv:
+            continue      # CGV pas encore rédigées : pas de page
+        src = fill_lists(site, rd(CONTENT, "pages", pid + ".html"))
+        sources[pid] = first_heading_h1(prepare_forms(site, home_photo(src) if pid == "home" else src))
     for i in range(len(site.data["secteurs"])):
         sources["secteur-%d" % i] = sector_page(site, i)
     for pid, src in sources.items():
@@ -499,8 +724,9 @@ def build_main(site):
             else:
                 p = site.site["pages"][pid][lang]
                 title, og_title = p["titre"], p.get("og_titre")
-                desc = p.get("description") or short(first_text(body, r'<p class="lead"[^>]*>(.*?)</p>') or
-                                                     first_text(body, r'<div class="band">.*?<p[^>]*>(.*?)</p>'))
+                filled = site.fill(body, lang)     # texte d'introduction tel qu'affiché (blocs et valeurs de config/site.yml)
+                desc = p.get("description") or short(first_text(filled, r'<p class="lead"[^>]*>(.*?)</p>') or
+                                                     first_text(filled, r'<div class="band">.*?<p[^>]*>(.*?)</p>'))
             extra = '<meta name="google-site-verification" content="%s">' % site.site["google_site_verification"] if pid == "home" else ""
             page = head(site, lang, pid, title, desc, og_title=og_title, jsonld=organization(site, lang) if pid == "home" else None,
                         scripts=["/assets/redirect.js"], extra=extra)
@@ -533,8 +759,13 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
     nav = "".join('<a href="%s" hreflang="%s" lang="%s"%s>%s</a>' % (lang_links[l], l, l, ' aria-current="true"' if l == lang else "", l.upper())
                   for l in LANGS)
     flinks = [(home, L["pied"][0]), (art, L["pied"][1])] + [(site.url(p, lang), L["pied"][2 + i]) for i, p in enumerate(LEGAL)]
+    if site.cgv:
+        flinks.append((site.url("cgv", lang), site.blocs[lang]["cgv"]))
+    r = site.config["reseaux"]
+    social = [(r["linkedin_profil"], L["pied"][6]), (r["linkedin_page"], site.blocs[lang]["linkedin_page"]),
+              (r["instagram"], "Instagram"), (r["tiktok"], "TikTok")]
     fl = "".join('<li><a href="%s">%s</a></li>' % (u, esc(t)) for u, t in flinks) + \
-        '<li><a href="https://www.linkedin.com/in/chanceleno" target="_blank" rel="noopener">LinkedIn</a></li>'
+        "".join('<li><a href="%s" target="_blank" rel="noopener">%s</a></li>' % (esc(u), esc(t)) for u, t in social if u)
     body = (
         '<body>\n<a class="skip" href="#contenu">%s</a>\n<header class="site">\n  <div class="wrap hbar">\n'
         '    <a href="%s" class="brand" aria-label="%s"><img src="/images/logo.png" alt="%s"><span class="word">CHANCELENO</span></a>\n'
@@ -544,11 +775,11 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
         '<main id="contenu">\n%s\n</main>\n%s'
         '<footer class="site">\n  <div class="wrap">\n    <ul class="flinks">%s</ul>\n'
         '    <div class="entities">\n      %s\n    </div>\n'
-        '    <div class="fbot"><span>© 2026 CHANCELENO</span><span><a data-mail href="%s">contact(at)chanceleno.com</a></span></div>\n'
+        '    <div class="fbot"><span>© {{annee}} CHANCELENO</span><span><a data-mail href="%s">{{email}}</a></span></div>\n'
         '  </div>\n</footer>\n<script src="/assets/mail.js" defer></script>\n</body>\n</html>\n') % (
         esc(L["aller_au_contenu"]), home, esc(L["accueil_aria"]), esc(L["logo_alt"]), art,
         ' aria-current="page"' if sec_current else "", esc(L["articles"]), nav, site.url("devis", lang), esc(L["devis"]),
-        main, after_main, fl, L["entites_html"], site.url("contact", lang))
+        main, after_main, fl, "<!--ENTITES-->", site.url("contact", lang))
     return h + body
 
 
@@ -591,16 +822,18 @@ def build_articles(site):
             src = rd(adir, a["id"], lang + ".html").rstrip("\n")
             src = re.sub(r'href="((?:/(?:en|pt))?/?#/[^"]*)"', lambda mm: 'href="%s"' % Rewriter(site, lang, "article", a["id"]).link(mm.group(1)), src)
             b1, b2 = L["byline"].split("|")
+            li = site.config["reseaux"]["linkedin_profil"]
+            author = '<a href="%s" target="_blank" rel="noopener author">Chano Chanceleno</a>' % esc(li) if li else "Chano Chanceleno"
             main = ('<article>\n<div class="pagehead"><div class="wrap">\n<a class="crumb" href="%s">%s</a>\n<h1>%s</h1>\n'
-                    '<p class="byline">%s<a href="https://www.linkedin.com/in/chanceleno" target="_blank" rel="noopener author">Chano Chanceleno</a>'
-                    '%s<time datetime="%s">%s</time></p>\n</div></div>\n<div class="article">\n%s\n</div>\n</article>') % (
-                base[lang], esc(L["articles"]), esc(t["titre"]), b1, b2, a["date"], date_text(site, lang, a["date"]), src)
+                    '<p class="byline">%s%s%s<time datetime="%s">%s</time></p>\n</div></div>\n<div class="article">\n%s\n</div>\n</article>') % (
+                base[lang], esc(L["articles"]), esc(t["titre"]), b1, author, b2, a["date"], date_text(site, lang, a["date"]), src)
+            person = {"@type": "Person", "name": "Chano Chanceleno", "jobTitle": t["fonction_auteur"]}
+            if li:
+                person.update({"url": li, "sameAs": [li]})
             ld = {"@context": "https://schema.org", "@type": "Article", "headline": t["titre"], "description": t["description"],
                   "inLanguage": L["langue_jsonld"], "datePublished": a["date"], "dateModified": a.get("modifie", a["date"]),
                   "image": [D + site.site["og_image"][lang]], "mainEntityOfPage": {"@type": "WebPage", "@id": D + a["url"][lang]},
-                  "author": {"@type": "Person", "name": "Chano Chanceleno", "jobTitle": t["fonction_auteur"],
-                             "url": "https://www.linkedin.com/in/chanceleno", "sameAs": ["https://www.linkedin.com/in/chanceleno"]},
-                  "publisher": publisher}
+                  "author": person, "publisher": publisher}
             wr(a["url"][lang], light_page(site, lang, t["titre"] + " | CHANCELENO", "index, follow", "", False, a["url"], main,
                                           desc=t["description"], alternates=a["url"], og_type="article", og_title=t["titre"], jsonld=ld))
             site.sitemap.append((a["url"][lang], a["url"], a.get("modifie", a["date"])))
@@ -647,7 +880,7 @@ def build_sitemap(site):
 
 
 def build_redirect(site):
-    routes = {pid: v for pid, v in site.pages.items() if not pid.startswith("secteur-")}
+    routes = {pid: v for pid, v in site.pages.items() if not pid.startswith("secteur-") and (pid != "cgv" or site.cgv)}
     js = ("/* Fichier généré par tools/build.py. Anciennes adresses #/rubrique et langue mémorisée. */\n"
           "(function(){\n"
           "var R=%s;\n"
@@ -664,7 +897,10 @@ def build_redirect(site):
           "if(legacy())return;\n"
           "/* Page française et langue EN ou PT choisie auparavant : page équivalente dans cette langue. */\n"
           "if(lang===\"fr\"){var sv=saved();if(sv===\"en\"||sv===\"pt\"){var a=document.querySelector('link[rel=\"alternate\"][hreflang=\"'+sv+'\"]');\n"
-          " if(a){var u=new URL(a.href);if(u.pathname!==location.pathname)location.replace(u.pathname+location.search+location.hash)}}}\n"
+          " if(a){var u=new URL(a.href);if(u.pathname!==location.pathname){location.replace(u.pathname+location.search+location.hash);return}}}}\n"
+          "/* Animation du logo : seulement à la première page de la visite (onglet). Ensuite, la classe ch-vu affiche\n"
+          "   directement le logo complet (assets/site.css) ; le survol du logo rejoue l'animation (assets/site.js). */\n"
+          "try{if(sessionStorage.getItem(\"ch_vu\"))document.documentElement.classList.add(\"ch-vu\");else sessionStorage.setItem(\"ch_vu\",\"1\")}catch(e){}\n"
           "})();\n") % json.dumps(routes, ensure_ascii=False, separators=(",", ":"))
     wr("/assets/redirect.js", js)
 
@@ -673,13 +909,20 @@ def build_strings(site):
     """Textes produits par le JavaScript (messages d'erreur, boutons…) : seulement ceux utilisés par site.js."""
     js = rd(STATIC, "assets", "site.js")
     used = {}
-    for lit in re.findall(r'"((?:[^"\\]|\\.)*)"', js):
+    # chaînes "…" du script ; commentaires et chaînes '…' lus à part pour ne pas décaler les guillemets
+    tokens = re.findall(r'/\*.*?\*/|//[^\n]*|\'(?:[^\'\\\n]|\\.)*\'|"((?:[^"\\\n]|\\.)*)"', js, re.S)
+    # appels __t("…") (y compris dans les gabarits `…${…}…`)
+    tokens += re.findall(r'__t\("((?:[^"\\\n]|\\.)*)"\)', js)
+    for lit in tokens:
+        if not lit:
+            continue
         try:
             k = norm(json.loads('"%s"' % lit))
         except ValueError:
             continue
         if k in site.i18n:
             used[k] = site.i18n[k]
+            site.used.add(k)
     wr("/assets/strings.js", "/* Fichier généré par tools/build.py : traductions des textes affichés par site.js. */\n"
        "window.CH_STRINGS=%s;\n" % json.dumps(used, ensure_ascii=False, separators=(",", ":")))
 
@@ -690,9 +933,47 @@ def copy_static():
     shutil.copytree(STATIC, OUT)
 
 
+def fill_static(site):
+    """Fichiers copiés tels quels (scripts, security.txt) : marqueurs {{nom}} remplacés par les valeurs de config/site.yml."""
+    for d, _, files in os.walk(OUT):
+        for f in files:
+            full = os.path.join(d, f)
+            if f.endswith((".js", ".txt", ".css")):
+                t = rd(full)
+                if "{{" in t:
+                    with open(full, "w", encoding="utf-8") as out:
+                        out.write(site.fill(t, None))
+
+
+def finish_photos():
+    """Emplacements photo : seule la version WebP est publiée (l'original, souvent lourd, n'est pas copié)."""
+    for folder in [""] + PHOTO_DIRS:
+        d = os.path.join(OUT, "images", folder)
+        if not os.path.isdir(d):
+            continue
+        for f in os.listdir(d):
+            stem, ext = os.path.splitext(f)
+            if (folder or stem.lower() == "accueil") and ext.lower() in PHOTO_EXT and os.path.isfile(os.path.join(d, stem + ".webp")):
+                os.remove(os.path.join(d, f))
+
+
+def leftovers():
+    """Aucun marqueur {{nom}} ne doit rester dans le site généré."""
+    bad = []
+    for d, _, files in os.walk(OUT):
+        for f in files:
+            if f.endswith((".html", ".js", ".txt", ".xml", ".css")):
+                for m in set(re.findall(r"\{\{[a-z_]+\}\}", rd(os.path.join(d, f)))):
+                    bad.append("%s : %s" % (os.path.relpath(os.path.join(d, f), OUT), m))
+    if bad:
+        raise SystemExit("Marqueurs non remplacés :\n  - " + "\n  - ".join(sorted(bad)))
+
+
 def main():
+    global SITE
     copy_static()
-    site = Site()
+    site = SITE = Site()
+    fill_static(site)
     build_main(site)
     build_articles(site)
     build_thanks(site)
@@ -700,11 +981,18 @@ def main():
     build_sitemap(site)
     build_redirect(site)
     build_strings(site)
+    finish_photos()
+    leftovers()
     if site.missing:
         print("ERREUR : %d texte(s) français sans traduction EN/PT dans content/i18n.json :" % len(site.missing))
         for k, w in sorted(site.missing.items()):
             print("  - %r  (%s)" % (k, ", ".join(sorted(w))))
         sys.exit(1)
+    unused = sorted(k for k in site.i18n if k not in site.used)
+    if unused:
+        print("Remarque : %d texte(s) de content/i18n.json ne sont plus utilisés (à supprimer) :" % len(unused))
+        for k in unused:
+            print("  - %r" % k)
     n = sum(len(fs) for _, _, fs in os.walk(OUT))
     print("Site généré dans _site/ : %d pages, %d fichiers." % (len(site.sitemap), n))
     if "--serve" in sys.argv:

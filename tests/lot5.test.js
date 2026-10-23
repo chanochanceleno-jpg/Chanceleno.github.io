@@ -1,0 +1,174 @@
+// Tests du lot 5 (données modifiables dans config/site.yml), à 360, 412, 1024, 1280 et 1440 px, en FR, EN et PT.
+//   MODE=reel   (par défaut) : configuration réelle ; logo animé seulement à la 1re page de la visite.
+//   MODE=fictif : lancé par tests/fictif.py avec des valeurs fictives (Kbis, photos, références, Instagram, CGV…).
+//   BASE=http://localhost:8765 node lot5.test.js        SHOTS=dossier pour des captures à 360 px
+const { chromium } = require(process.env.PW || "playwright");
+const fs = require("fs");
+const path = require("path");
+
+const BASE = process.env.BASE || "http://localhost:8765";
+const MODE = process.env.MODE || "reel";
+const WIDTHS = (process.env.WIDTHS || "360,412,1024,1280,1440").split(",").map(Number);
+const SHOTS = process.env.SHOTS || "";
+const SITE = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "content", "site.json"), "utf8"));
+const U = (pid, lang) => SITE.pages[pid][lang].chemin;
+const LANGS = ["fr", "en", "pt"];
+const YEAR = String(new Date().getFullYear());
+let fails = 0, checks = 0;
+const ok = (c, m) => { checks++; if (!c) { fails++; console.log("  ÉCHEC", m); } };
+
+async function page(b, w) {
+  const ctx = await b.newContext({ viewport: { width: w, height: 800 } });
+  await ctx.addInitScript(() => { window.__csp = []; document.addEventListener("securitypolicyviolation", e => window.__csp.push(e.violatedDirective + " " + e.blockedURI)); });
+  await ctx.route(/formsubmit\.co/, r => r.fulfill({ status: 200, contentType: "application/json", body: '{"success":"true"}' }));
+  await ctx.route(/goatcounter\.com/, r => r.fulfill({ status: 200, body: "" }));
+  const p = await ctx.newPage();
+  p.errs = [];
+  p.on("pageerror", e => p.errs.push(e.message));
+  p.on("console", m => { if (m.type() === "error") p.errs.push(m.text()); });
+  return p;
+}
+async function go(p, url, label) {
+  const r = await p.goto(BASE + url);
+  ok(r && r.status() === 200, label + " : code " + (r && r.status()));
+  const h = await p.evaluate(() => ({ csp: window.__csp, sw: document.documentElement.scrollWidth, iw: innerWidth }));
+  ok(h.csp.length === 0, label + " : CSP " + h.csp.join(" | "));
+  ok(h.sw <= h.iw, label + " : débordement horizontal " + h.sw + " > " + h.iw);
+  ok(p.errs.length === 0, label + " : erreur JS " + p.errs.join(" | ")); p.errs.length = 0;
+}
+const text = (p, sel) => p.$eval(sel, e => e.innerText.replace(/\s+/g, " ").trim()).catch(() => "");
+// image chargée (après défilement jusqu'à elle : les images hors du premier écran sont en chargement différé)
+const loaded = async (p, sel, webp = true) => {
+  const el = await p.$(sel); if (!el) return false;
+  await el.scrollIntoViewIfNeeded(); await p.waitForFunction(i => i.complete, el, { timeout: 5000 }).catch(() => {});
+  return el.evaluate((i, w) => i.complete && i.naturalWidth > 0 && (!w || /\.webp$/.test(i.src)), webp);
+};
+const jsonld = p => p.$eval('script[type="application/ld+json"]', s => JSON.parse(s.textContent)).catch(() => ({}));
+const shot = async (p, name) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await p.screenshot({ path: path.join(SHOTS, name + ".png"), fullPage: true }); } };
+
+const PAGES = ["home", "marches", "mentions", "contact", "devis", "cookies"];
+
+async function reel(b) {
+  // logo : animé à la 1re page de la visite seulement ; le survol le rejoue
+  const p = await page(b, 1440);
+  await go(p, "/", "logo 1re page");
+  ok(!(await p.evaluate(() => document.documentElement.classList.contains("ch-vu"))), "logo : animation jouée à la 1re page");
+  ok(await p.$eval(".word span", e => getComputedStyle(e).animationName) === "fade", "logo : animation d'entrée active à la 1re page");
+  await go(p, U("solutions", "fr"), "logo 2e page");
+  ok(await p.evaluate(() => document.documentElement.classList.contains("ch-vu")), "logo : classe ch-vu à la 2e page");
+  const st = await p.$eval(".word span", e => ({ a: getComputedStyle(e).animationName, o: getComputedStyle(e).opacity }));
+  ok(st.a === "none" && st.o === "1", "logo : affiché directement à la 2e page " + JSON.stringify(st));
+  ok(await p.$eval(".brand img", i => getComputedStyle(i).animationName) === "none", "logo : image sans animation d'entrée à la 2e page");
+  await p.hover(".brand"); await p.waitForTimeout(100);
+  ok(!(await p.evaluate(() => document.documentElement.classList.contains("ch-vu"))), "logo : le survol rejoue l'animation");
+  await p.context().close();
+  const p2 = await page(b, 1440);   // nouvelle visite (nouvel onglet) : animation rejouée
+  await go(p2, U("solutions", "fr"), "logo nouvelle visite");
+  ok(!(await p2.evaluate(() => document.documentElement.classList.contains("ch-vu"))), "logo : animation rejouée à une nouvelle visite");
+  await p2.context().close();
+
+  for (const w of WIDTHS) {
+    const p = await page(b, w);
+    for (const lang of LANGS) {
+      const L = w + " " + lang;
+      for (const pid of PAGES) await go(p, U(pid, lang), L + " " + pid);
+      await p.goto(BASE + U("home", lang));
+      ok(!(await p.$("#references")), L + " : pas de section références (aucune référence saisie)");
+      ok(!!(await p.$("#globe")) && !(await p.$(".hero-photo")), L + " : globe affiché (pas de photo d'accueil)");
+      ok((await text(p, "#audit .price")) === { fr: "250 € HT", en: "€250 excl. VAT", pt: "250 € sem IVA" }[lang], L + " : prix de l'audit");
+      const foot = await p.$$eval("footer.site a", a => a.map(x => x.textContent.trim() + " " + x.getAttribute("href")));
+      ok(foot.some(x => x === "LinkedIn https://www.linkedin.com/in/chanceleno"), L + " : LinkedIn dans le pied de page");
+      ok(!foot.some(x => /instagram|tiktok|linkedin\.com\/company|cgv|terms-of-sale|condicoes-gerais/.test(x)), L + " : liens vides ou CGV absents du pied de page");
+      ok((await text(p, ".fbot")).includes("© " + YEAR + " CHANCELENO"), L + " : copyright " + YEAR);
+      ok((await text(p, ".entities")).includes({ fr: "société en cours d'immatriculation", en: "company being registered", pt: "sociedade em processo de registo" }[lang]), L + " : statut de la société française");
+      const ld = lang === "fr" ? await jsonld(p) : null;
+      if (ld) ok(!ld.subOrganization[1].taxID && JSON.stringify(ld.sameAs) === '["https://www.linkedin.com/in/chanceleno"]', "JSON-LD : société française sans identifiants, LinkedIn seul");
+      await p.goto(BASE + U("mentions", lang));
+      ok((await text(p, ".legal .band")).includes("NIF 5003018334"), L + " : mentions légales, éditeur angolais");
+      // message de confirmation du formulaire de contact, traduit
+      await p.goto(BASE + U("contact", lang)); await p.fill("#c-name", "T"); await p.fill("#c-mail", "a@b.co"); await p.fill("#c-msg", "T");
+      await p.click("#ctForm button[type=submit]"); await p.waitForSelector("#ctForm .status.ok");
+      ok((await text(p, "#ctForm .status")).startsWith({ fr: "Votre message est bien envoyé", en: "Your message has been sent", pt: "A sua mensagem foi enviada" }[lang]), L + " : confirmation du contact traduite");
+      ok(!(await text(p, "#ctForm .status")).includes("{{"), L + " : pas de marqueur dans la confirmation");
+    }
+    const r = await p.goto(BASE + "/cgv/"); ok(r.status() === 404, w + " : pas de page CGV tant que le texte n'existe pas");
+    await p.context().close();
+  }
+}
+
+async function fictif(b) {
+  for (const w of WIDTHS) {
+    const p = await page(b, w);
+    for (const lang of LANGS) {
+      const L = w + " " + lang;
+      for (const pid of PAGES.concat(["cgv"])) await go(p, U(pid, lang), L + " " + pid);
+      await go(p, "/" + (lang === "fr" ? "" : lang + "/") + { fr: "secteurs", en: "industries", pt: "setores" }[lang] + "/" +
+        { fr: "sante-laboratoire", en: "healthcare-laboratory", pt: "saude-laboratorio" }[lang] + "/", L + " secteur santé");
+      ok(await loaded(p, ".sector-photo img"), L + " : photo du secteur santé");
+      ok(await p.$eval(".sector-photo img", i => i.alt.length > 5 && i.loading === "lazy"), L + " : photo du secteur, texte alternatif et chargement différé");
+      // accueil
+      await p.goto(BASE + U("home", lang)); await p.waitForTimeout(200);
+      ok(await loaded(p, ".hero-photo img") && !(await p.$("#globe")), L + " : photo d'accueil à la place du globe");
+      ok(await p.$eval(".hero-photo img", (i, l) => i.alt === { fr: "Photo de test de l'accueil", en: "Home test photo", pt: "Foto de teste da página inicial" }[l] && i.loading !== "lazy", lang), L + " : photo d'accueil, texte alternatif, chargement immédiat");
+      ok((await text(p, "#audit .price")) === { fr: "300 € HT", en: "€300 excl. VAT", pt: "300 € sem IVA" }[lang], L + " : prix de l'audit modifié");
+      const refs = await text(p, "#references");
+      if (lang === "pt") ok(refs === "", L + " : pas de références sans traduction portugaise");
+      else {
+        ok(refs.includes("Client Fictif Autorisé SA") && !refs.includes("Non Autorisé") && !refs.includes("jamais"), L + " : seule la référence autorisée s'affiche");
+        ok(refs.includes({ fr: "Santé et laboratoire · Angola", en: "Health and laboratory · Angola" }[lang]), L + " : secteur et pays de la référence");
+        ok(await loaded(p, "#references img"), L + " : logo de la référence");
+      }
+      const foot = await p.$$eval("footer.site a", a => a.map(x => x.textContent.trim() + " " + x.getAttribute("href")));
+      ok(foot.some(x => x === "Instagram https://www.instagram.com/exemple-test"), L + " : Instagram dans le pied de page");
+      ok(!foot.some(x => /tiktok|linkedin\.com\/company/.test(x)), L + " : réseaux vides absents");
+      ok(foot.some(x => x.endsWith(" " + U("cgv", lang))), L + " : lien CGV dans le pied de page");
+      const ent = await text(p, ".entities");
+      ok(ent.includes("SIREN 123 456 789 · RCS Lyon 123 456 789") && ent.includes("FR12123456789") && !/immatricul|registered|registo/.test(ent), L + " : pied de page, identifiants de la société française");
+      if (lang === "fr") {
+        const ld = await jsonld(p), fr = ld.subOrganization[1];
+        ok(fr.taxID === "123456789" && fr.vatID === "FR12123456789" && fr.foundingDate === "2026-11-02" && !fr.description, "JSON-LD : identifiants de la société française");
+        ok(ld.sameAs.includes("https://www.instagram.com/exemple-test"), "JSON-LD : Instagram dans sameAs");
+      }
+      await shot(p, "fictif-accueil-" + lang + "-" + w);
+      // marchés
+      await p.goto(BASE + U("marches", lang));
+      const cards = await p.$$eval(".nodes > div", d => d.map(x => x.innerText.replace(/\s+/g, " ")));
+      ok(cards.length === 6 && !cards.some(c => c.includes("XAF")), L + " : carte « Devises » masquée");
+      ok(cards[0].includes("CHANCELENO INTERNATIONAL, SASU, SIREN 123 456 789."), L + " : carte Lyon avec le SIREN");
+      ok(cards.some(c => c.includes("Pointe-Noire")) && cards.some(c => c.includes("Kinshasa")), L + " : cartes Pointe-Noire et Kinshasa");
+      ok(await loaded(p, ".nodes > div:nth-child(2) img.node-photo"), L + " : photo de Luanda");
+      if (w === 360) await shot(p, "fictif-marches-" + lang);
+      // mentions légales
+      await p.goto(BASE + U("mentions", lang));
+      const m = await text(p, ".legal .band");
+      ok(m.includes({ fr: "Éditeur du site CHANCELENO INTERNATIONAL — SASU au capital de 1 000 € — SIREN 123 456 789 — RCS Lyon 123 456 789 — TVA intracommunautaire FR12123456789 — Siège : 1 rue de l'Exemple, 69001 Lyon, France — Président : Président Fictif — Tél. : +33 6 41 80 84 99. Directeur de la publication : Chano Ndandu CHANCELENO.",
+        en: "Site publisher CHANCELENO INTERNATIONAL — SASU with share capital of 1 000 €", pt: "Editor do site CHANCELENO INTERNATIONAL — SASU com capital social de 1 000 €" }[lang]), L + " : mentions légales, éditeur français");
+      ok(m.includes({ fr: "Structure angolaise CHANCELENO – COMÉRCIO GERAL, (SU), LDA — NIF 5003018334", en: "Angolan company CHANCELENO", pt: "Estrutura angolana CHANCELENO" }[lang]), L + " : mentions légales, société angolaise");
+      ok(m.includes("contact@chanceleno.com"), L + " : mentions légales, email reconstitué");
+      if (w === 360) await shot(p, "fictif-mentions-" + lang);
+      // CGV, devis, remerciement
+      await p.goto(BASE + U("cgv", lang));
+      ok((await text(p, "main")).includes({ fr: "TEXTE DE TEST", en: "TEST TEXT", pt: "TEXTO DE TESTE" }[lang]), L + " : page CGV");
+      await p.goto(BASE + U("devis", lang));
+      ok((await text(p, "#rfqForm")).includes({ fr: "sous 24 h ouvrées", en: "within 24 business hours", pt: "em 24 horas úteis" }[lang]), L + " : délai de réponse modifié");
+      ok(await p.$eval('#r-type option[value="audit1"]', o => o.dataset.fr) === "Audit documentaire fournisseur (300 € HT, sous 48 h)", L + " : option audit, valeur française envoyée");
+      await p.goto(BASE + { fr: "/merci/", en: "/en/thank-you/", pt: "/pt/obrigado/" }[lang] + "?ref=CH-RFQ-20261102-1000");
+      ok((await text(p, "#keep")).includes("24"), L + " : délai sur la page de remerciement");
+    }
+    // article (mise en page légère) : pied de page et auteur
+    await p.goto(BASE + "/articles/");
+    const art = await text(p, "footer.site");
+    ok(art.includes("SIREN 123 456 789") && art.includes("Instagram") && art.includes("Conditions générales de vente"), w + " : pied de page des articles");
+    await p.context().close();
+  }
+  const sm = fs.readFileSync(path.join(__dirname, "..", "_site", "sitemap.xml"), "utf8");
+  ok(["/cgv/", "/en/terms-of-sale/", "/pt/condicoes-gerais-de-venda/"].every(u => sm.includes("https://chanceleno.com" + u + "<")), "sitemap : pages CGV");
+}
+
+(async () => {
+  const b = await chromium.launch(process.env.CHROMIUM ? { executablePath: process.env.CHROMIUM } : {});
+  await (MODE === "fictif" ? fictif(b) : reel(b));
+  await b.close();
+  console.log(fails ? "ÉCHECS : " + fails + " sur " + checks + " contrôles (" + MODE + ")" : "TOUT OK : " + checks + " contrôles (" + MODE + ")");
+  process.exit(fails ? 1 : 0);
+})();

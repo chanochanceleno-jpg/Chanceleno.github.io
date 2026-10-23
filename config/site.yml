@@ -1,9 +1,231 @@
 # Configuration du site chanceleno.com : les données que vous pouvez modifier vous-même.
 # Après une modification, le site est régénéré et publié automatiquement au merge (voir README.md).
-# D'autres rubriques s'ajouteront ici au lot 5 (identité et Kbis, coordonnées, tarifs, cartes Marchés…).
+#
+# Règles simples :
+#   - un texte entre guillemets "…" peut contenir n'importe quel caractère (deux-points, apostrophe…) ;
+#   - un champ vide s'écrit "" : l'information correspondante n'est alors pas affichée ;
+#   - fr / en / pt = le même texte en français, anglais et portugais ;
+#   - en cas d'erreur (champ manquant, numéro mal écrit…), la mise en ligne est bloquée avec un message en français.
+#
+# Dans les textes des cartes Marchés et des références, on peut reprendre une valeur de ce fichier avec un
+# marqueur entre doubles accolades, par exemple {{france_nom}}, {{france_statut}}, {{angola_nom}},
+# {{prix_audit}}, {{delai_reponse}} (liste complète dans README.md).
 
+
+# ----------------------------------------------------------------------------------------------------------------
+# Identité et informations légales
+# Utilisées dans les mentions légales, le pied de page, la carte Lyon et les données lues par Google (schema.org).
+# ----------------------------------------------------------------------------------------------------------------
+identite:
+  # Entité qui édite le site : « angola » aujourd'hui, « france » quand CHANCELENO INTERNATIONAL sera immatriculée.
+  editeur: angola
+  directeur_publication: "Chano Ndandu CHANCELENO"
+
+  # Société angolaise. Téléphone affiché : le WhatsApp Afrique (rubrique coordonnees).
+  angola:
+    denomination: "CHANCELENO – COMÉRCIO GERAL, (SU), LDA"
+    adresse: "Bairro Quarteirão V6, Rua V6, Kilamba, Luanda, Angola"
+    ville: "Luanda"
+    nif: "5003018334"
+    date_creation: "2026-04-17"        # format AAAA-MM-JJ
+
+  # Société française. Tant que le SIREN est vide, le site indique « société en cours d'immatriculation ».
+  # Dès qu'il est rempli (avec le Kbis), les identifiants s'affichent partout automatiquement.
+  # Téléphone affiché : le WhatsApp Europe (rubrique coordonnees).
+  france:
+    denomination: "CHANCELENO INTERNATIONAL"
+    forme: ""                          # ex. "SASU"
+    adresse: ""                        # adresse du siège, ex. "10 rue Exemple, 69002 Lyon, France"
+    ville: "Lyon"
+    siren: ""                          # 9 chiffres, ex. "123 456 789"
+    rcs: ""                            # ex. "Lyon 123 456 789"
+    tva: ""                            # ex. "FR12123456789"
+    capital: ""                        # ex. "1 000 €"
+    president: ""                      # ex. "Chano Ndandu CHANCELENO"
+    date_immatriculation: ""           # format AAAA-MM-JJ
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Coordonnées
+# ----------------------------------------------------------------------------------------------------------------
+coordonnees:
+  # Adresse email affichée (masquée dans le code des pages contre les robots).
+  # Attention : les formulaires sont envoyés à l'adresse enregistrée chez FormSubmit (identifiant ci-dessous).
+  # Si vous changez d'adresse, activez d'abord la nouvelle chez FormSubmit (voir README.md).
+  email: "contact@chanceleno.com"
+  formsubmit: "dd4826d916be1ff8585a8daf1f96ea91"
+  # Numéros WhatsApp, écrits comme ils doivent s'afficher (avec l'indicatif +…).
+  whatsapp_europe: "+33 6 41 80 84 99"
+  whatsapp_afrique: "+244 928 424 849"
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Réseaux sociaux : adresse complète (https://…). Un lien vide ( "" ) n'est affiché nulle part.
+# ----------------------------------------------------------------------------------------------------------------
+reseaux:
+  linkedin_profil: "https://www.linkedin.com/in/chanceleno"
+  linkedin_page: ""                    # page entreprise, ex. "https://www.linkedin.com/company/chanceleno"
+  instagram: ""                        # ex. "https://www.instagram.com/chanceleno"
+  tiktok: ""                           # ex. "https://www.tiktok.com/@chanceleno"
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Tarifs et délais annoncés (accueil, devis, pages de remerciement, accusés de réception)
+# ----------------------------------------------------------------------------------------------------------------
+tarifs:
+  prix_audit_ht: 250                   # prix de l'audit documentaire, en euros hors taxes (nombre seul)
+  delai_rapport_h: 48                  # rapport d'audit remis sous … heures ouvrées
+  delai_reponse_h: 48                  # réponse aux demandes sous … heures ouvrées
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Cartes de la page Marchés, dans l'ordre d'affichage.
+#   id      : nom court, sans espace ni accent ; sert aussi au nom de la photo (images/marches/<id>.jpg)
+#   affiche : oui = carte visible, non = carte masquée
+# ----------------------------------------------------------------------------------------------------------------
+marches:
+  - id: lyon
+    affiche: oui
+    role:
+      fr: "Base Europe · siège"
+      en: "European base · headquarters"
+      pt: "Base Europa · sede"
+    titre:
+      fr: "Lyon, France"
+      en: "Lyon, France"
+      pt: "Lyon, França"
+    texte:
+      fr: "{{france_nom}}, {{france_statut}}. Base administrative et logistique pour l'Europe et les pays francophones."
+      en: "{{france_nom}}, {{france_statut}}. Administrative and logistics base for Europe and French-speaking countries."
+      pt: "{{france_nom}}, {{france_statut}}. Base administrativa e logística para a Europa e os países francófonos."
+  - id: luanda
+    affiche: oui
+    role:
+      fr: "Base Afrique · pays relais"
+      en: "African base · relay country"
+      pt: "Base África · país de apoio"
+    titre:
+      fr: "Luanda, Angola"
+      en: "Luanda, Angola"
+      pt: "Luanda, Angola"
+    texte:
+      fr: "{{angola_nom}}. Base pour l'Afrique et les pays lusophones, marché africain prioritaire."
+      en: "{{angola_nom}}. Base for Africa and Portuguese-speaking countries, priority African market."
+      pt: "{{angola_nom}}. Base para África e os países lusófonos, mercado africano prioritário."
+  - id: pointe-noire
+    affiche: oui
+    role:
+      fr: "Pays relais · partenaire local"
+      en: "Relay country · local partner"
+      pt: "País de apoio · parceiro local"
+    titre:
+      fr: "Pointe-Noire, République du Congo"
+      en: "Pointe-Noire, Republic of Congo"
+      pt: "Pointe-Noire, República do Congo"
+    texte:
+      fr: "Un partenaire sur place pour la prospection et le suivi des opérations."
+      en: "A partner on the ground for prospecting and following up operations."
+      pt: "Um parceiro no terreno para a prospeção e o acompanhamento das operações."
+  - id: kinshasa
+    affiche: oui
+    role:
+      fr: "Pays relais · partenaire local"
+      en: "Relay country · local partner"
+      pt: "País de apoio · parceiro local"
+    titre:
+      fr: "Kinshasa, RD Congo"
+      en: "Kinshasa, DR Congo"
+      pt: "Kinshasa, RD Congo"
+    texte:
+      fr: "Un partenaire sur place pour la prospection et le suivi des opérations."
+      en: "A partner on the ground for prospecting and following up operations."
+      pt: "Um parceiro no terreno para a prospeção e o acompanhamento das operações."
+  - id: lusophonie
+    affiche: oui
+    role:
+      fr: "Marchés servis · monde lusophone"
+      en: "Markets served · Portuguese-speaking world"
+      pt: "Mercados servidos · mundo lusófono"
+    titre:
+      fr: "Angola, Mozambique, Cap-Vert, Guinée-Bissau, São Tomé-et-Príncipe, Brésil, Portugal, Timor oriental"
+      en: "Angola, Mozambique, Cape Verde, Guinea-Bissau, São Tomé and Príncipe, Brazil, Portugal, East Timor"
+      pt: "Angola, Moçambique, Cabo Verde, Guiné-Bissau, São Tomé e Príncipe, Brasil, Portugal, Timor-Leste"
+    texte:
+      fr: "Nous travaillons en portugais avec les acheteurs de tous les pays lusophones, à partir de notre base angolaise et de notre siège européen."
+      en: "We work in Portuguese with buyers in all Portuguese-speaking countries, from our Angolan base and our European headquarters."
+      pt: "Trabalhamos em português com os compradores de todos os países lusófonos, a partir da nossa base angolana e da nossa sede europeia."
+  - id: approvisionnement
+    affiche: oui
+    role:
+      fr: "Marchés d'approvisionnement"
+      en: "Supply markets"
+      pt: "Mercados de aprovisionamento"
+    titre:
+      fr: "Asie, Europe, Afrique, Moyen-Orient"
+      en: "Asia, Europe, Africa, Middle East"
+      pt: "Ásia, Europa, África, Médio Oriente"
+    texte:
+      fr: "Sourcing selon le besoin, le produit et le niveau de risque acceptable. Nous restons ouverts à d'autres régions."
+      en: "Sourcing according to the need, the product and the acceptable level of risk. We remain open to other regions."
+      pt: "Sourcing consoante a necessidade, o produto e o nível de risco aceitável. Mantemo-nos abertos a outras regiões."
+  - id: devises
+    affiche: oui
+    role:
+      fr: "Devises et unités"
+      en: "Currencies and units"
+      pt: "Moedas e unidades"
+    titre:
+      fr: "EUR, USD, AOA, XAF, CDF"
+      en: "EUR, USD, AOA, XAF, CDF"
+      pt: "EUR, USD, AOA, XAF, CDF"
+    texte:
+      fr: "Les offres peuvent être établies dans la devise adaptée à l'opération."
+      en: "Offers can be issued in the currency best suited to the operation."
+      pt: "As propostas podem ser emitidas na moeda adequada à operação."
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Références clients (section « Ils nous font confiance » de l'accueil)
+# La section n'apparaît que si au moins une référence a « autorisation: oui ».
+# Ne saisir que de vrais clients ayant donné leur accord écrit pour être cités.
+#   nom, secteur, pays : texte unique, ou {fr: …, en: …, pt: …} s'il change selon la langue
+#   temoignage         : fr obligatoire ; en et pt facultatifs (sans traduction, la référence n'apparaît qu'en français)
+#   photo              : facultatif, nom d'un fichier placé dans static/images/references/ (ex. "client-x.jpg")
+# Exemple (à recopier sous « references: » en retirant les # et en remplaçant [] ) :
+#   - nom: "Société Exemple SARL"
+#     secteur: {fr: "Santé et laboratoire", en: "Health and laboratory", pt: "Saúde e laboratório"}
+#     pays: {fr: "Angola", en: "Angola", pt: "Angola"}
+#     temoignage:
+#       fr: "Texte exact du témoignage, tel que validé par le client."
+#       en: ""
+#       pt: ""
+#     autorisation: oui
+# ----------------------------------------------------------------------------------------------------------------
+references: []
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Photos : il suffit de déposer le fichier (JPG ou PNG) au bon endroit dans static/images/ ;
+# il est converti en WebP et redimensionné à la génération. Sans fichier, l'affichage actuel ne change pas.
+#   static/images/accueil.jpg                   visuel de l'accueil (remplace l'illustration du globe)
+#   static/images/secteurs/<secteur>.jpg        en haut de la page du secteur, ex. secteurs/sante-laboratoire.jpg
+#                                               (nom = fin de l'adresse française de la page du secteur)
+#   static/images/marches/<id>.jpg              en tête de la carte Marchés, ex. marches/luanda.jpg
+#   static/images/fondateur.jpg                 photo du fondateur (accueil et À propos)
+#   static/images/references/<fichier>          photo ou logo d'une référence (voir ci-dessus)
+# Description de la photo d'accueil, lue par les lecteurs d'écran et les moteurs de recherche :
+# ----------------------------------------------------------------------------------------------------------------
+photos:
+  accueil_description:
+    fr: ""
+    en: ""
+    pt: ""
+
+
+# ----------------------------------------------------------------------------------------------------------------
 # Statistiques de visite GoatCounter, sans cookie.
 # « goatcounter » = code du compte (tableau de bord : https://chanceleno.goatcounter.com).
 # Laisser vide ( goatcounter: "" ) pour désactiver complètement le comptage.
+# ----------------------------------------------------------------------------------------------------------------
 statistiques:
   goatcounter: chanceleno
