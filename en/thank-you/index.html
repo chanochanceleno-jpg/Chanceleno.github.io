@@ -2,13 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; base-uri 'self'; object-src 'none'; frame-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, follow">
 <title>Thank you | CHANCELENO</title>
 <meta name="theme-color" content="#0A1622">
 <link rel="icon" href="/images/logo.png">
 <link rel="stylesheet" href="/assets/articles.css">
-<script>try{localStorage.setItem("ch_lang","en")}catch(e){}</script>
+<script src="/assets/lang.js"></script>
 </head>
 <body>
 <a class="skip" href="#contenu">Skip to content</a>
@@ -35,20 +37,7 @@
 <p style="margin-top:28px"><a class="btn btn-primary" href="/">Back to home</a></p>
 </div>
 </main>
-<script>
-(function(){
-  var KINDS={"RFQ": "Your quote request has been sent.", "SUP": "Your application has been sent. Its status is “Applicant” until assessment.", "PAR": "Your collaboration enquiry has been sent."};
-  var ref=new URLSearchParams(location.search).get("ref")||"";
-  var m=/^CH-(RFQ|SUP|PAR)-\d{8}-\d{4}$/.exec(ref);
-  if(m){
-    document.getElementById("what").textContent=KINDS[m[1]];
-    document.getElementById("ref").textContent=ref;
-    document.getElementById("refline").hidden=false;
-    document.getElementById("keep").hidden=false;
-  }
-  document.querySelectorAll(".lang a").forEach(function(a){a.search=location.search});
-})();
-</script>
+<script src="/assets/thanks.js"></script>
 <footer class="site">
   <div class="wrap">
     <ul class="flinks"><li><a href="/">Home</a></li><li><a href="/en/articles/">Articles</a></li><li><a href="/#/mentions">Legal notice</a></li><li><a href="/#/confidentialite">Privacy</a></li><li><a href="/#/cookies">Cookies</a></li><li><a href="/#/conditions">Contractual information</a></li><li><a href="https://www.linkedin.com/in/chanceleno" target="_blank" rel="noopener">LinkedIn</a></li></ul>
@@ -56,8 +45,9 @@
       <div><strong>CHANCELENO – COMÉRCIO GERAL, (SU), LDA</strong><br>Luanda, Angola<br>NIF 5003018334<br><a href="https://wa.me/244928424849">+244 928 424 849</a></div>
       <div><strong>CHANCELENO INTERNATIONAL</strong><br>Lyon, France — company being incorporated<br>Identifiers published after registration<br><a href="https://wa.me/33641808499">+33 6 41 80 84 99</a></div>
     </div>
-    <div class="fbot"><span>© 2026 CHANCELENO</span><span><a href="mailto:contact@chanceleno.com">contact@chanceleno.com</a></span></div>
+    <div class="fbot"><span>© 2026 CHANCELENO</span><span><a data-mail href="/#/contact">contact(at)chanceleno.com</a></span></div>
   </div>
 </footer>
+<script src="/assets/mail.js"></script>
 </body>
 </html>
