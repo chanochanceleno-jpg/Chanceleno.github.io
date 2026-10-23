@@ -43,10 +43,61 @@ def rjson(*p):
     return json.loads(rd(*p))
 
 
+# Images affichées dans les pages : converties en WebP et redimensionnées à la génération (Pillow), avec leurs
+# dimensions et un chargement différé. Taille maximale = 2 fois la taille affichée (écrans haute densité) ;
+# par défaut 1600 px de large. Les originaux restent publiés (icône, données structurées, partage).
+IMAGE_SIZES = {"/images/logo.png": {"hauteur": 68}, "/images/fondateur.jpg": {"largeur": 680}}
+EAGER = {"/images/logo.png"}   # images du haut de page, chargées immédiatement
+_webp = {}
+
+
+def webp(src):
+    """Crée (une seule fois) la version WebP d'une image du site et renvoie (adresse, largeur, hauteur)."""
+    if src not in _webp:
+        try:
+            from PIL import Image
+        except ImportError:
+            raise SystemExit("Le module Pillow est nécessaire : python3 -m pip install -r tools/requirements.txt")
+        im = Image.open(os.path.join(STATIC, src.lstrip("/")))
+        w, h = im.size
+        size = IMAGE_SIZES.get(src, {"largeur": 1600})
+        if "hauteur" in size and h > size["hauteur"]:
+            w, h = round(w * size["hauteur"] / h), size["hauteur"]
+        if "largeur" in size and w > size["largeur"]:
+            w, h = size["largeur"], round(h * size["largeur"] / w)
+        if (w, h) != im.size:
+            im = im.resize((w, h), Image.LANCZOS)
+        out = os.path.splitext(src)[0] + ".webp"
+        im.save(os.path.join(OUT, out.lstrip("/")), "WEBP", quality=82, method=6)
+        _webp[src] = (out, w, h)
+    return _webp[src]
+
+
+def optimize_images(page):
+    def one_img(m):
+        tag = m.group(0)
+        src = re.search(r'\ssrc="([^"]+)"', tag)
+        if not src or not re.match(r"^/images/[^\"]+\.(png|jpe?g)$", src.group(1), re.I):
+            return tag
+        out, w, h = webp(src.group(1))
+        tag = tag.replace('src="%s"' % src.group(1), 'src="%s"' % out)
+        extra = ""
+        if " width=" not in tag:
+            extra += ' width="%d" height="%d"' % (w, h)
+        if "loading=" not in tag and src.group(1) not in EAGER:
+            extra += ' loading="lazy"'
+        if "decoding=" not in tag:
+            extra += ' decoding="async"'
+        return tag[:-1].rstrip("/").rstrip() + extra + ">"
+    return re.sub(r"<img\b[^>]*>", one_img, page)
+
+
 def wr(path, s):
     full = os.path.join(OUT, path.lstrip("/"))
     if full.endswith("/"):
         full += "index.html"
+    if full.endswith(".html"):
+        s = optimize_images(s)
     os.makedirs(os.path.dirname(full), exist_ok=True)
     with open(full, "w", encoding="utf-8") as f:
         f.write(s)
@@ -363,6 +414,8 @@ def head(site, lang, pid, title, desc, *, og_title=None, og_type="website", robo
               '<meta name="twitter:image" content="%s%s">' % (D, img),
               '<meta name="twitter:image:alt" content="%s">' % esc(img_alt)]
     h += ['<meta name="theme-color" content="#0A1622">', extra, '<link rel="icon" href="/images/logo.png">',
+          '<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>',
+          '<link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>',
           '<link rel="stylesheet" href="%s">' % css]
     if jsonld:
         h.append('<script type="application/ld+json">%s</script>' % json.dumps(jsonld, ensure_ascii=False).replace("</", "<\\/"))
@@ -452,8 +505,8 @@ def build_main(site):
             page = head(site, lang, pid, title, desc, og_title=og_title, jsonld=organization(site, lang) if pid == "home" else None,
                         scripts=["/assets/redirect.js"], extra=extra)
             page += ("<body>\n" + hdr + "\n" + '<main id="content" tabindex="-1">\n\n' + body + "\n</main>\n\n" + ftr + "\n" + flt +
-                     '\n<script src="/assets/mail.js"></script>\n<script src="/assets/strings.js"></script>\n'
-                     '<script src="/assets/site.js"></script>\n</body>\n</html>\n')
+                     '\n<script src="/assets/mail.js" defer></script>\n<script src="/assets/strings.js" defer></script>\n'
+                     '<script src="/assets/site.js" defer></script>\n</body>\n</html>\n')
             wr(site.url(pid, lang), page)
             site.sitemap.append((site.url(pid, lang), {l: site.url(pid, l) for l in LANGS}, None))
 
@@ -492,7 +545,7 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
         '<footer class="site">\n  <div class="wrap">\n    <ul class="flinks">%s</ul>\n'
         '    <div class="entities">\n      %s\n    </div>\n'
         '    <div class="fbot"><span>© 2026 CHANCELENO</span><span><a data-mail href="%s">contact(at)chanceleno.com</a></span></div>\n'
-        '  </div>\n</footer>\n<script src="/assets/mail.js"></script>\n</body>\n</html>\n') % (
+        '  </div>\n</footer>\n<script src="/assets/mail.js" defer></script>\n</body>\n</html>\n') % (
         esc(L["aller_au_contenu"]), home, esc(L["accueil_aria"]), esc(L["logo_alt"]), art,
         ' aria-current="page"' if sec_current else "", esc(L["articles"]), nav, site.url("devis", lang), esc(L["devis"]),
         main, after_main, fl, L["entites_html"], site.url("contact", lang))
@@ -559,7 +612,7 @@ def build_thanks(site):
         main = rd(CONTENT, "thanks", lang + ".html").rstrip("\n")
         main = main.replace('href="/"', 'href="%s"' % site.url("home", lang))
         wr(urls[lang], light_page(site, lang, site.light[lang]["merci_titre"] + " | CHANCELENO", "noindex, follow", "", False, urls, main,
-                                  after_main='<script src="/assets/thanks.js"></script>\n'))
+                                  after_main='<script src="/assets/thanks.js" defer></script>\n'))
 
 
 def build_404(site):

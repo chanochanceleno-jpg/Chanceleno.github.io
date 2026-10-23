@@ -202,11 +202,11 @@ async function main() {
     // en-tête (PR n° 10) : aucune largeur dépassée pendant l'animation du logo
     if (w === 360) { const sws = []; for (let i = 0; i < 8; i++) { await p.waitForTimeout(400); sws.push(await p.evaluate(() => document.documentElement.scrollWidth)); } ok(sws.every(x => x <= 360), L + " en-tête : largeur " + sws); }
     // photo de repli
-    await p.route(/fondateur\.jpg/, r => r.abort()); await p.goto(BASE + U("a-propos", lang)); await p.waitForTimeout(500);
+    await p.route(/fondateur\.(jpg|webp)/, r => r.abort()); await p.goto(BASE + U("a-propos", lang)); await p.waitForTimeout(500);
     ok(await p.$eval("section.page figure", f => f.classList.contains("noimg")), L + " photo de repli");
     if (SHOTS && w === 360) {
       fs.mkdirSync(SHOTS, { recursive: true });
-      await p.unroute(/fondateur\.jpg/);
+      await p.unroute(/fondateur\.(jpg|webp)/);
       for (const pid of ["home", "secteurs", "devis", "partenaires"]) { await p.goto(BASE + U(pid, lang)); await p.waitForTimeout(600); await p.screenshot({ path: path.join(SHOTS, lang + "-" + pid + ".png") }); }
       await p.goto(BASE + SITE.secteurs_base[lang]); await p.click("#sectorsFull h3 a"); await p.waitForTimeout(400); await p.screenshot({ path: path.join(SHOTS, lang + "-secteur.png") });
     }
