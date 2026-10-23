@@ -1,18 +1,17 @@
 /* Pages Articles — reprend la charte de index.html (couleurs, polices, en-tête, pied de page) */
-@font-face{font-family:"Archivo";src:url("../fonts/Archivo.ttf") format("truetype");font-weight:100 900;font-stretch:62% 125%;font-display:swap}
-@font-face{font-family:"Newsreader";src:url("../fonts/Newsreader.ttf") format("truetype");font-weight:200 800;font-style:normal;font-display:swap}
-@font-face{font-family:"Newsreader";src:url("../fonts/Newsreader-Italic.ttf") format("truetype");font-weight:200 800;font-style:italic;font-display:swap}
+@font-face{font-family:"Archivo";src:url("/fonts/Archivo.woff2") format("woff2");font-weight:400 700;font-stretch:100% 125%;font-display:swap}
+@font-face{font-family:"Newsreader";src:url("/fonts/Newsreader.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
 :root{
   --ink:#0A1622; --paper:#FAF6EE; --cream:#EFE7D8; --text:#14202C; --muted:#56616C;
-  --copper:#A8683A; --gold:#C8A064; --line:rgba(20,32,44,.14);
+  --copper:#9C6035; --copper-strong:#935B33; --copper-btn:#9C6035; --gold:#C8A064; --line:rgba(20,32,44,.14);
   --serif:"Newsreader", Georgia, "Times New Roman", serif;
   --sans:"Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
   --wrap:1180px; --read:720px;
 }
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452}
+  :root:not([data-theme="light"]){--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452;--copper-strong:#C98452}
 }
-:root[data-theme="dark"]{--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452}
+:root[data-theme="dark"]{--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452;--copper-strong:#C98452}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{max-width:100%}
@@ -35,7 +34,7 @@ header.site{position:sticky;top:0;z-index:40;background:var(--ink);color:#EFE7D8
 .lang a{color:#CFC6B5;font:600 12.5px var(--sans);padding:9px 9px;min-width:36px;text-align:center;text-decoration:none}
 .lang a[aria-current="true"]{background:#EFE7D8;color:var(--ink)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:12px 20px;border-radius:3px;font:600 15px var(--sans);letter-spacing:.02em;text-decoration:none;border:1px solid transparent}
-.btn-primary{background:var(--copper);color:#FFF8EE}
+.btn-primary{background:var(--copper-btn);color:#FFF8EE}
 .btn-primary:hover{background:#8F552C}
 .btn-sm{min-height:40px;padding:8px 14px;font-size:14px}
 @media (max-width:760px){.hcta{display:none}.hnav>a.sec{padding:10px 6px}}

@@ -19,7 +19,8 @@ reconstruit tout seul à chaque mise en ligne.
 | `static/` | Images, polices, styles, scripts, `robots.txt`, `.well-known/security.txt`, fichier Google |
 | `tools/build.py` | Le générateur (ne pas modifier sauf évolution du site) |
 | `tools/check.py` | Les contrôles automatiques (liens, sécurité, référencement) |
-| `tools/requirements.txt` | Le module Python nécessaire (PyYAML), installé automatiquement par GitHub Actions |
+| `tools/requirements.txt` | Les modules Python nécessaires (PyYAML, Pillow), installés automatiquement par GitHub Actions |
+| `sources/fonts/` | Polices d'origine (non publiées) ; `tools/fonts.py` en tire les versions légères de `static/fonts/` |
 
 ## Modifier un texte
 
@@ -116,6 +117,18 @@ Vous y voyez, jour par jour :
 
 **Réglage conseillé** dans *Settings* de GoatCounter : activez l'option qui ignore vos propres visites. Sur un
 appareil donné, vous pouvez aussi cliquer sur « Ne pas compter mes visites » en bas de la page Cookies du site.
+
+## Images et polices (rapidité du site)
+
+- **Images** : déposez les photos en JPG ou PNG dans `static/images/`. À la génération, chaque image affichée dans
+  une page est **convertie en WebP et redimensionnée** automatiquement (au double de sa taille d'affichage), reçoit
+  ses dimensions et se charge seulement quand elle devient visible. Les tailles se règlent dans `IMAGE_SIZES`
+  (`tools/build.py`). Les images de partage (`og-image*.jpg`) restent en JPG.
+- **Polices** : le site publie des versions légères (WOFF2, 141 Ko au lieu de 1,1 Mo) des polices Archivo et
+  Newsreader, limitées aux caractères du français, de l'anglais et du portugais. Si un jour une autre langue ou une
+  autre police est nécessaire : `python3 -m pip install fonttools==4.60.1 brotli==1.1.0` puis `python3 tools/fonts.py`.
+- **Mesurer** : `python3 tests/pages_server.py 8766` sert le site comme GitHub Pages (compression, cache), puis
+  lancez Lighthouse (onglet « Lighthouse » de Chrome, mode mobile) sur `http://localhost:8766/`.
 
 ## À faire régulièrement
 

@@ -26,6 +26,7 @@ class Page(HTMLParser):
         super().__init__()
         self.links, self.ids, self.alts, self.metas, self.scripts, self.handlers = [], set(), {}, {}, [], []
         self.h1 = 0
+        self.imgs = []
         self.canonical = None
         self.title = ""
         self._in_title = False
@@ -40,6 +41,8 @@ class Page(HTMLParser):
                 self.handlers.append("%s %s" % (tag, k))
         if tag == "h1":
             self.h1 += 1
+        if tag == "img":
+            self.imgs.append(a)
         if tag == "title":
             self._in_title = True
         if tag == "a" and a.get("href"):
@@ -124,6 +127,14 @@ def main():
             errors.append("%s : script en ligne interdit par la CSP (%s)" % (url, p.scripts[0]))
         if p.handlers:
             errors.append("%s : attribut on…= interdit par la CSP (%s)" % (url, p.handlers[0]))
+        for img in p.imgs:
+            src = img.get("src", "")
+            if not img.get("width") or not img.get("height") or img.get("alt") is None:
+                errors.append("%s : image sans dimensions ou sans texte alternatif (%s)" % (url, src))
+            if src.endswith((".jpg", ".jpeg", ".png")):
+                errors.append("%s : image non convertie en WebP (%s)" % (url, src))
+            if src != "/images/logo.webp" and img.get("loading") != "lazy":
+                errors.append("%s : image hors haut de page sans chargement différé (%s)" % (url, src))
         if p.h1 != 1:
             errors.append("%s : %d titre(s) h1 au lieu d'un" % (url, p.h1))
         if not p.title.strip():
