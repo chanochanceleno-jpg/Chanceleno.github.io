@@ -24,10 +24,13 @@ OUT = os.path.join(ROOT, "_site")
 LANGS = ["fr", "en", "pt"]
 OG_LOCALE = {"fr": "fr_FR", "en": "en_GB", "pt": "pt_PT"}
 
-# Politique de sécurité du contenu, commune à toutes les pages (voir le lot Sécurité).
-CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; "
-       "connect-src 'self' https://formsubmit.co; form-action 'self' https://formsubmit.co; base-uri 'self'; "
-       "object-src 'none'; frame-src 'none'; upgrade-insecure-requests")
+def csp(stats):
+    """Politique de sécurité du contenu, commune à toutes les pages (voir le lot Sécurité). Le domaine des
+    statistiques GoatCounter n'est autorisé (envoi des comptages) que si un code est configuré."""
+    gc = " " + stats if stats else ""
+    return ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'%s; font-src 'self'; "
+            "connect-src 'self' https://formsubmit.co%s; form-action 'self' https://formsubmit.co; base-uri 'self'; "
+            "object-src 'none'; frame-src 'none'; upgrade-insecure-requests") % (gc, gc)
 
 
 def rd(*p):
@@ -65,6 +68,11 @@ class Site:
         self.data = rjson(CONTENT, "data.json")
         self.light = rjson(CONTENT, "layout", "light.json")
         self.domain = self.site["domaine"]
+        # statistiques GoatCounter : code du compte (ex. « chanceleno »), vide = aucun comptage
+        code = self.site.get("goatcounter", "").strip()
+        if code and not re.match(r"^[a-z0-9-]+$", code):
+            raise SystemExit("Code GoatCounter invalide dans content/site.json : %r" % code)
+        self.stats = "https://%s.goatcounter.com" % code if code else ""
         self.missing = {}          # texte français sans traduction -> pages concernées
         self.pages = {}            # identifiant de page -> {langue: chemin}
         for pid, p in self.site["pages"].items():
@@ -305,7 +313,7 @@ def head(site, lang, pid, title, desc, *, og_title=None, og_type="website", robo
     img = site.site["og_image"][lang]
     img_alt = site.site["og_image_alt"][lang]
     h = ['<!DOCTYPE html>', '<html lang="%s">' % lang, '<head>', '<meta charset="utf-8">',
-         '<meta http-equiv="Content-Security-Policy" content="%s">' % CSP,
+         '<meta http-equiv="Content-Security-Policy" content="%s">' % csp(site.stats),
          '<meta name="referrer" content="strict-origin-when-cross-origin">',
          '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">',
          '<meta name="robots" content="%s">' % robots,
@@ -341,6 +349,9 @@ def head(site, lang, pid, title, desc, *, og_title=None, og_type="website", robo
     if jsonld:
         h.append('<script type="application/ld+json">%s</script>' % json.dumps(jsonld, ensure_ascii=False).replace("</", "<\\/"))
     h += ['<script src="%s"></script>' % s for s in scripts]
+    if site.stats:
+        h.append('<script data-goatcounter="%s/count" async src="/assets/count.js"></script>' % site.stats)
+    h.append('<script src="/assets/stats.js" defer></script>')
     h.append("</head>")
     return "\n".join(x for x in h if x) + "\n"
 

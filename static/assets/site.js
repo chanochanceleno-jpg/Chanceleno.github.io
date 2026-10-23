@@ -6,7 +6,6 @@ const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},se
 const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* ===== CONFIGURATION ===== */
 const FORM_ENDPOINT="https://formsubmit.co/ajax/dd4826d916be1ff8585a8daf1f96ea91"; // même service que le site en ligne (FormSubmit)
-const ANALYTICS_ENABLED=false; // passer à true uniquement si un outil de mesure d'audience est ajouté
 
 /* ---------- Menu mobile ---------- */
 const nav=document.getElementById("nav"),menuBtn=document.getElementById("menuBtn");
@@ -165,6 +164,8 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
       inp.setAttribute("aria-invalid",bad);if(er){er.classList.toggle("show",bad);if(bad)inp.setAttribute("aria-describedby",er.id)}
       if(bad&&!first)first=inp});
     if(first){st.className="status bad show";st.textContent=window.__t("Certains champs sont à compléter. Vos informations saisies sont conservées.");first.focus();return}
+    /* statistiques : formulaire valide qui part (voir assets/stats.js) */
+    if(window.chStat)window.chStat({RFQ:"envoi-devis",SUP:"envoi-fournisseur",PAR:"envoi-partenaire",CT:"envoi-contact"}[form.dataset.kind]);
     const btn=form.querySelector("button[type=submit]");const label=btn.textContent;btn.dataset.label=label;btn.disabled=true;btn.textContent=window.__t("Envoi en cours…");
     const ref=makeRef(form.dataset.kind==="CT"?"MSG":form.dataset.kind);
     const fd=new FormData();
@@ -204,14 +205,6 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
 document.querySelectorAll(".brand img").forEach(img=>{const ok=()=>img.parentNode.classList.add("has-logo"),ko=()=>img.remove();if(img.complete)(img.naturalWidth?ok:ko)();else{img.addEventListener("load",ok);img.addEventListener("error",ko)}});
 document.querySelectorAll("img[data-fallback]").forEach(img=>{const ko=()=>img.parentNode.classList.add("noimg");if(img.complete&&!img.naturalWidth)ko();else img.addEventListener("error",ko)});
 
-/* ---------- Consent ---------- */
-const cBox=document.getElementById("consent");
-function showConsentState(){const cs=document.getElementById("consentState");if(!cs)return;if(!ANALYTICS_ENABLED){cs.textContent="";return}const s=store.get("ch_consent");cs.textContent=s==="yes"?"Votre choix actuel : mesure d'audience acceptée.":s==="no"?"Votre choix actuel : mesure d'audience refusée.":"Vous n'avez pas encore fait de choix."}
-if(ANALYTICS_ENABLED){document.querySelectorAll("[data-open-consent]").forEach(b=>b.hidden=false);if(!store.get("ch_consent"))cBox.classList.add("show")}
-cBox.addEventListener("click",e=>{const b=e.target.closest("[data-consent]");if(!b)return;store.set("ch_consent",b.dataset.consent);cBox.classList.remove("show");showConsentState()
-  /* En production : charger l'outil d'analyse uniquement si "yes" */});
-document.querySelectorAll("[data-open-consent]").forEach(b=>b.addEventListener("click",()=>{cBox.classList.add("show");cBox.querySelector("button").focus()}));
-showConsentState();
 
 /* ---------- Logo : rejouer l'animation au survol ---------- */
 const brand=document.querySelector(".brand");let rpl=0;
@@ -236,4 +229,15 @@ const STR=window.CH_STRINGS||{};
 const norm=t=>t.trim().replace(/\s+/g," ");
 window.__t=fr=>{if(LANG==="fr")return unmask(fr);const e=STR[norm(fr)];return unmask(e&&e[LANG]?e[LANG]:fr)};
 
+/* ---------- Statistiques (après window.__t, utilisé à l'affichage) : « Ne pas compter mes visites » (page Cookies) ---------- */
+/* GoatCounter n'envoie rien quand localStorage « skipgc » vaut « t » (mécanisme prévu par count.js). */
+const gcBtn=document.getElementById("gcOptout"),gcState=document.getElementById("gcState");
+if(gcBtn&&document.querySelector("script[data-goatcounter]")){
+  gcBtn.hidden=false;gcState.hidden=false;
+  const skip=()=>store.get("skipgc")==="t";
+  const show=()=>{gcBtn.textContent=window.__t(skip()?"Compter à nouveau mes visites":"Ne pas compter mes visites");
+    gcState.textContent=window.__t(skip()?"Vos visites ne sont pas comptées sur cet appareil.":"Vos visites sont comptées de façon anonyme.")};
+  gcBtn.addEventListener("click",()=>{if(skip()){try{localStorage.removeItem("skipgc")}catch(e){}}else store.set("skipgc","t");show()});
+  show();
+}
 })();

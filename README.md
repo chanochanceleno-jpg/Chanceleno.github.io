@@ -75,6 +75,30 @@ puis ouvrez http://localhost:8000. Pour vérifier les liens et la sécurité : `
 - Les anciennes adresses du type `chanceleno.com/#/devis` continuent de fonctionner : elles redirigent vers
   les nouvelles (`/devis/`, `/en/quote/`, `/pt/cotacao/`…).
 
+## Statistiques de visite (GoatCounter)
+
+Le site mesure sa fréquentation avec **GoatCounter**, un outil gratuit **sans cookie** qui ne conserve pas les
+adresses IP : aucun bandeau de consentement n'est affiché. Le script est hébergé sur le site
+(`static/assets/count.js`).
+
+**Activer le comptage** (une seule fois) :
+1. Créez un compte gratuit sur https://www.goatcounter.com (« Sign up ») et choisissez un code, par exemple `chanceleno`.
+2. Dans `content/site.json`, remplissez le champ : `"goatcounter": "chanceleno"`.
+3. Mergez : le comptage démarre au déploiement suivant. Tant que le champ est vide, rien n'est chargé ni compté.
+
+**Consulter les statistiques** : connectez-vous sur `https://chanceleno.goatcounter.com` (avec votre code).
+Vous y voyez, jour par jour :
+- les **pages les plus vues** (ex. `/devis/`, `/en/quote/`, `/pt/cotacao/`) ;
+- d'où viennent les visiteurs (Google, LinkedIn, WhatsApp…), leur pays et leur appareil ;
+- les **événements**, dans la même liste :
+  - `envoi-devis`, `envoi-fournisseur`, `envoi-partenaire`, `envoi-contact` : un formulaire valide est parti
+    (le libellé indique la langue, ex. « envoi-devis (pt) ») ;
+  - `whatsapp-europe` (+33) et `whatsapp-afrique` (+244) : un clic sur un lien WhatsApp ;
+- les pages `/merci/`, `/en/thank-you/`, `/pt/obrigado/` : demandes réellement reçues après le captcha.
+
+**Réglage conseillé** dans *Settings* de GoatCounter : activez l'option qui ignore vos propres visites. Sur un
+appareil donné, vous pouvez aussi cliquer sur « Ne pas compter mes visites » en bas de la page Cookies du site.
+
 ## À faire régulièrement
 
 - **Chaque année, avant le 22 octobre** : repousser d'un an la date `Expires` de `static/.well-known/security.txt`.
