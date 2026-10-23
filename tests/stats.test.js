@@ -1,4 +1,4 @@
-// Tests des statistiques GoatCounter. À lancer sur un site généré AVEC un code (ex. « test » dans content/site.json) :
+// Tests des statistiques GoatCounter. À lancer sur un site généré AVEC un code (ex. « chanceleno » dans config/site.yml) :
 // les requêtes vers <code>.goatcounter.com sont interceptées, rien n'est réellement envoyé.
 //   BASE=http://localhost:8765 GC=test node stats.test.js
 const { chromium } = require(process.env.PW || "playwright");

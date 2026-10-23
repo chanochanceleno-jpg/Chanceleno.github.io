@@ -5,7 +5,7 @@ const unmask=window.chMail.unmask; // adresse email masquée dans le code (voir 
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 /* ===== CONFIGURATION ===== */
-const FORM_ENDPOINT="https://formsubmit.co/ajax/dd4826d916be1ff8585a8daf1f96ea91"; // même service que le site en ligne (FormSubmit)
+const FORM_ENDPOINT="https://formsubmit.co/ajax/{{formsubmit}}"; // FormSubmit ; identifiant et autres valeurs {{…}} : config/site.yml
 
 /* ---------- Menu mobile ---------- */
 const nav=document.getElementById("nav"),menuBtn=document.getElementById("menuBtn");
@@ -118,7 +118,7 @@ selectTab(params.get("t")==="sup"?"sup":"cli");
 const files=[];const list=document.getElementById("fileList");
 if(list){
 function renderFiles(){list.innerHTML=files.map((f,i)=>`<li><span>${f.name.replace(/[<>&]/g,"")} <span class="muted">(${Math.max(1,Math.round(f.size/1024))} Ko)</span></span><button type="button" data-rm="${i}" aria-label="${window.__t("Retirer")} ${f.name.replace(/"/g,"")}">${window.__t("Retirer")}</button></li>`).join("")}
-function addFiles(fl){for(const f of fl){if(f.size>10*1024*1024){alert("« "+f.name+" » "+window.__t("dépasse 10 Mo. Compressez-le ou envoyez-le à contact(at)chanceleno.com."));continue}if(files.reduce((n,x)=>n+x.size,0)+f.size>10*1024*1024){alert("« "+f.name+" » "+window.__t("ne peut pas être ajouté : la limite est de 10 Mo au total. Envoyez-le à contact(at)chanceleno.com."));continue}files.push(f)}renderFiles()}
+function addFiles(fl){for(const f of fl){if(f.size>10*1024*1024){alert("« "+f.name+" » "+window.__t("dépasse 10 Mo. Compressez-le ou envoyez-le à {{email}}."));continue}if(files.reduce((n,x)=>n+x.size,0)+f.size>10*1024*1024){alert("« "+f.name+" » "+window.__t("ne peut pas être ajouté : la limite est de 10 Mo au total. Envoyez-le à {{email}}."));continue}files.push(f)}renderFiles()}
 document.getElementById("r-files").addEventListener("change",e=>{addFiles(e.target.files);e.target.value=""});
 document.getElementById("r-cam").addEventListener("change",e=>{addFiles(e.target.files);e.target.value=""});
 document.getElementById("r-photos").addEventListener("change",e=>{addFiles(e.target.files);e.target.value=""});
@@ -137,9 +137,9 @@ const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 const FORM_POST=FORM_ENDPOINT.replace("/ajax/","/");
 const THANKS={fr:"https://chanceleno.com/merci/",pt:"https://chanceleno.com/pt/obrigado/",en:"https://chanceleno.com/en/thank-you/"};
 const ACK={
-  fr:(k,ref)=>"Bonjour,\n\nNous avons bien reçu "+{RFQ:"votre demande de devis",SUP:"votre candidature fournisseur",PAR:"votre demande de collaboration",CT:"votre message"}[k]+". Votre référence : "+ref+".\nConservez cette référence. Nous revenons vers vous par email, en général sous 48 heures ouvrées.\n\nCHANCELENO\ncontact(at)chanceleno.com · https://chanceleno.com",
-  pt:(k,ref)=>"Olá,\n\nRecebemos "+{RFQ:"o seu pedido de cotação",SUP:"a sua candidatura de fornecedor",PAR:"o seu pedido de colaboração",CT:"a sua mensagem"}[k]+". A sua referência: "+ref+".\nGuarde esta referência. Responderemos por email, geralmente em 48 horas úteis.\n\nCHANCELENO\ncontact(at)chanceleno.com · https://chanceleno.com/pt/",
-  en:(k,ref)=>"Hello,\n\nWe have received "+{RFQ:"your quote request",SUP:"your supplier application",PAR:"your collaboration enquiry",CT:"your message"}[k]+". Your reference: "+ref+".\nKeep this reference. We will get back to you by email, usually within 48 business hours.\n\nCHANCELENO\ncontact(at)chanceleno.com · https://chanceleno.com"};
+  fr:(k,ref)=>"Bonjour,\n\nNous avons bien reçu "+{RFQ:"votre demande de devis",SUP:"votre candidature fournisseur",PAR:"votre demande de collaboration",CT:"votre message"}[k]+". Votre référence : "+ref+".\nConservez cette référence. Nous revenons vers vous par email, en général sous {{delai_reponse}} heures ouvrées.\n\nCHANCELENO\n{{email}} · https://chanceleno.com",
+  pt:(k,ref)=>"Olá,\n\nRecebemos "+{RFQ:"o seu pedido de cotação",SUP:"a sua candidatura de fornecedor",PAR:"o seu pedido de colaboração",CT:"a sua mensagem"}[k]+". A sua referência: "+ref+".\nGuarde esta referência. Responderemos por email, geralmente em {{delai_reponse}} horas úteis.\n\nCHANCELENO\n{{email}} · https://chanceleno.com/pt/",
+  en:(k,ref)=>"Hello,\n\nWe have received "+{RFQ:"your quote request",SUP:"your supplier application",PAR:"your collaboration enquiry",CT:"your message"}[k]+". Your reference: "+ref+".\nKeep this reference. We will get back to you by email, usually within {{delai_reponse}} business hours.\n\nCHANCELENO\n{{email}} · https://chanceleno.com"};
 /* Référence CH-XXX-AAAAMMJJ-HHMM, à l'heure de Paris (heure de réception), quel que soit le pays du visiteur. */
 function makeRef(code){let p={};try{new Intl.DateTimeFormat("fr-FR",{timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date()).forEach(x=>{p[x.type]=x.value})}catch(e){const d=new Date(),pad=x=>String(x).padStart(2,"0");p={year:d.getFullYear(),month:pad(d.getMonth()+1),day:pad(d.getDate()),hour:pad(d.getHours()),minute:pad(d.getMinutes())}}return "CH-"+code+"-"+p.year+p.month+p.day+"-"+p.hour+p.minute}
 function sendClassic(fd,toSend,ref,kind){
@@ -178,7 +178,7 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
       if(el.type==="email")fd.append("email",val);
       fd.append(key,val)});
     const toSend=form.id==="rfqForm"?files:Array.from((form.querySelector("input[type=file]")||{}).files||[]);
-    if(toSend.reduce((n,f)=>n+f.size,0)>10*1024*1024){st.className="status bad show";st.textContent=window.__t("Vos fichiers dépassent 10 Mo au total. Retirez-en, ou envoyez-les par email à contact(at)chanceleno.com.");btn.disabled=false;btn.textContent=label;st.setAttribute("tabindex","-1");st.focus();return}
+    if(toSend.reduce((n,f)=>n+f.size,0)>10*1024*1024){st.className="status bad show";st.textContent=window.__t("Vos fichiers dépassent 10 Mo au total. Retirez-en, ou envoyez-les par email à {{email}}.");btn.disabled=false;btn.textContent=label;st.setAttribute("tabindex","-1");st.focus();return}
     if(form.dataset.kind!=="CT"){sendClassic(fd,toSend,ref,form.dataset.kind);return}
     toSend.forEach(f=>fd.append("upload",f,f.name));
     const lg=["pt","en"].includes(document.documentElement.lang)?document.documentElement.lang:"fr";fd.append("_autoresponse",unmask(ACK[lg]("CT",ref)));
@@ -188,13 +188,13 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
     .then(r=>r.json().catch(()=>({})).then(j=>{if(!r.ok||String(j.success)!=="true")throw new Error(j.message||"HTTP "+r.status)}))
     .then(()=>{
       const what={RFQ:"Votre demande de devis est bien envoyée",SUP:"Votre candidature est bien envoyée. Son statut est « Candidat » jusqu'à l'évaluation",PAR:"Votre demande de collaboration est bien envoyée",CT:"Votre message est bien envoyé"}[form.dataset.kind];
-      st.className="status ok show";st.innerHTML=window.__t(what)+". "+window.__t("Référence")+" : <code>"+ref+"</code><br><span class=\"muted\" style=\"font-size:14px\">"+window.__t("Conservez cette référence. Nous revenons vers vous par email, en général sous 48 heures ouvrées.")+"</span>";
+      st.className="status ok show";st.innerHTML=window.__t(what)+". "+window.__t("Référence")+" : <code>"+ref+"</code><br><span class=\"muted\" style=\"font-size:14px\">"+window.__t("Conservez cette référence. Nous revenons vers vous par email, en général sous {{delai_reponse}} heures ouvrées.")+"</span>";
       form.querySelectorAll("input:not([type=checkbox]),textarea").forEach(i=>{if(i.type!=="file")i.value=""});
       if(form.id==="rfqForm"){files.length=0;renderFiles()}
     })
     .catch(err=>{
       console.warn("Envoi du formulaire non confirmé :",err);
-      st.className="status bad show";st.innerHTML=window.__t("L'envoi n'a pas abouti. Vos informations sont conservées : réessayez, ou écrivez-nous directement à")+" <a data-mail href=\"/#/contact\">contact(at)chanceleno.com</a> "+window.__t("ou sur")+" <a href=\"https://wa.me/33641808499\" target=\"_blank\" rel=\"noopener\">WhatsApp</a>.";window.chMail.reveal(st);
+      st.className="status bad show";st.innerHTML=window.__t("L'envoi n'a pas abouti. Vos informations sont conservées : réessayez, ou écrivez-nous directement à")+" <a data-mail href=\"/#/contact\">{{email}}</a> "+window.__t("ou sur")+" <a href=\"https://wa.me/{{wa_europe_num}}\" target=\"_blank\" rel=\"noopener\">WhatsApp</a>.";window.chMail.reveal(st);
     })
     .finally(()=>{clearTimeout(timer);btn.disabled=false;btn.textContent=label;st.setAttribute("tabindex","-1");st.focus()});
   });
@@ -206,9 +206,9 @@ document.querySelectorAll(".brand img").forEach(img=>{const ok=()=>img.parentNod
 document.querySelectorAll("img[data-fallback]").forEach(img=>{const ko=()=>img.parentNode.classList.add("noimg");if(img.complete&&!img.naturalWidth)ko();else img.addEventListener("error",ko)});
 
 
-/* ---------- Logo : rejouer l'animation au survol ---------- */
+/* ---------- Logo : rejouer l'animation au survol (même sur les pages où elle n'a pas été jouée, classe ch-vu) ---------- */
 const brand=document.querySelector(".brand");let rpl=0;
-function replayLogo(){if(reduce||Date.now()-rpl<2500)return;rpl=Date.now();brand.classList.add("replay");void brand.offsetWidth;brand.classList.remove("replay")}
+function replayLogo(){if(reduce||Date.now()-rpl<2500)return;rpl=Date.now();document.documentElement.classList.remove("ch-vu");brand.classList.add("replay");void brand.offsetWidth;brand.classList.remove("replay")}
 brand.addEventListener("mouseenter",replayLogo);brand.addEventListener("focus",replayLogo);
 
 /* ---------- Assistant guidé (sans service externe) ---------- */
@@ -216,7 +216,7 @@ const cbBtn=document.getElementById("cbBtn"),cbPanel=document.getElementById("cb
 const cbClose=()=>{cbPanel.hidden=true;cbBtn.setAttribute("aria-expanded","false")};
 cbBtn.addEventListener("click",()=>{const o=cbPanel.hidden;cbPanel.hidden=!o;cbBtn.setAttribute("aria-expanded",String(o))});
 cbPanel.querySelectorAll("a").forEach(a=>a.addEventListener("click",cbClose));
-document.getElementById("cbWa").addEventListener("click",function(){const pt=LANG==="pt";const msg={fr:"Bonjour CHANCELENO, j’ai une demande :",en:"Hello CHANCELENO, I have a request:",pt:"Olá CHANCELENO, tenho um pedido:"}[LANG]||"";this.href="https://wa.me/"+(pt?"244928424849":"33641808499")+"?text="+encodeURIComponent(msg)});
+document.getElementById("cbWa").addEventListener("click",function(){const pt=LANG==="pt";const msg={fr:"Bonjour CHANCELENO, j’ai une demande :",en:"Hello CHANCELENO, I have a request:",pt:"Olá CHANCELENO, tenho um pedido:"}[LANG]||"";this.href="https://wa.me/"+(pt?"{{wa_afrique_num}}":"{{wa_europe_num}}")+"?text="+encodeURIComponent(msg)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")cbClose()});
 
 /* ---------- WhatsApp ---------- */

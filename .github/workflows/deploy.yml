@@ -1,5 +1,6 @@
 # Génère le site depuis content/ et static/ (tools/build.py), le contrôle (tools/check.py),
-# puis le publie sur GitHub Pages à chaque merge sur main. Sur une pull request : génération et contrôles seulement.
+# puis le publie sur GitHub Pages à chaque merge sur main (et chaque 1er janvier, pour l'année du copyright).
+# Sur une pull request : génération et contrôles seulement.
 name: Générer et publier le site
 
 on:
@@ -7,6 +8,8 @@ on:
     branches: ["main"]
   pull_request:
   workflow_dispatch:
+  schedule:
+    - cron: "7 0 1 1 *"      # chaque 1er janvier : nouvelle génération pour mettre à jour l'année du copyright
 
 permissions:
   contents: read
@@ -25,7 +28,7 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Installer les modules Python (PyYAML)
+      - name: Installer les modules Python (PyYAML, Pillow)
         run: python -m pip install -r tools/requirements.txt
       - name: Générer le site
         run: python tools/build.py

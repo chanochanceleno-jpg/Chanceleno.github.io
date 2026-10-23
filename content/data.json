@@ -149,42 +149,5 @@
    "etape": "Livraison",
    "etat": 0
   }
- ],
- "marches": [
-  {
-   "role": "Base Europe · siège",
-   "titre": "Lyon, France",
-   "texte": "CHANCELENO INTERNATIONAL, société en cours d'immatriculation. Base administrative et logistique pour l'Europe et les pays francophones."
-  },
-  {
-   "role": "Base Afrique · pays relais",
-   "titre": "Luanda, Angola",
-   "texte": "CHANCELENO – COMÉRCIO GERAL, (SU), LDA. Base pour l'Afrique et les pays lusophones, marché africain prioritaire."
-  },
-  {
-   "role": "Pays relais · partenaire local",
-   "titre": "Pointe-Noire, République du Congo",
-   "texte": "Un partenaire sur place pour la prospection et le suivi des opérations."
-  },
-  {
-   "role": "Pays relais · partenaire local",
-   "titre": "Kinshasa, RD Congo",
-   "texte": "Un partenaire sur place pour la prospection et le suivi des opérations."
-  },
-  {
-   "role": "Marchés servis · monde lusophone",
-   "titre": "Angola, Mozambique, Cap-Vert, Guinée-Bissau, São Tomé-et-Príncipe, Brésil, Portugal, Timor oriental",
-   "texte": "Nous travaillons en portugais avec les acheteurs de tous les pays lusophones, à partir de notre base angolaise et de notre siège européen."
-  },
-  {
-   "role": "Marchés d'approvisionnement",
-   "titre": "Asie, Europe, Afrique, Moyen-Orient",
-   "texte": "Sourcing selon le besoin, le produit et le niveau de risque acceptable. Nous restons ouverts à d'autres régions."
-  },
-  {
-   "role": "Devises et unités",
-   "titre": "EUR, USD, AOA, XAF, CDF",
-   "texte": "Les offres peuvent être établies dans la devise adaptée à l'opération."
-  }
  ]
 }

@@ -5,7 +5,7 @@
       <form id="rfqForm" novalidate data-kind="RFQ">
         <fieldset>
           <legend>1. Votre besoin</legend>
-          <div style="margin-bottom:18px"><label for="r-type">Type de demande</label><select id="r-type" name="Type de demande"><option value="rfq">Approvisionnement (devis produit ou équipement)</option><option value="audit1">Audit documentaire fournisseur (250 € HT, sous 48 h)</option><option value="audit2">Inspection physique sur site (sur devis)</option><option value="boq">Projet sur liste de quantités (BOQ)</option><option value="afrique">Achat de produits africains</option></select></div>
+          <div style="margin-bottom:18px"><label for="r-type">Type de demande</label><select id="r-type" name="Type de demande"><option value="rfq">Approvisionnement (devis produit ou équipement)</option><option value="audit1">Audit documentaire fournisseur ({{prix_audit}}, sous {{delai_rapport}} h)</option><option value="audit2">Inspection physique sur site (sur devis)</option><option value="boq">Projet sur liste de quantités (BOQ)</option><option value="afrique">Achat de produits africains</option></select></div>
           <div><label for="r-req">Produit, équipement ou service recherché</label><textarea id="r-req" required placeholder="Ex. : 4 pompes centrifuges pour eau industrielle, débit 80 m³/h, avec kit de pièces d'usure"></textarea><div class="err" id="e-r-req">Décrivez votre besoin, même en quelques mots.</div></div>
           <div class="grid2" style="margin-top:18px">
             <div><label for="r-sec">Secteur</label><select id="r-sec" class="secSelect"></select></div>
@@ -54,8 +54,8 @@
         <p class="privacy">Les services de CHANCELENO sont réservés aux professionnels.</p>
         <p class="privacy">CHANCELENO utilise ces informations pour étudier votre demande et vous adresser une offre (mesures précontractuelles). Vos documents ne sont pas publiés et ne sont partagés avec des fournisseurs que dans la mesure nécessaire au sourcing. Durée de conservation et droits : voir la <a href="#/confidentialite">politique de confidentialité</a>.</p>
         <div class="status" role="status" aria-live="polite" tabindex="-1"></div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" type="submit">Envoyer ma demande de devis</button><a class="btn btn-ghost" href="https://wa.me/33641808499?text=Bonjour%2C%20je%20souhaite%20demander%20un%20devis." target="_blank" rel="noopener">Plutôt par WhatsApp</a></div>
-        <p class="fine" style="margin-top:10px">Réponse sous 48 h ouvrées</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><button class="btn btn-primary" type="submit">Envoyer ma demande de devis</button><a class="btn btn-ghost" href="https://wa.me/{{wa_europe_num}}?text=Bonjour%2C%20je%20souhaite%20demander%20un%20devis." target="_blank" rel="noopener">Plutôt par WhatsApp</a></div>
+        <p class="fine" style="margin-top:10px">Réponse sous {{delai_reponse}} h ouvrées</p>
       </form>
     </div>
   </div>

@@ -1,5 +1,5 @@
 # Signaler une faille de sécurité sur chanceleno.com / Report a security issue / Comunicar uma falha de segurança
-Contact: mailto:contact@chanceleno.com
+Contact: mailto:{{email_nom}}@{{email_domaine}}
 Expires: 2027-10-22T23:00:00.000Z
 Preferred-Languages: fr, en, pt
 Canonical: https://chanceleno.com/.well-known/security.txt
