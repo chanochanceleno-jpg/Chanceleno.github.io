@@ -699,7 +699,7 @@ def organization(site, lang):
              "areaServed": ["FR", "BE", "CH", "CG", "CD"], "availableLanguage": ["fr", "en"]},
             {"@type": "ContactPoint", "telephone": wa_af, "contactType": "sales",
              "areaServed": ["AO", "MZ", "CV", "GW", "ST", "BR", "PT"], "availableLanguage": ["pt", "es"]}],
-        "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es"]}
+        "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es", "ln"]}
     if site.founder_same_as():
         org["founder"]["sameAs"] = site.founder_same_as()
     if site.same_as():
