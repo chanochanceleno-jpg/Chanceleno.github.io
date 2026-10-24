@@ -19,8 +19,11 @@
     "france_attente": "{nom} — société en cours d'immatriculation, domiciliée à {ville}. Ses identifiants (SIREN, RCS, TVA) seront publiés dès son immatriculation.",
     "pied_attente": "Identifiants publiés après immatriculation",
     "references_titre": "Ils nous font confiance",
-    "linkedin_page": "Page LinkedIn",
-    "cgv": "Conditions générales de vente"
+    "cgv": "Conditions générales de vente",
+    "suivez": "Suivez-nous",
+    "reseaux_groupe": "Réseaux sociaux",
+    "reseau": "CHANCELENO sur {r}",
+    "reseau_tiktok": "Chano Chanceleno, fondateur, sur TikTok"
   },
   "en": {
     "pays": {"AO": "Angola", "FR": "France"},
@@ -41,8 +44,11 @@
     "france_attente": "{nom} — company being registered, domiciled in {ville}. Its identifiers (SIREN, RCS, VAT) will be published once registered.",
     "pied_attente": "Identifiers published after registration",
     "references_titre": "They trust us",
-    "linkedin_page": "LinkedIn page",
-    "cgv": "General terms and conditions of sale"
+    "cgv": "General terms and conditions of sale",
+    "suivez": "Follow us",
+    "reseaux_groupe": "Social media",
+    "reseau": "CHANCELENO on {r}",
+    "reseau_tiktok": "Chano Chanceleno, founder, on TikTok"
   },
   "pt": {
     "pays": {"AO": "Angola", "FR": "França"},
@@ -63,7 +69,10 @@
     "france_attente": "{nom} — sociedade em processo de registo, domiciliada em {ville}. Os seus identificadores (SIREN, RCS, IVA) serão publicados após o registo.",
     "pied_attente": "Identificadores publicados após o registo",
     "references_titre": "Confiam em nós",
-    "linkedin_page": "Página LinkedIn",
-    "cgv": "Condições gerais de venda"
+    "cgv": "Condições gerais de venda",
+    "suivez": "Siga-nos",
+    "reseaux_groupe": "Redes sociais",
+    "reseau": "CHANCELENO no {r}",
+    "reseau_tiktok": "Chano Chanceleno, fundador, no TikTok"
   }
 }

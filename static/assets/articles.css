@@ -73,3 +73,13 @@ footer.site a:hover{color:#fff;text-decoration:underline}
 .entities strong{color:#EFE7D8;font-weight:600}
 .fbot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:28px;font-size:13px;color:#8E99A3}
 @media (max-width:760px){.entities{grid-template-columns:1fr}}
+/* Réseaux sociaux : icônes des comptes officiels (zones cliquables de 44 × 44 px, couleurs de la charte) */
+.socials{display:flex;flex-wrap:wrap;gap:4px;list-style:none;margin:24px 0 0 -12px;padding:0}
+footer.site .socials{margin:24px 0 0 -12px}
+footer.site .socials li{margin:0}
+.socials a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:4px;transition:color .2s ease,opacity .2s ease}
+.socials svg{display:block}
+footer.site .socials a{color:var(--cream);opacity:.75}
+footer.site .socials a:hover,footer.site .socials a:focus-visible{color:var(--gold);opacity:1;text-decoration:none}
+.socials a:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.socials a{transition:none}}

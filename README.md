@@ -79,7 +79,7 @@ de la configuration :
 | `{{email}}` | l'adresse email, masquée contre les robots |
 | `{{wa_europe}}`, `{{wa_afrique}}` | +33 6 41 80 84 99, +244 928 424 849 |
 | `{{wa_europe_num}}`, `{{wa_afrique_num}}` | 33641808499, 244928424849 (pour les liens `https://wa.me/…`) |
-| `{{linkedin_profil}}`, `{{linkedin_page}}`, `{{instagram}}`, `{{tiktok}}` | adresse du réseau social |
+| `{{linkedin_profil}}`, `{{linkedin_page}}`, `{{instagram}}`, `{{facebook}}`, `{{youtube}}`, `{{tiktok}}` | adresse du réseau social |
 | `{{france_nom}}`, `{{france_statut}}`, `{{angola_nom}}` | dénomination, « société en cours d'immatriculation » ou « SASU, SIREN … » |
 | `{{annee}}` | l'année en cours (copyright) |
 
@@ -224,16 +224,27 @@ Dans `config/site.yml`, rubrique `reseaux`, collez l'adresse complète :
 ```yaml
 reseaux:
   linkedin_profil: "https://www.linkedin.com/in/chanceleno"
-  linkedin_page: "https://www.linkedin.com/company/chanceleno"
-  instagram: "https://www.instagram.com/chanceleno"
-  tiktok: ""
+  linkedin_page: "https://www.linkedin.com/company/chanceleno/"
+  instagram: "https://www.instagram.com/chanceleno_international/"
+  facebook: "https://www.facebook.com/profile.php?id=1149213368276296"
+  youtube: "https://www.youtube.com/@Chanceleno"
+  tiktok: "https://www.tiktok.com/@chano.chanceleno"
 ```
 
-Le lien apparaît dans le pied de page (toutes les pages et les articles), sur la page Contact et dans les données
-lues par Google. Un champ vide (`""`) n'est affiché nulle part. Les numéros WhatsApp et l'email se modifient de la
-même façon, rubrique `coordonnees`. **Attention à l'email** : les formulaires arrivent à l'adresse enregistrée chez
-FormSubmit. Avant de changer d'adresse, envoyez un premier formulaire vers la nouvelle adresse sur formsubmit.co,
-confirmez-la, puis remplacez `email` et `formsubmit` (le nouvel identifiant chiffré).
+- Les comptes `linkedin_page`, `instagram`, `facebook`, `youtube` et `tiktok` s'affichent en **icônes** dans le pied
+  de page (toutes les pages et les articles) et sur la page Contact (« Suivez-nous »), dans cet ordre, TikTok en
+  dernier. Les icônes sont dans `tools/icones.py`, les libellés lus par les lecteurs d'écran dans
+  `content/layout/blocs.json`.
+- Les données lues par Google (schema.org) reprennent les 4 comptes de l'entreprise ; le profil LinkedIn et le
+  TikTok, comptes du fondateur, y sont rattachés au fondateur.
+- `linkedin_profil` est le profil du fondateur, utilisé par les liens texte « LinkedIn » (accueil, À propos,
+  Contact, pied de page, signature des articles).
+- Un champ vide (`""`) n'est affiché nulle part.
+
+Les numéros WhatsApp et l'email se modifient de la même façon, rubrique `coordonnees`. **Attention à l'email** : les
+formulaires arrivent à l'adresse enregistrée chez FormSubmit. Avant de changer d'adresse, envoyez un premier
+formulaire vers la nouvelle adresse sur formsubmit.co, confirmez-la, puis remplacez `email` et `formsubmit` (le
+nouvel identifiant chiffré).
 
 ## Publier les CGV
 

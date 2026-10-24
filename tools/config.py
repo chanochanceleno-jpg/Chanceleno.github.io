@@ -143,7 +143,8 @@ def load(path=CONFIG):
 
     # réseaux sociaux (vide = non affiché)
     rs = section(raw, "reseaux", errors)
-    cfg["reseaux"] = {k: url(rs.get(k), "reseaux." + k, errors) for k in ("linkedin_profil", "linkedin_page", "instagram", "tiktok")}
+    cfg["reseaux"] = {k: url(rs.get(k), "reseaux." + k, errors) for k in ("linkedin_profil", "linkedin_page", "instagram", "facebook",
+                                                                                "youtube", "tiktok")}
     for k in set(rs) - set(cfg["reseaux"]):
         errors.append("reseaux.%s : réseau inconnu (possibles : %s)" % (k, ", ".join(cfg["reseaux"])))
 

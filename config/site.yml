@@ -61,12 +61,17 @@ coordonnees:
 
 # ----------------------------------------------------------------------------------------------------------------
 # Réseaux sociaux : adresse complète (https://…). Un lien vide ( "" ) n'est affiché nulle part.
+# Icônes du pied de page et de la page Contact, dans cet ordre : LinkedIn (page), Instagram, Facebook, YouTube,
+# TikTok. Les 4 comptes de l'entreprise figurent aussi dans les données lues par Google (schema.org) ;
+# le profil LinkedIn et le TikTok, comptes personnels du fondateur, y sont rattachés au fondateur.
 # ----------------------------------------------------------------------------------------------------------------
 reseaux:
-  linkedin_profil: "https://www.linkedin.com/in/chanceleno"
-  linkedin_page: ""                    # page entreprise, ex. "https://www.linkedin.com/company/chanceleno"
-  instagram: ""                        # ex. "https://www.instagram.com/chanceleno"
-  tiktok: ""                           # ex. "https://www.tiktok.com/@chanceleno"
+  linkedin_profil: "https://www.linkedin.com/in/chanceleno"           # profil du fondateur (liens texte « LinkedIn »)
+  linkedin_page: "https://www.linkedin.com/company/chanceleno/"       # page de l'entreprise
+  instagram: "https://www.instagram.com/chanceleno_international/"
+  facebook: "https://www.facebook.com/profile.php?id=1149213368276296"
+  youtube: "https://www.youtube.com/@Chanceleno"
+  tiktok: "https://www.tiktok.com/@chano.chanceleno"                 # compte du fondateur, toujours en dernier
 
 
 # ----------------------------------------------------------------------------------------------------------------
