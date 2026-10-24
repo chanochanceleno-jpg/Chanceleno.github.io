@@ -103,7 +103,7 @@ async function reel(b) {
       const ld = lang === "fr" ? await jsonld(p) : null;
       if (ld) {
         ok(!ld.subOrganization[1].taxID && JSON.stringify(ld.sameAs) === JSON.stringify(SOCIAL.slice(0, 4).map(x => x[0])), "JSON-LD : société française sans identifiants, sameAs = 4 comptes de l'entreprise");
-        ok(JSON.stringify(ld.founder.sameAs) === '["https://www.linkedin.com/in/chanceleno","https://www.tiktok.com/@chano.chanceleno"]', "JSON-LD : profil LinkedIn et TikTok du fondateur");
+        ok(ld.founder.name === "Chano Chanceleno" && JSON.stringify(ld.founder.sameAs) === '["https://www.linkedin.com/in/chanceleno","https://www.tiktok.com/@chano.chanceleno"]', "JSON-LD : fondateur « Chano Chanceleno », profil LinkedIn et TikTok");
         ok(JSON.stringify(ld.knowsLanguage) === '["fr","pt","en","es","ln"]' && !("email" in ld), "JSON-LD : knowsLanguage avec ln, sans email");
       }
       await p.goto(BASE + U("mentions", lang));

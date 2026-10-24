@@ -693,7 +693,7 @@ def organization(site, lang):
     org = {
         "@context": "https://schema.org", "@type": "Organization", "@id": D + "/#organisation",
         "name": "CHANCELENO", "url": D + "/", "logo": D + "/images/logo.png", "description": desc,
-        "founder": {"@type": "Person", "name": "Chano Ndandu Chanceleno"},
+        "founder": {"@type": "Person", "name": "Chano Chanceleno"},
         "contactPoint": [
             {"@type": "ContactPoint", "telephone": wa_eu, "contactType": "sales",
              "areaServed": ["FR", "BE", "CH", "CG", "CD"], "availableLanguage": ["fr", "en"]},
