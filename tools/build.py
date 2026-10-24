@@ -22,6 +22,7 @@ from html.parser import HTMLParser
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import config as configfile  # noqa: E402  (tools/config.py)
+from icones import ICONS  # noqa: E402  (tools/icones.py)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONTENT = os.path.join(ROOT, "content")
@@ -246,7 +247,8 @@ class Site:
         """Après traduction : blocs construits depuis config/site.yml, liens facultatifs, puis marqueurs {{nom}}."""
         if lang:
             for name, fn in (("MARCHES", self.markets_html), ("IDENTITE", self.legal_html), ("ENTITES", self.entities_html),
-                             ("REFERENCES", self.references_html), ("CGV", lambda l: self.cgv[l] if self.cgv else "")):
+                             ("REFERENCES", self.references_html), ("CGV", lambda l: self.cgv[l] if self.cgv else ""),
+                             ("RESEAUX", self.socials_html), ("SUIVEZ", self.follow_html)):
                 if "<!--%s-->" % name in page:
                     block = fn(lang)
                     # bloc vide : la ligne du repère disparaît aussi (page identique à une page sans ce bloc)
@@ -337,9 +339,38 @@ class Site:
         return ('<div class="band dark" id="references">\n    <div class="wrap">\n      <h2>%s</h2>\n      <div class="refs">%s</div>\n'
                 '    </div>\n  </div>' % (e(self.blocs[lang]["references_titre"]), "".join(items)))
 
+    # --- réseaux sociaux : icônes (pied de page, Contact) et données structurées
+    SOCIAL = [("linkedin_page", "linkedin", "LinkedIn"), ("instagram", "instagram", "Instagram"),
+              ("facebook", "facebook", "Facebook"), ("youtube", "youtube", "YouTube"), ("tiktok", "tiktok", "TikTok")]
+
+    def socials_html(self, lang):
+        """Rangée d'icônes des comptes officiels, dans l'ordre de SOCIAL (TikTok, compte du fondateur, en dernier)."""
+        B, r = self.blocs[lang], self.config["reseaux"]
+        items = []
+        for key, icon, name in self.SOCIAL:
+            if not r[key]:
+                continue
+            label = B["reseau_tiktok"] if key == "tiktok" else B["reseau"].format(r=name)
+            items.append('<li><a href="%s" target="_blank" rel="noopener noreferrer" aria-label="%s"><svg viewBox="0 0 24 24" '
+                         'width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="%s"/></svg></a></li>'
+                         % (esc(r[key]), esc(label).replace("&#x27;", "'"), ICONS[icon]))
+        if not items:
+            return ""
+        return '<ul class="socials" aria-label="%s">%s</ul>' % (esc(B["reseaux_groupe"]), "".join(items))
+
+    def follow_html(self, lang):
+        """Page Contact : « Suivez-nous » suivi des icônes."""
+        icons = self.socials_html(lang)
+        return '<div class="follow"><p>%s</p>%s</div>' % (esc(self.blocs[lang]["suivez"]), icons) if icons else ""
+
     def same_as(self):
+        """Comptes de l'entreprise (schema.org Organization) : sans le profil LinkedIn ni le TikTok du fondateur."""
         r = self.config["reseaux"]
-        return [r[k] for k in ("linkedin_profil", "linkedin_page", "instagram", "tiktok") if r[k]]
+        return [r[k] for k in ("linkedin_page", "instagram", "facebook", "youtube") if r[k]]
+
+    def founder_same_as(self):
+        r = self.config["reseaux"]
+        return [r[k] for k in ("linkedin_profil", "tiktok") if r[k]]
 
     def tr(self, fr, lang, where=""):
         """Traduction d'un texte isolé (titres, descriptions…)."""
@@ -662,13 +693,15 @@ def organization(site, lang):
     org = {
         "@context": "https://schema.org", "@type": "Organization", "@id": D + "/#organisation",
         "name": "CHANCELENO", "url": D + "/", "logo": D + "/images/logo.png", "description": desc,
-        "founder": {"@type": "Person", "name": "Chano Ndandu Chanceleno"},
+        "founder": {"@type": "Person", "name": "Chano Chanceleno"},
         "contactPoint": [
             {"@type": "ContactPoint", "telephone": wa_eu, "contactType": "sales",
              "areaServed": ["FR", "BE", "CH", "CG", "CD"], "availableLanguage": ["fr", "en"]},
             {"@type": "ContactPoint", "telephone": wa_af, "contactType": "sales",
              "areaServed": ["AO", "MZ", "CV", "GW", "ST", "BR", "PT"], "availableLanguage": ["pt", "es"]}],
-        "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es"]}
+        "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es", "ln"]}
+    if site.founder_same_as():
+        org["founder"]["sameAs"] = site.founder_same_as()
     if site.same_as():
         org["sameAs"] = site.same_as()
     org["subOrganization"] = [ao, fr]
@@ -762,8 +795,7 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
     if site.cgv:
         flinks.append((site.url("cgv", lang), site.blocs[lang]["cgv"]))
     r = site.config["reseaux"]
-    social = [(r["linkedin_profil"], L["pied"][6]), (r["linkedin_page"], site.blocs[lang]["linkedin_page"]),
-              (r["instagram"], "Instagram"), (r["tiktok"], "TikTok")]
+    social = [(r["linkedin_profil"], L["pied"][6])]   # profil du fondateur ; comptes officiels : icônes (<!--RESEAUX-->)
     fl = "".join('<li><a href="%s">%s</a></li>' % (u, esc(t)) for u, t in flinks) + \
         "".join('<li><a href="%s" target="_blank" rel="noopener">%s</a></li>' % (esc(u), esc(t)) for u, t in social if u)
     body = (
@@ -774,7 +806,7 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
         '      <a href="%s" class="btn btn-primary btn-sm hcta">%s</a>\n    </div>\n  </div>\n</header>\n'
         '<main id="contenu">\n%s\n</main>\n%s'
         '<footer class="site">\n  <div class="wrap">\n    <ul class="flinks">%s</ul>\n'
-        '    <div class="entities">\n      %s\n    </div>\n'
+        '    <div class="entities">\n      %s\n    </div>\n    <!--RESEAUX-->\n'
         '    <div class="fbot"><span>© {{annee}} CHANCELENO</span><span><a data-mail href="%s">{{email}}</a></span></div>\n'
         '  </div>\n</footer>\n<script src="/assets/mail.js" defer></script>\n</body>\n</html>\n') % (
         esc(L["aller_au_contenu"]), home, esc(L["accueil_aria"]), esc(L["logo_alt"]), art,

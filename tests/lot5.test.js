@@ -8,7 +8,7 @@ const path = require("path");
 
 const BASE = process.env.BASE || "http://localhost:8765";
 const MODE = process.env.MODE || "reel";
-const WIDTHS = (process.env.WIDTHS || "360,412,1024,1280,1440").split(",").map(Number);
+const WIDTHS = (process.env.WIDTHS || "360,412,768,1024,1280,1440").split(",").map(Number);
 const SHOTS = process.env.SHOTS || "";
 const SITE = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "content", "site.json"), "utf8"));
 const U = (pid, lang) => SITE.pages[pid][lang].chemin;
@@ -48,6 +48,22 @@ const shot = async (p, name) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: 
 
 const PAGES = ["home", "marches", "mentions", "contact", "devis", "cookies"];
 
+// Réseaux sociaux officiels : ordre, libellés, attributs, taille des zones cliquables (44 × 44 px)
+const SOCIAL = [["https://www.linkedin.com/company/chanceleno/", "LinkedIn"], ["https://www.instagram.com/chanceleno_international/", "Instagram"],
+  ["https://www.facebook.com/profile.php?id=1149213368276296", "Facebook"], ["https://www.youtube.com/@Chanceleno", "YouTube"],
+  ["https://www.tiktok.com/@chano.chanceleno", "TikTok"]];
+const LABEL = (lang, name) => name === "TikTok" ? { fr: "Chano Chanceleno, fondateur, sur TikTok", en: "Chano Chanceleno, founder, on TikTok", pt: "Chano Chanceleno, fundador, no TikTok" }[lang]
+  : { fr: "CHANCELENO sur ", en: "CHANCELENO on ", pt: "CHANCELENO no " }[lang] + name;
+async function socials(p, sel, lang, L, expected = SOCIAL) {
+  const s = await p.$$eval(sel + " .socials a", a => a.map(x => { x.scrollIntoView(); const r = x.getBoundingClientRect(), svg = x.querySelector("svg");
+    return { href: x.getAttribute("href"), label: x.getAttribute("aria-label"), target: x.target, rel: x.rel, w: r.width, h: r.height,
+      svg: svg && svg.getAttribute("aria-hidden") === "true" && svg.getAttribute("focusable") === "false" && svg.getAttribute("fill") === "currentColor" }; }));
+  ok(JSON.stringify(s.map(x => x.href)) === JSON.stringify(expected.map(x => x[0])), L + " " + sel + " : liens des réseaux dans l'ordre " + JSON.stringify(s.map(x => x.href)));
+  ok(s.every((x, i) => expected[i] && x.label === LABEL(lang, expected[i][1])), L + " " + sel + " : aria-label des réseaux");
+  ok(s.every(x => x.target === "_blank" && x.rel === "noopener noreferrer" && x.svg), L + " " + sel + " : target, rel et SVG des réseaux");
+  ok(s.every(x => x.w >= 44 && x.h >= 44), L + " " + sel + " : zones cliquables d'au moins 44 × 44 px");
+}
+
 async function reel(b) {
   // logo : animé à la 1re page de la visite seulement ; le survol le rejoue
   const p = await page(b, 1440);
@@ -78,14 +94,26 @@ async function reel(b) {
       ok((await text(p, "#audit .price")) === { fr: "250 € HT", en: "€250 excl. VAT", pt: "250 € sem IVA" }[lang], L + " : prix de l'audit");
       const foot = await p.$$eval("footer.site a", a => a.map(x => x.textContent.trim() + " " + x.getAttribute("href")));
       ok(foot.some(x => x === "LinkedIn https://www.linkedin.com/in/chanceleno"), L + " : LinkedIn dans le pied de page");
-      ok(!foot.some(x => /instagram|tiktok|linkedin\.com\/company|cgv|terms-of-sale|condicoes-gerais/.test(x)), L + " : liens vides ou CGV absents du pied de page");
+      ok(!foot.some(x => /cgv|terms-of-sale|condicoes-gerais/.test(x)), L + " : CGV absentes du pied de page");
+      await socials(p, "footer.site", lang, L);
+      ok((await text(p, ".stats")).includes({ fr: "5 langues de travail : FR · PT · EN · ES · LN", en: "5 working languages: FR · PT · EN · ES · LN", pt: "5 línguas de trabalho: FR · PT · EN · ES · LN" }[lang]), L + " : 5 langues de travail");
+      ok((await text(p, ".founder")).includes({ fr: "en français, en portugais, en anglais, en espagnol et en lingala.", en: "French, Portuguese, English, Spanish and Lingala.", pt: "francês, português, inglês, espanhol e lingala." }[lang]), L + " : lingala dans le bloc fondateur");
       ok((await text(p, ".fbot")).includes("© " + YEAR + " CHANCELENO"), L + " : copyright " + YEAR);
       ok((await text(p, ".entities")).includes({ fr: "société en cours d'immatriculation", en: "company being registered", pt: "sociedade em processo de registo" }[lang]), L + " : statut de la société française");
       const ld = lang === "fr" ? await jsonld(p) : null;
-      if (ld) ok(!ld.subOrganization[1].taxID && JSON.stringify(ld.sameAs) === '["https://www.linkedin.com/in/chanceleno"]', "JSON-LD : société française sans identifiants, LinkedIn seul");
+      if (ld) {
+        ok(!ld.subOrganization[1].taxID && JSON.stringify(ld.sameAs) === JSON.stringify(SOCIAL.slice(0, 4).map(x => x[0])), "JSON-LD : société française sans identifiants, sameAs = 4 comptes de l'entreprise");
+        ok(ld.founder.name === "Chano Chanceleno" && JSON.stringify(ld.founder.sameAs) === '["https://www.linkedin.com/in/chanceleno","https://www.tiktok.com/@chano.chanceleno"]', "JSON-LD : fondateur « Chano Chanceleno », profil LinkedIn et TikTok");
+        ok(JSON.stringify(ld.knowsLanguage) === '["fr","pt","en","es","ln"]' && !("email" in ld), "JSON-LD : knowsLanguage avec ln, sans email");
+      }
       await p.goto(BASE + U("mentions", lang));
       ok((await text(p, ".legal .band")).includes("NIF 5003018334"), L + " : mentions légales, éditeur angolais");
       // message de confirmation du formulaire de contact, traduit
+      await p.goto(BASE + U("contact", lang));
+      ok((await text(p, ".follow p")) === { fr: "Suivez-nous", en: "Follow us", pt: "Siga-nos" }[lang], L + " : Contact, « Suivez-nous »");
+      await socials(p, ".follow", lang, L);
+      await p.goto(BASE + U("a-propos", lang));
+      ok((await text(p, "main")).includes({ fr: "en français, en portugais, en anglais, en espagnol et en lingala, et négocie", en: "French, Portuguese, English, Spanish and Lingala, and negotiates", pt: "francês, português, inglês, espanhol e lingala, e negoceia" }[lang]), L + " : lingala dans À propos");
       await p.goto(BASE + U("contact", lang)); await p.fill("#c-name", "T"); await p.fill("#c-mail", "a@b.co"); await p.fill("#c-msg", "T");
       await p.click("#ctForm button[type=submit]"); await p.waitForSelector("#ctForm .status.ok");
       ok((await text(p, "#ctForm .status")).startsWith({ fr: "Votre message est bien envoyé", en: "Your message has been sent", pt: "A sua mensagem foi enviada" }[lang]), L + " : confirmation du contact traduite");
@@ -119,15 +147,14 @@ async function fictif(b) {
         ok(await loaded(p, "#references img"), L + " : logo de la référence");
       }
       const foot = await p.$$eval("footer.site a", a => a.map(x => x.textContent.trim() + " " + x.getAttribute("href")));
-      ok(foot.some(x => x === "Instagram https://www.instagram.com/exemple-test"), L + " : Instagram dans le pied de page");
-      ok(!foot.some(x => /tiktok|linkedin\.com\/company/.test(x)), L + " : réseaux vides absents");
+      await socials(p, "footer.site", lang, L, SOCIAL.filter(x => x[1] !== "YouTube"));   // lien YouTube vidé : icône absente
       ok(foot.some(x => x.endsWith(" " + U("cgv", lang))), L + " : lien CGV dans le pied de page");
       const ent = await text(p, ".entities");
       ok(ent.includes("SIREN 123 456 789 · RCS Lyon 123 456 789") && ent.includes("FR12123456789") && !/immatricul|registered|registo/.test(ent), L + " : pied de page, identifiants de la société française");
       if (lang === "fr") {
         const ld = await jsonld(p), fr = ld.subOrganization[1];
         ok(fr.taxID === "123456789" && fr.vatID === "FR12123456789" && fr.foundingDate === "2026-11-02" && !fr.description, "JSON-LD : identifiants de la société française");
-        ok(ld.sameAs.includes("https://www.instagram.com/exemple-test"), "JSON-LD : Instagram dans sameAs");
+        ok(ld.sameAs.length === 3 && !ld.sameAs.some(u => /youtube|tiktok/.test(u)), "JSON-LD : lien vide absent de sameAs");
       }
       await shot(p, "fictif-accueil-" + lang + "-" + w);
       // marchés
@@ -158,7 +185,7 @@ async function fictif(b) {
     // article (mise en page légère) : pied de page et auteur
     await p.goto(BASE + "/articles/");
     const art = await text(p, "footer.site");
-    ok(art.includes("SIREN 123 456 789") && art.includes("Instagram") && art.includes("Conditions générales de vente"), w + " : pied de page des articles");
+    ok(art.includes("SIREN 123 456 789") && (await p.$$("footer.site .socials a")).length === 4 && art.includes("Conditions générales de vente"), w + " : pied de page des articles");
     await p.context().close();
   }
   const sm = fs.readFileSync(path.join(__dirname, "..", "_site", "sitemap.xml"), "utf8");

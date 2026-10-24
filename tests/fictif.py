@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test des données modifiables avec des valeurs FICTIVES (Kbis, photos, références, réseau social, CGV, tarifs).
+"""Test des données modifiables avec des valeurs FICTIVES (Kbis, photos, références, réseau social vidé, CGV, tarifs).
 
 Remplace temporairement config/site.yml, ajoute des photos et des CGV de test, génère et contrôle le site, lance
 tests/lot5.test.js (MODE=fictif), puis remet TOUT en l'état, même en cas d'échec. Rien n'est publié.
@@ -39,7 +39,7 @@ def fictitious(text):
         ('    capital: ""', '    capital: "1 000 €"'),
         ('    president: ""', '    president: "Président Fictif"'),
         ('    date_immatriculation: ""', '    date_immatriculation: "2026-11-02"'),
-        ('  instagram: ""', '  instagram: "https://www.instagram.com/exemple-test"'),
+        ('  youtube: "https://www.youtube.com/@Chanceleno"', '  youtube: ""'),
         ('  prix_audit_ht: 250', '  prix_audit_ht: 300'),
         ('  delai_reponse_h: 48', '  delai_reponse_h: 24'),
         ('''  - id: devises
@@ -87,7 +87,7 @@ def main():
     try:
         # 1. erreurs volontaires : la génération doit s'arrêter avec un message clair
         for bad, expected in [(('    siren: ""', '    siren: "12345"'), "identite.france.siren : 9 chiffres attendus"),
-                              (('  tiktok: ""', '  tiktok: "tiktok.com/@x"'), "reseaux.tiktok : adresse complète commençant par https://"),
+                              (('  youtube: "https://www.youtube.com/@Chanceleno"', '  youtube: "youtube.com/@x"'), "reseaux.youtube : adresse complète commençant par https://"),
                               (('  prix_audit_ht: 250', '  prix_audit_ht: "250 €"'), "tarifs.prix_audit_ht : nombre positif attendu"),
                               (('  editeur: angola', '  editeur: france'), "« france » n'est possible qu'une fois le SIREN")]:
             open(CONFIG, "w", encoding="utf-8").write(original.replace(*bad))
