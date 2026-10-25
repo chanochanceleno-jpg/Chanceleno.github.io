@@ -64,7 +64,52 @@ async function socials(p, sel, lang, L, expected = SOCIAL) {
   ok(s.every(x => x.w >= 44 && x.h >= 44), L + " " + sel + " : zones cliquables d'au moins 44 × 44 px");
 }
 
+// Contraste des icônes réseaux (WCAG 1.4.11, éléments non textuels : au moins 3:1) : couleur calculée et opacité de
+// chaque lien, fondues sur la couleur de fond réelle (premier parent au fond non transparent).
+async function contrast(p, sel) {
+  return p.$$eval(sel + " .socials a", links => links.map(a => {
+    const rgb = c => (c.match(/[\d.]+/g) || []).map(Number);
+    const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+    let el = a, bg = null;
+    while (el && !bg) { const c = rgb(getComputedStyle(el).backgroundColor); if (c.length && (c.length < 4 || c[3] > 0)) bg = c.slice(0, 3); el = el.parentElement; }
+    bg = bg || [255, 255, 255];
+    const st = getComputedStyle(a), fg = rgb(st.color), op = parseFloat(st.opacity) * (fg.length > 3 ? fg[3] : 1);
+    const mix = fg.slice(0, 3).map((v, i) => v * op + bg[i] * (1 - op));
+    const L1 = lum(mix), L2 = lum(bg);
+    return { color: st.color, opacity: st.opacity, ratio: (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05) };
+  }));
+}
+
+async function iconContrast(b) {
+  const pages = { home: ["footer.site"], contact: [".follow", "footer.site"] };
+  const art = { fr: "/articles/importer-pieces-camions-europe-angola/", en: "/en/articles/importing-truck-parts-europe-angola/", pt: "/pt/artigos/importar-pecas-camioes-europa-angola/" };
+  for (const scheme of ["light", "dark"]) {
+    const ctx = await b.newContext({ viewport: { width: 360, height: 800 }, colorScheme: scheme });
+    const p = await ctx.newPage();
+    for (const lang of LANGS) {
+      const targets = Object.entries(pages).map(([pid, sels]) => [U(pid, lang), sels]).concat([[art[lang], ["footer.site"]]]);
+      for (const [url, sels] of targets) {
+        await p.goto(BASE + url);
+        for (const sel of sels) {
+          const L = "360 " + scheme + " " + url + " " + sel;
+          const c = await contrast(p, sel);
+          ok(c.length === 5 && c.every(x => x.ratio >= 3), L + " : contraste des icônes ≥ 3:1 " + c.map(x => x.ratio.toFixed(1) + " (" + x.color + ", " + x.opacity + ")").join(" | "));
+          if (sel === "footer.site") ok(c.every(x => x.color === "rgb(239, 231, 216)"), L + " : icônes en ivoire --cream (#EFE7D8) " + c.map(x => x.color).join(" | "));
+          const first = (await p.$$(sel + " .socials a"))[0];
+          await first.focus(); await p.keyboard.press("Shift+Tab"); await p.keyboard.press("Tab"); await p.waitForTimeout(250);   // focus au clavier, fin de la transition
+          ok(await first.evaluate(a => getComputedStyle(a).opacity === "1" && getComputedStyle(a).outlineStyle !== "none"), L + " : opacité 100 % et contour visible au focus clavier");
+          await first.hover(); await p.waitForTimeout(250);
+          ok(await first.evaluate(a => getComputedStyle(a).opacity === "1"), L + " : opacité 100 % au survol");
+          await p.mouse.move(0, 0);
+        }
+      }
+    }
+    await ctx.close();
+  }
+}
+
 async function reel(b) {
+  await iconContrast(b);
   // logo : animé à la 1re page de la visite seulement ; le survol le rejoue
   const p = await page(b, 1440);
   await go(p, "/", "logo 1re page");

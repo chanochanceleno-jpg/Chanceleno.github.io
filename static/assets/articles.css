@@ -79,6 +79,9 @@ footer.site .socials{margin:24px 0 0 -12px}
 footer.site .socials li{margin:0}
 .socials a{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:4px;transition:color .2s ease,opacity .2s ease}
 .socials svg{display:block}
+/* Le pied de page reste bleu nuit dans les deux thèmes : --cream y garde sa valeur ivoire. Sans cela, en mode
+   sombre (ex. iPhone réglé en apparence sombre), --cream devient #132435 et les icônes disparaissent sur --ink. */
+footer.site{--cream:#EFE7D8}
 footer.site .socials a{color:var(--cream);opacity:.75}
 footer.site .socials a:hover,footer.site .socials a:focus-visible{color:var(--gold);opacity:1;text-decoration:none}
 .socials a:focus-visible{outline:2px solid currentColor;outline-offset:2px}
