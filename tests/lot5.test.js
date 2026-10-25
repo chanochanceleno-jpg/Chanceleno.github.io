@@ -108,8 +108,45 @@ async function iconContrast(b) {
   }
 }
 
+// Contraste d'éléments de texte (WCAG 1.4.3 : 4,5:1), même calcul que pour les icônes
+const textContrast = (p, sel) => p.$$eval(sel, els => els.map(a => {
+  const rgb = c => (c.match(/[\d.]+/g) || []).map(Number);
+  const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+  let el = a, bg = null;
+  while (el && !bg) { const c = rgb(getComputedStyle(el).backgroundColor); if (c.length && (c.length < 4 || c[3] > 0)) bg = c.slice(0, 3); el = el.parentElement; }
+  bg = bg || [255, 255, 255];
+  const fg = rgb(getComputedStyle(a).color).slice(0, 3), L1 = lum(fg), L2 = lum(bg);
+  return { text: a.textContent.trim(), color: getComputedStyle(a).color, ratio: (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05) };
+}));
+
+async function demoAndWhatsappContrast(b) {
+  for (const scheme of ["light", "dark"]) {
+    const ctx = await b.newContext({ viewport: { width: 360, height: 800 }, colorScheme: scheme });
+    const p = await ctx.newPage();
+    for (const lang of LANGS) {
+      const L = "360 " + scheme + " " + lang;
+      // Portails DEMO : étiquettes d'état (Offre, Livré, Sourcing)
+      await p.goto(BASE + U("portail", lang));
+      const pills = await textContrast(p, ".pill");
+      ok(pills.length >= 3 && pills.every(x => x.ratio >= 4.5), L + " : étiquettes DEMO ≥ 4,5:1 " + pills.map(x => x.text + " " + x.ratio.toFixed(1)).join(" | "));
+      if (scheme === "light") {
+        ok(await p.$eval(".pill.ok", e => getComputedStyle(e).color) === "rgb(47, 107, 79)" && await p.$eval(".pill.w", e => getComputedStyle(e).color) === "rgb(138, 90, 18)", L + " : couleurs des étiquettes DEMO inchangées en mode clair");
+      }
+      // Assistant : bouton « Écrire sur WhatsApp », au repos puis au survol
+      await p.goto(BASE + U("home", lang)); await p.click("#cbBtn"); await p.waitForTimeout(150);
+      let wa = await textContrast(p, "#cbWa");
+      ok(wa[0].ratio >= 4.5, L + " : bouton WhatsApp de l'assistant ≥ 4,5:1 (" + wa[0].ratio.toFixed(1) + ")");
+      await p.hover("#cbWa"); wa = await textContrast(p, "#cbWa");
+      ok(wa[0].ratio >= 4.5, L + " : bouton WhatsApp de l'assistant au survol ≥ 4,5:1 (" + wa[0].ratio.toFixed(1) + ")");
+      ok(await p.$eval("#waBtn", e => getComputedStyle(e).backgroundColor) === "rgb(31, 122, 77)", L + " : bouton flottant WhatsApp inchangé");
+    }
+    await ctx.close();
+  }
+}
+
 async function reel(b) {
   await iconContrast(b);
+  await demoAndWhatsappContrast(b);
   // logo : animé à la 1re page de la visite seulement ; le survol le rejoue
   const p = await page(b, 1440);
   await go(p, "/", "logo 1re page");
