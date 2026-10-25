@@ -18,11 +18,13 @@
   :root:not([data-theme="light"]){
     --paper:#0C1824; --cream:#132435; --text:#ECE4D4; --muted:#A5AFB8;
     --line:rgba(236,228,212,.16); --copper:#C98452; --copper-strong:#C98452;
+    --ok:#5DA683; --warn:#C99A4E; /* vert et brun éclaircis : lisibles sur le fond bleu nuit (≥ 4,5:1) */
   }
 }
 :root[data-theme="dark"]{
   --paper:#0C1824; --cream:#132435; --text:#ECE4D4; --muted:#A5AFB8;
   --line:rgba(236,228,212,.16); --copper:#C98452; --copper-strong:#C98452;
+  --ok:#5DA683; --warn:#C99A4E;
 }
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -391,8 +393,9 @@ body.cb-on .wa-menu{bottom:66px}
 .cbx-sub{font-size:13px;color:var(--muted,#666)}
 .cbx-link{display:block;padding:10px 12px;margin-top:8px;border:1px solid var(--line);color:var(--text);text-decoration:none;font-weight:600;font-size:14px}
 .cbx-link:hover,.cbx-link:focus{background:var(--cream)}
-.cbx-wa{background:#1F9D55;color:#fff;border-color:#1F9D55}
-.cbx-wa:hover,.cbx-wa:focus{background:#178a49}
+/* Vert foncé de WhatsApp (#075E54) : texte blanc lisible, 7,7:1 (l'ancien #1F9D55 n'offrait que 3,5:1) */
+.cbx-wa{background:#075E54;color:#fff;border-color:#075E54}
+.cbx-wa:hover,.cbx-wa:focus{background:#054C44}
 
 /* Cookie banner */
 
