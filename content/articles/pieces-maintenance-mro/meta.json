@@ -1,0 +1,21 @@
+{
+ "date": "2026-10-30",
+ "fr": {
+  "adresse": "pieces-maintenance-industrielle-eviter-arret-production",
+  "titre": "Pièces de maintenance industrielle : comment éviter l'arrêt de production quand le fournisseur est loin",
+  "description": "Plaque signalétique, pièces critiques, équivalences, stock de sécurité : la méthode pour sécuriser vos pièces de maintenance achetées à l'international.",
+  "fonction_auteur": "Fondateur"
+ },
+ "en": {
+  "adresse": "industrial-maintenance-parts-avoid-downtime",
+  "titre": "Industrial maintenance parts: how to avoid downtime when the supplier is far away",
+  "description": "Nameplates, critical parts, equivalents, safety stock: a method to secure the maintenance parts you buy internationally.",
+  "fonction_auteur": "Founder"
+ },
+ "pt": {
+  "adresse": "pecas-manutencao-industrial-evitar-paragem-producao",
+  "titre": "Peças de manutenção industrial: como evitar a paragem da produção quando o fornecedor está longe",
+  "description": "Placa de identificação, peças críticas, equivalências, stock de segurança: o método para garantir as peças de manutenção compradas no estrangeiro.",
+  "fonction_auteur": "Fundador"
+ }
+}
