@@ -129,6 +129,35 @@ const drop=document.getElementById("drop");
 drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
 }
 
+/* ---------- Téléphone avec indicatif (Devis, Partenaires) : normalisation et contrôle dans assets/tel.js ---------- */
+const TEL_ERR={indicatif:"Choisissez l'indicatif du pays dans la liste, ou « Autre ».",
+  inconnu:"Indicatif non reconnu : choisissez « Autre » dans la liste et saisissez l'indicatif.",
+  autre:"Saisissez l'indicatif du pays : 1 à 4 chiffres, par exemple +7.",
+  chiffres:"Le numéro ne peut contenir que des chiffres, avec + ou 00 au début pour l'indicatif.",
+  longueur:"Numéro incomplet ou trop long : 6 à 14 chiffres sont attendus après l'indicatif."};
+const telParts=box=>({sel:box.querySelector("select"),num:box.querySelector("input[type=tel]"),xbox:box.querySelector(".telx"),x:box.querySelector(".telx input"),err:box.querySelector(".err"),hint:box.querySelector(".hint")});
+function telRead(box){const t=telParts(box),codes=[...t.sel.options].map(o=>o.value).filter(v=>/^\d+$/.test(v));
+  return window.chTel.telCheck(t.num.value,t.sel.value,t.x.value,codes)}
+/* Affiche ou retire l'erreur ; renvoie le champ à corriger (null si tout va bien). */
+function telShow(box,r){const t=telParts(box),bad=!r.ok,target=r.error==="autre"?t.x:t.num;
+  [t.num,t.x].forEach(i=>{const on=bad&&i===target,d=(i===t.num?[t.hint.id]:[]).concat(on?[t.err.id]:[]);
+    i.setAttribute("aria-invalid",String(on));if(d.length)i.setAttribute("aria-describedby",d.join(" "));else i.removeAttribute("aria-describedby")});
+  t.err.textContent=bad?window.__t(TEL_ERR[r.error]):"";t.err.classList.toggle("show",bad);
+  return bad?target:null}
+/* « +xxx » ou « 00xxx » saisi dans le numéro : l'indicatif reconnu passe dans le sélecteur, le numéro reste sans indicatif. */
+function telSync(box){const t=telParts(box),r=telRead(box);
+  if(r.intl&&r.cc&&r.error!=="inconnu"&&r.error!=="chiffres"&&r.error!=="autre"){
+    if([...t.sel.options].some(o=>o.value===r.cc))t.sel.value=r.cc;
+    t.num.value=r.num}
+  t.xbox.hidden=t.sel.value!=="autre";return r}
+document.querySelectorAll("[data-tel]").forEach(box=>{const t=telParts(box);
+  t.xbox.hidden=t.sel.value!=="autre";   // valeurs restaurées par le navigateur (retour arrière)
+  /* erreur affichée seulement à l'envoi (pas à la sortie du champ : le bouton ne se décale pas sous le clic), puis mise à jour */
+  const recheck=()=>{if(t.err.classList.contains("show"))telShow(box,telRead(box))};
+  t.sel.addEventListener("change",()=>{t.xbox.hidden=t.sel.value!=="autre";recheck()});
+  t.num.addEventListener("change",()=>{telSync(box);recheck()});
+  t.x.addEventListener("change",recheck)});
+
 /* ---------- Forms ---------- */
 const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 /* Devis, fournisseur, partenaire : envoi classique (multipart) vers FormSubmit, seul mode qui transmet les pièces
@@ -163,6 +192,7 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
       const er=document.getElementById("e-"+inp.id);
       inp.setAttribute("aria-invalid",bad);if(er){er.classList.toggle("show",bad);if(bad)inp.setAttribute("aria-describedby",er.id)}
       if(bad&&!first)first=inp});
+    form.querySelectorAll("[data-tel]").forEach(box=>{const bad=telShow(box,telSync(box));if(bad&&!first)first=bad});
     if(first){st.className="status bad show";st.textContent=window.__t("Certains champs sont à compléter. Vos informations saisies sont conservées.");first.focus();return}
     /* statistiques : formulaire valide qui part (voir assets/stats.js) */
     if(window.chStat)window.chStat({RFQ:"envoi-devis",SUP:"envoi-fournisseur",PAR:"envoi-partenaire",CT:"envoi-contact"}[form.dataset.kind]);
@@ -172,9 +202,10 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
     const subj={RFQ:"Demande de devis",SUP:"Candidature fournisseur",PAR:"Demande de collaboration",CT:"Message de contact"}[form.dataset.kind];
     fd.append("_captcha","false");fd.append("_honey",hp?hp.value:"");fd.append("_template","table");fd.append("Référence",ref);fd.append("_subject",subj+" "+ref);fd.append("Langue",document.documentElement.lang);
     form.querySelectorAll("input,select,textarea").forEach(el=>{
-      if(el.classList.contains("hp")||el.type==="file"||!el.id)return;
+      if(el.classList.contains("hp")||el.type==="file"||!el.id||el.hasAttribute("data-nosend"))return;
       const lab=form.querySelector('label[for="'+el.id+'"]');const key=(el.dataset.key||(lab&&lab.dataset.fr)||(lab?lab.childNodes[0].textContent:el.id)).trim();
-      const val=el.type==="checkbox"?(el.checked?"oui":"non"):(el.tagName==="SELECT"?(el.options[el.selectedIndex].dataset.fr||el.options[el.selectedIndex].text):el.value);
+      let val=el.type==="checkbox"?(el.checked?"oui":"non"):(el.tagName==="SELECT"?(el.options[el.selectedIndex].dataset.fr||el.options[el.selectedIndex].text):el.value);
+      const tb=el.type==="tel"&&el.closest("[data-tel]");if(tb)val=telRead(tb).full;   // ex. +244923456789 (vide si non renseigné)
       if(el.type==="email")fd.append("email",val);
       fd.append(key,val)});
     const toSend=form.id==="rfqForm"?files:Array.from((form.querySelector("input[type=file]")||{}).files||[]);

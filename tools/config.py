@@ -202,7 +202,37 @@ def load(path=CONFIG):
         errors.append("statistiques.goatcounter : code en minuscules, chiffres et tirets (valeur actuelle : %r)" % code)
     cfg["goatcounter"] = code
 
-    known = {"identite", "coordonnees", "reseaux", "tarifs", "marches", "references", "photos", "statistiques"}
+    # indicatifs téléphoniques des formulaires Devis et Partenaires
+    tel = section(raw, "telephone", errors)
+    codes, seen = [], set()
+    for i, c in enumerate(tel.get("indicatifs") or []):
+        where = "telephone.indicatifs, ligne %d" % (i + 1)
+        if not isinstance(c, dict):
+            errors.append("%s : écrire {pays: AO, indicatif: \"244\", nom: \"Angola\"}" % where)
+            continue
+        pays = text(c.get("pays"), where + " : pays", errors, True)
+        if pays and not re.match(r"^[A-Z]{2}$", pays):
+            errors.append("%s : pays = code de 2 lettres majuscules, ex. AO (valeur actuelle : %r)" % (where, pays))
+        if pays in seen:
+            errors.append("%s : pays %r déjà dans la liste" % (where, pays))
+        seen.add(pays)
+        ind = text(c.get("indicatif"), where + " : indicatif", errors, True).lstrip("+")
+        if ind and not re.match(r"^[1-9]\d{0,3}$", ind):
+            errors.append("%s : indicatif = 1 à 4 chiffres, sans + ni 00, ex. \"244\" (valeur actuelle : %r)" % (where, ind))
+        codes.append({"pays": pays, "indicatif": ind, "nom": per_lang(c.get("nom"), where + " : nom", errors)})
+    if not codes:
+        errors.append("telephone.indicatifs : la liste des indicatifs est vide")
+    defaut = tel.get("par_defaut") or {}
+    if not isinstance(defaut, dict):
+        errors.append("telephone.par_defaut : écrire {fr: FR, en: \"\", pt: AO}")
+        defaut = {}
+    cfg["tel_defaut"] = {l: text(defaut.get(l), "telephone.par_defaut." + l, errors) for l in LANGS}
+    for l, v in cfg["tel_defaut"].items():
+        if v and v not in seen:
+            errors.append("telephone.par_defaut.%s : %r n'est pas dans la liste des indicatifs" % (l, v))
+    cfg["indicatifs"] = codes
+
+    known = {"identite", "coordonnees", "reseaux", "tarifs", "marches", "references", "photos", "statistiques", "telephone"}
     for k in set(raw) - known:
         errors.append("%s : rubrique inconnue (vérifier l'orthographe)" % k)
     if errors:

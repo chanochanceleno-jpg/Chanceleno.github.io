@@ -248,7 +248,7 @@ class Site:
         if lang:
             for name, fn in (("MARCHES", self.markets_html), ("IDENTITE", self.legal_html), ("ENTITES", self.entities_html),
                              ("REFERENCES", self.references_html), ("CGV", lambda l: self.cgv[l] if self.cgv else ""),
-                             ("RESEAUX", self.socials_html), ("SUIVEZ", self.follow_html)):
+                             ("RESEAUX", self.socials_html), ("SUIVEZ", self.follow_html), ("INDICATIFS", self.codes_html)):
                 if "<!--%s-->" % name in page:
                     block = fn(lang)
                     # bloc vide : la ligne du repère disparaît aussi (page identique à une page sans ce bloc)
@@ -338,6 +338,19 @@ class Site:
                 img, e(r["temoignage"][lang]), e(r["nom"]), "<span>%s</span>" % e(meta) if meta else ""))
         return ('<div class="band dark" id="references">\n    <div class="wrap">\n      <h2>%s</h2>\n      <div class="refs">%s</div>\n'
                 '    </div>\n  </div>' % (e(self.blocs[lang]["references_titre"]), "".join(items)))
+
+    def codes_html(self, lang):
+        """Options du sélecteur d'indicatif (formulaires Devis et Partenaires) : drapeau, pays, indicatif, dans l'ordre
+        de config/site.yml ; pays présélectionné selon la langue (telephone.par_defaut), puis « Autre » (saisie libre)."""
+        B, defaut = self.blocs[lang], self.config["tel_defaut"][lang]
+        e = lambda t: esc(t).replace("&#x27;", "'")
+        flag = lambda cc: "".join(chr(0x1F1E6 + ord(ch) - ord("A")) for ch in cc)
+        out = ['<option value=""%s>%s</option>' % ("" if defaut else " selected", e(B["tel_choisir"]))]
+        for c in self.config["indicatifs"]:
+            out.append('<option value="%s" data-pays="%s"%s>%s %s +%s</option>' % (
+                c["indicatif"], c["pays"], " selected" if c["pays"] == defaut else "", flag(c["pays"]), e(c["nom"][lang]), c["indicatif"]))
+        out.append('<option value="autre">%s</option>' % e(B["tel_autre"]))
+        return "".join(out)
 
     # --- réseaux sociaux : icônes (pied de page, Contact) et données structurées
     SOCIAL = [("linkedin_page", "linkedin", "LinkedIn"), ("instagram", "instagram", "Instagram"),
@@ -763,8 +776,9 @@ def build_main(site):
             extra = '<meta name="google-site-verification" content="%s">' % site.site["google_site_verification"] if pid == "home" else ""
             page = head(site, lang, pid, title, desc, og_title=og_title, jsonld=organization(site, lang) if pid == "home" else None,
                         scripts=["/assets/redirect.js"], extra=extra)
+            tel = '<script src="/assets/tel.js" defer></script>\n' if "data-tel" in body else ""
             page += ("<body>\n" + hdr + "\n" + '<main id="content" tabindex="-1">\n\n' + body + "\n</main>\n\n" + ftr + "\n" + flt +
-                     '\n<script src="/assets/mail.js" defer></script>\n<script src="/assets/strings.js" defer></script>\n'
+                     '\n<script src="/assets/mail.js" defer></script>\n<script src="/assets/strings.js" defer></script>\n' + tel +
                      '<script src="/assets/site.js" defer></script>\n</body>\n</html>\n')
             wr(site.url(pid, lang), page)
             site.sitemap.append((site.url(pid, lang), {l: site.url(pid, l) for l in LANGS}, None))

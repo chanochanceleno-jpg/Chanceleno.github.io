@@ -17,10 +17,15 @@
             <div><label for="p-co">Entreprise</label><input id="p-co" required autocomplete="organization"><div class="err" id="e-p-co">Indiquez le nom de l'entreprise.</div></div>
             <div><label for="p-country">Pays d'établissement</label><input id="p-country" required autocomplete="country-name"><div class="err" id="e-p-country">Indiquez votre pays d'établissement.</div></div>
           </div>
-          <div class="grid2">
-            <div><label for="p-tel">Téléphone ou WhatsApp <span class="opt">(facultatif)</span></label><input id="p-tel" type="tel" autocomplete="tel"></div>
-            <div><label for="p-web">Site web ou profil LinkedIn <span class="opt">(facultatif)</span></label><input id="p-web" inputmode="url" autocomplete="url"></div>
+          <div class="telf" data-tel>
+            <label for="p-tel">Téléphone <span class="opt">(facultatif)</span></label>
+            <div class="telrow"><label for="p-tel-cc" class="sr">Indicatif du pays</label><select id="p-tel-cc" data-nosend><!--INDICATIFS--></select><input id="p-tel" type="tel" inputmode="tel" autocomplete="tel" data-key="Téléphone" aria-describedby="h-p-tel"></div>
+            <div class="telx" hidden><label for="p-tel-x">Indicatif du pays (autre)</label><input id="p-tel-x" inputmode="tel" autocomplete="off" maxlength="6" placeholder="+7" data-nosend></div>
+            <p class="hint" id="h-p-tel">Choisissez l'indicatif, puis le numéro sans le 0 initial. Vous pouvez aussi saisir le numéro complet avec + ou 00.</p>
+            <div class="err" id="e-p-tel"></div>
+            <label class="check"><input type="checkbox" id="p-wa" data-key="Joignable sur WhatsApp"> Ce numéro est joignable sur WhatsApp</label>
           </div>
+          <div><label for="p-web">Site web ou profil LinkedIn <span class="opt">(facultatif)</span></label><input id="p-web" inputmode="url" autocomplete="url"></div>
           <div><label for="p-type">Nature de la demande</label><select id="p-type"><option>Représentation commerciale</option><option>Accès marché</option><option>Export depuis l'Afrique</option><option>Distribution</option><option>Apporteur d’affaires (commission)</option><option>Partenaire logistique / transit / douane</option><option>Autre collaboration</option></select></div>
           <div><label for="p-msg">Votre projet</label><textarea id="p-msg" required></textarea><div class="err" id="e-p-msg">Décrivez brièvement votre projet.</div></div>
           <div class="grid2">

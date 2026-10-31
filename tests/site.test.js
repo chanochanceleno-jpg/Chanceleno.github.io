@@ -142,6 +142,7 @@ async function main() {
     await p.setInputFiles("#r-files", { name: "liste.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4") });
     let body = await submit("rfqForm", "RFQ");
     ok(/filename="liste\.pdf"/.test(body) && field(body, "Pays et ville de destination") === "Luanda" && field(body, "Type de demande") !== null, L + " devis : pièce jointe et noms de champs en français");
+    ok(field(body, "Téléphone") === "" && field(body, "Indicatif du pays") === null && field(body, "Indicatif du pays (autre)") === null, L + " devis : téléphone vide accepté, indicatif non envoyé à part");
     // fournisseur
     await p.goto(BASE + U("fournisseurs", lang));
     ok((await p.$$('section.page .caps .cap')).length === 5, L + " bloc « Pourquoi rejoindre »");
@@ -155,7 +156,8 @@ async function main() {
     await p.fill("#p-co", "TEST"); await p.fill("#p-country", "France"); await p.fill("#p-tel", "+33 6 00 00 00 00"); await p.fill("#p-web", "www.linkedin.com/in/chanceleno");
     await p.selectOption("#p-type", { index: 5 }); await p.fill("#p-msg", "T"); await p.fill("#p-name", "T"); await p.fill("#p-mail", "a@b.co");
     body = await submit("parForm", "PAR");
-    ok(field(body, "Pays d'établissement") === "France" && field(body, "Téléphone ou WhatsApp") === "+33 6 00 00 00 00" && field(body, "Site web ou profil LinkedIn") === "www.linkedin.com/in/chanceleno"
+    ok(field(body, "Pays d'établissement") === "France" && field(body, "Téléphone") === "+33600000000" && field(body, "Joignable sur WhatsApp") === "non"
+      && field(body, "Site web ou profil LinkedIn") === "www.linkedin.com/in/chanceleno"
       && field(body, "Nature de la demande") === "Partenaire logistique / transit / douane", L + " partenaire : champs de la PR n° 9 en français");
     // contact (AJAX), succès puis échec
     await p.goto(BASE + U("contact", lang)); await p.fill("#c-name", "T"); await p.fill("#c-mail", "a@b.co"); await p.fill("#c-msg", "T");
@@ -213,6 +215,60 @@ async function main() {
     await close(p);
   }
   console.log("4. formulaires, assistant, menu : terminé");
+
+  // 5. Téléphone avec indicatif (Devis, Partenaires) : présélection, reconnaissance de +xxx / 00xxx, contrôle traduit,
+  //    numéro international envoyé, case WhatsApp, « Autre », clavier et lecteur d'écran
+  const TEL = { fr: { cc: "33", err: "6 à 14 chiffres", errCc: "Choisissez l'indicatif" },
+    en: { cc: "", err: "6 to 14 digits", errCc: "Choose the country code" },
+    pt: { cc: "244", err: "6 a 14 algarismos", errCc: "Escolha o indicativo" } };
+  for (const lang of LANGS) for (const [pid, form, pre, req] of [["devis", "rfqForm", "r", { "#r-req": "Test", "#r-dest": "Luanda", "#r-name": "T", "#r-mail": "a@b.co" }],
+    ["partenaires", "parForm", "p", { "#p-co": "TEST", "#p-country": "France", "#p-msg": "T", "#p-name": "T", "#p-mail": "a@b.co" }]]) {
+    const L = "360px " + lang + " " + pid + " téléphone", t = TEL[lang];
+    const p = await page(b, 360);
+    const posts = [];
+    await p.route(/formsubmit\.co/, r => { posts.push(r.request().postDataBuffer().toString("utf8")); r.fulfill({ status: 200, contentType: "text/html", body: "ok" }); });
+    await p.goto(BASE + U(pid, lang));
+    for (const [k, v] of Object.entries(req)) await p.fill(k, v);
+    // sortie du champ avant le clic : l'erreur affichée à la sortie décale le bouton
+    const send = async () => { await p.evaluate(() => document.activeElement && document.activeElement.blur()); await p.waitForTimeout(100); await p.click("#" + form + " button[type=submit]"); };
+    await health(p, L);
+    const cc = "#" + pre + "-tel-cc", num = "#" + pre + "-tel", err = "#e-" + pre + "-tel";
+    ok(await p.$eval(cc, s => s.value) === t.cc, L + " : indicatif présélectionné « " + t.cc + " »");
+    const a11y = await p.evaluate(([cc, num]) => { const s = document.querySelector(cc), n = document.querySelector(num);
+      return { sl: s.labels.length && s.labels[0].textContent.trim(), nl: n.labels.length && n.labels[0].textContent.trim(), desc: n.getAttribute("aria-describedby"),
+        opts: s.options.length, first: [...s.options].slice(1, 6).map(o => o.value).join(","), last: s.options[s.options.length - 1].value,
+        flag: /^\u{1F1E6}\u{1F1F4} \S.* \+244$/u.test(s.options[1].text) }; }, [cc, num]);
+    ok(a11y.sl && a11y.nl && a11y.desc === "h-" + pre + "-tel", L + " : libellés et aide associés " + JSON.stringify(a11y));
+    ok(a11y.opts === 27 && a11y.first === "244,243,242,33,351" && a11y.last === "autre" && a11y.flag, L + " : liste des indicatifs " + JSON.stringify(a11y));
+    // clavier : du sélecteur au numéro, puis à la case WhatsApp
+    await p.focus(cc); await p.keyboard.press("Tab");
+    ok(await p.evaluate(() => document.activeElement.id) === pre + "-tel", L + " : Tab du sélecteur au numéro");
+    // numéro trop court : erreur traduite, envoi bloqué, focus sur le numéro
+    await p.fill(num, "+244 123"); await send(); await p.waitForTimeout(300);
+    const e1 = await p.evaluate(([num, err]) => ({ txt: document.querySelector(err).textContent, show: document.querySelector(err).classList.contains("show"),
+      inv: document.querySelector(num).getAttribute("aria-invalid"), desc: document.querySelector(num).getAttribute("aria-describedby"), focus: document.activeElement.id }), [num, err]);
+    ok(posts.length === 0 && e1.show && e1.txt.includes(t.err) && e1.inv === "true" && e1.desc.includes("e-" + pre + "-tel") && e1.focus === pre + "-tel", L + " : contrôle " + JSON.stringify(e1));
+    ok(await p.$eval(cc, s => s.value) === "244" && await p.$eval(num, i => i.value) === "123", L + " : +244 reconnu, sélecteur mis à jour");
+    // numéro national sans indicatif (EN, rien de présélectionné) / 00xxx
+    if (!t.cc) { await p.selectOption(cc, ""); await p.fill(num, "612345678"); await send(); await p.waitForTimeout(200);
+      ok(posts.length === 0 && (await p.textContent(err)).includes(t.errCc), L + " : indicatif manquant signalé"); }
+    await p.fill(num, "00351 912-345.678"); await p.press(num, "Tab");
+    ok(await p.$eval(cc, s => s.value) === "351" && await p.$eval(num, i => i.value) === "912345678" && !(await p.$eval(err, e => e.classList.contains("show"))), L + " : 00351 reconnu, erreur retirée");
+    ok(await p.evaluate(() => document.activeElement.id) === pre + "-wa", L + " : Tab du numéro à la case WhatsApp");
+    await p.keyboard.press("Space");
+    await send(); await p.waitForTimeout(500);
+    ok(posts.length === 1 && field(posts[0], "Téléphone") === "+351912345678" && field(posts[0], "Joignable sur WhatsApp") === "oui", L + " : envoi +351912345678 et WhatsApp oui");
+    // « Autre » : saisie libre de l'indicatif
+    await p.goto(BASE + U(pid, lang)); for (const [k, v] of Object.entries(req)) await p.fill(k, v);
+    ok(await p.$eval("#" + pre + "-tel-x", i => i.closest(".telx").hidden), L + " : indicatif libre masqué");
+    await p.selectOption(cc, "autre"); ok(!(await p.$eval("#" + pre + "-tel-x", i => i.closest(".telx").hidden)), L + " : « Autre » affiche l'indicatif libre");
+    await p.fill(num, "912 345 67 89"); await send(); await p.waitForTimeout(300);
+    ok(posts.length === 1 && await p.evaluate(() => document.activeElement.id) === pre + "-tel-x", L + " : indicatif libre manquant signalé");
+    await p.fill("#" + pre + "-tel-x", "+7"); await send(); await p.waitForTimeout(500);
+    ok(posts.length === 2 && field(posts[1], "Téléphone") === "+79123456789" && field(posts[1], "Joignable sur WhatsApp") === "non", L + " : envoi avec « Autre » +7");
+    await close(p);
+  }
+  console.log("5. téléphone avec indicatif : terminé");
   await b.close();
   console.log(fails ? "ÉCHECS : " + fails + " sur " + checks + " contrôles" : "TOUT OK : " + checks + " contrôles");
   process.exit(fails ? 1 : 0);
