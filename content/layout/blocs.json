@@ -23,7 +23,9 @@
     "suivez": "Suivez-nous",
     "reseaux_groupe": "Réseaux sociaux",
     "reseau": "CHANCELENO sur {r}",
-    "reseau_tiktok": "Chano Chanceleno, fondateur, sur TikTok"
+    "reseau_tiktok": "Chano Chanceleno, fondateur, sur TikTok",
+    "tel_choisir": "Indicatif…",
+    "tel_autre": "Autre"
   },
   "en": {
     "pays": {"AO": "Angola", "FR": "France"},
@@ -48,7 +50,9 @@
     "suivez": "Follow us",
     "reseaux_groupe": "Social media",
     "reseau": "CHANCELENO on {r}",
-    "reseau_tiktok": "Chano Chanceleno, founder, on TikTok"
+    "reseau_tiktok": "Chano Chanceleno, founder, on TikTok",
+    "tel_choisir": "Country code…",
+    "tel_autre": "Other"
   },
   "pt": {
     "pays": {"AO": "Angola", "FR": "França"},
@@ -73,6 +77,8 @@
     "suivez": "Siga-nos",
     "reseaux_groupe": "Redes sociais",
     "reseau": "CHANCELENO no {r}",
-    "reseau_tiktok": "Chano Chanceleno, fundador, no TikTok"
+    "reseau_tiktok": "Chano Chanceleno, fundador, no TikTok",
+    "tel_choisir": "Indicativo…",
+    "tel_autre": "Outro"
   }
 }

@@ -18,13 +18,13 @@
   :root:not([data-theme="light"]){
     --paper:#0C1824; --cream:#132435; --text:#ECE4D4; --muted:#A5AFB8;
     --line:rgba(236,228,212,.16); --copper:#C98452; --copper-strong:#C98452;
-    --ok:#5DA683; --warn:#C99A4E; /* vert et brun éclaircis : lisibles sur le fond bleu nuit (≥ 4,5:1) */
+    --ok:#5DA683; --warn:#C99A4E; --err:#E8806E; /* vert, brun et rouge éclaircis : lisibles sur le fond bleu nuit (≥ 4,5:1) */
   }
 }
 :root[data-theme="dark"]{
   --paper:#0C1824; --cream:#132435; --text:#ECE4D4; --muted:#A5AFB8;
   --line:rgba(236,228,212,.16); --copper:#C98452; --copper-strong:#C98452;
-  --ok:#5DA683; --warn:#C99A4E;
+  --ok:#5DA683; --warn:#C99A4E; --err:#E8806E;
 }
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 80px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -286,6 +286,13 @@ input:focus,select:focus,textarea:focus{outline:3px solid rgba(200,160,100,.55);
 .unver{font-size:12px;font-weight:700;color:var(--warn);margin-left:6px}
 .check{display:flex;gap:10px;align-items:flex-start;font-weight:400}
 .check input{width:22px;height:22px;min-height:0;margin-top:2px;flex-shrink:0}
+/* Téléphone avec indicatif (Devis, Partenaires) : sélecteur + numéro sur une ligne, l'un sous l'autre si l'espace manque */
+.grid2>.telf{grid-column:1/-1}
+.telrow{display:flex;flex-wrap:wrap;gap:8px}
+.telrow select{flex:1 1 13em;min-width:0;max-width:100%}
+.telrow input{flex:999 1 11em;min-width:0}
+.telx{margin-top:10px;max-width:16em}
+.telf .check{margin:10px 0 0;font-size:15px}
 .privacy{font-size:13.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
 .status{padding:16px 18px;border-radius:3px;display:none;font-size:15.5px}
 .status.show{display:block}

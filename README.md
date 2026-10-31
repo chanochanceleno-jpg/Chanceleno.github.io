@@ -14,7 +14,8 @@ un numéro WhatsApp ou un prix dans `config/site.yml` le met à jour sur toutes 
 [ajouter une photo](#ajouter-une-photo) · [ajouter une référence client](#ajouter-une-référence-client) ·
 [ajouter un article](#ajouter-un-article) · [modifier un tarif ou un délai](#modifier-un-tarif-ou-un-délai) ·
 [modifier une carte Marchés](#modifier-une-carte-marchés) · [ajouter un réseau social](#ajouter-un-réseau-social) ·
-[publier les CGV](#publier-les-cgv) · [surveillance hebdomadaire](#surveillance-hebdomadaire)
+[publier les CGV](#publier-les-cgv) · [indicatifs téléphoniques](#indicatifs-téléphoniques) ·
+[surveillance hebdomadaire](#surveillance-hebdomadaire)
 
 ## Où se trouve quoi
 
@@ -246,6 +247,29 @@ formulaires arrivent à l'adresse enregistrée chez FormSubmit. Avant de changer
 formulaire vers la nouvelle adresse sur formsubmit.co, confirmez-la, puis remplacez `email` et `formsubmit` (le
 nouvel identifiant chiffré).
 
+## Indicatifs téléphoniques
+
+Les formulaires **Devis** et **Partenaires** demandent un téléphone (facultatif) en deux parties : l'indicatif pays,
+choisi dans une liste (drapeau, pays, indicatif), puis le numéro. La liste se modifie dans `config/site.yml`,
+rubrique `telephone` :
+
+```yaml
+telephone:
+  par_defaut: {fr: FR, en: "", pt: AO}     # pays présélectionné selon la langue ("" = aucun)
+  indicatifs:
+    - {pays: AO, indicatif: "244", nom: "Angola"}
+    - {pays: CD, indicatif: "243", nom: {fr: "RD Congo", en: "DR Congo", pt: "RD Congo"}}
+```
+
+- `pays` : code du pays en 2 lettres majuscules (il donne le drapeau) ; `indicatif` : chiffres seuls, sans `+`.
+- Les pays s'affichent dans l'ordre du fichier ; « Autre » (saisie libre de l'indicatif) est ajouté en dernier.
+- Le visiteur peut aussi taper directement `+244…` ou `00244…` : l'indicatif est reconnu et le sélecteur se met à jour.
+  Espaces, points, tirets, parenthèses et le 0 initial sont retirés (sauf pour l'Italie, où le 0 fait partie du
+  numéro). Il faut 6 à 14 chiffres après l'indicatif, sinon un message s'affiche ; un champ vide est accepté.
+- L'email reçu contient `Téléphone` au format international (ex. `+244923456789`, vide si non renseigné) et
+  `Joignable sur WhatsApp` (oui / non).
+- La normalisation et le contrôle sont dans `static/assets/tel.js`, testés par `tests/tel.test.js`.
+
 ## Publier les CGV
 
 Les conditions générales de vente entre professionnels se rédigent dans `content/legal/cgv.fr.html`,
@@ -394,6 +418,9 @@ anciennes adresses, la langue mémorisée, l'assistant et WhatsApp :
 python3 tools/build.py && (cd _site && python3 -m http.server 8765 &)
 cd tests && npm install && npx playwright install chromium && npm test
 ```
+
+`tests/tel.test.js` vérifie, sans navigateur, la normalisation et le contrôle des numéros de téléphone :
+`node tel.test.js` (lancé aussi par `npm test`).
 
 `tests/stats.test.js` vérifie les statistiques (pages vues, événements, « Ne pas compter mes visites ») sans rien
 envoyer : `GC=chanceleno node stats.test.js`.

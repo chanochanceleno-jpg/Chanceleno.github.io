@@ -234,3 +234,41 @@ photos:
 # ----------------------------------------------------------------------------------------------------------------
 statistiques:
   goatcounter: chanceleno
+
+
+# ----------------------------------------------------------------------------------------------------------------
+# Indicatifs téléphoniques proposés dans les formulaires Devis et Partenaires, dans l'ordre de la liste.
+#   pays      : code du pays en 2 lettres majuscules (sert au drapeau), ex. AO
+#   indicatif : chiffres seuls, sans + ni 00, ex. "244"
+#   nom       : nom du pays, texte unique ou {fr: …, en: …, pt: …}
+# Le choix « Autre » (saisie libre de l'indicatif) est ajouté automatiquement en fin de liste.
+# par_defaut : pays présélectionné selon la langue de la page ("" = aucun), ex. {fr: FR, en: "", pt: AO}
+# ----------------------------------------------------------------------------------------------------------------
+telephone:
+  par_defaut: {fr: FR, en: "", pt: AO}
+  indicatifs:
+    - {pays: AO, indicatif: "244", nom: "Angola"}
+    - {pays: CD, indicatif: "243", nom: {fr: "RD Congo", en: "DR Congo", pt: "RD Congo"}}
+    - {pays: CG, indicatif: "242", nom: "Congo"}
+    - {pays: FR, indicatif: "33", nom: {fr: "France", en: "France", pt: "França"}}
+    - {pays: PT, indicatif: "351", nom: "Portugal"}
+    - {pays: MZ, indicatif: "258", nom: {fr: "Mozambique", en: "Mozambique", pt: "Moçambique"}}
+    - {pays: CV, indicatif: "238", nom: {fr: "Cap-Vert", en: "Cape Verde", pt: "Cabo Verde"}}
+    - {pays: GW, indicatif: "245", nom: {fr: "Guinée-Bissau", en: "Guinea-Bissau", pt: "Guiné-Bissau"}}
+    - {pays: ST, indicatif: "239", nom: {fr: "São Tomé-et-Principe", en: "São Tomé and Príncipe", pt: "São Tomé e Príncipe"}}
+    - {pays: BR, indicatif: "55", nom: {fr: "Brésil", en: "Brazil", pt: "Brasil"}}
+    - {pays: CM, indicatif: "237", nom: {fr: "Cameroun", en: "Cameroon", pt: "Camarões"}}
+    - {pays: GA, indicatif: "241", nom: {fr: "Gabon", en: "Gabon", pt: "Gabão"}}
+    - {pays: CI, indicatif: "225", nom: {fr: "Côte d'Ivoire", en: "Côte d'Ivoire", pt: "Costa do Marfim"}}
+    - {pays: SN, indicatif: "221", nom: {fr: "Sénégal", en: "Senegal", pt: "Senegal"}}
+    - {pays: BE, indicatif: "32", nom: {fr: "Belgique", en: "Belgium", pt: "Bélgica"}}
+    - {pays: CH, indicatif: "41", nom: {fr: "Suisse", en: "Switzerland", pt: "Suíça"}}
+    - {pays: ES, indicatif: "34", nom: {fr: "Espagne", en: "Spain", pt: "Espanha"}}
+    - {pays: GB, indicatif: "44", nom: {fr: "Royaume-Uni", en: "United Kingdom", pt: "Reino Unido"}}
+    - {pays: DE, indicatif: "49", nom: {fr: "Allemagne", en: "Germany", pt: "Alemanha"}}
+    - {pays: IT, indicatif: "39", nom: {fr: "Italie", en: "Italy", pt: "Itália"}}
+    - {pays: NL, indicatif: "31", nom: {fr: "Pays-Bas", en: "Netherlands", pt: "Países Baixos"}}
+    - {pays: TR, indicatif: "90", nom: {fr: "Turquie", en: "Türkiye", pt: "Turquia"}}
+    - {pays: AE, indicatif: "971", nom: {fr: "Émirats arabes unis", en: "United Arab Emirates", pt: "Emirados Árabes Unidos"}}
+    - {pays: CN, indicatif: "86", nom: {fr: "Chine", en: "China", pt: "China"}}
+    - {pays: IN, indicatif: "91", nom: {fr: "Inde", en: "India", pt: "Índia"}}

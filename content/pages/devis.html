@@ -47,7 +47,14 @@
             <div><label for="r-co">Entreprise ou nom commercial <span class="opt">(facultatif pour un artisan)</span></label><input id="r-co" autocomplete="organization"></div>
             <div><label for="r-name">Nom et fonction</label><input id="r-name" required autocomplete="name"><div class="err" id="e-r-name">Indiquez votre nom.</div></div>
             <div><label for="r-mail">Email professionnel</label><input id="r-mail" type="email" required autocomplete="email"><div class="err" id="e-r-mail">Indiquez une adresse email valide.</div></div>
-            <div><label for="r-tel">Téléphone ou WhatsApp <span class="opt">(facultatif)</span></label><input id="r-tel" type="tel" autocomplete="tel"></div>
+            <div class="telf" data-tel>
+              <label for="r-tel">Téléphone <span class="opt">(facultatif)</span></label>
+              <div class="telrow"><label for="r-tel-cc" class="sr">Indicatif du pays</label><select id="r-tel-cc" data-nosend><!--INDICATIFS--></select><input id="r-tel" type="tel" inputmode="tel" autocomplete="tel" data-key="Téléphone" aria-describedby="h-r-tel"></div>
+              <div class="telx" hidden><label for="r-tel-x">Indicatif du pays (autre)</label><input id="r-tel-x" inputmode="tel" autocomplete="off" maxlength="6" placeholder="+7" data-nosend></div>
+              <p class="hint" id="h-r-tel">Choisissez l'indicatif, puis le numéro sans le 0 initial. Vous pouvez aussi saisir le numéro complet avec + ou 00.</p>
+              <div class="err" id="e-r-tel"></div>
+              <label class="check"><input type="checkbox" id="r-wa" data-key="Joignable sur WhatsApp"> Ce numéro est joignable sur WhatsApp</label>
+            </div>
           </div>
         </fieldset>
         <input class="hp" tabindex="-1" autocomplete="off" name="_honey" aria-hidden="true">
