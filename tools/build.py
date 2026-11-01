@@ -643,8 +643,28 @@ def home_photo(src):
     return out
 
 
+GUIDES = os.path.join(CONTENT, "secteurs")
+
+
+def guide_text(s, lang):
+    """Texte rédigé d'une page secteur (content/secteurs/<adresse française>/<langue>.html), écrit directement dans
+    chaque langue : il n'est pas traduit par i18n.json. Vide = page secteur courte, comme avant."""
+    p = os.path.join(GUIDES, s["adresse"]["fr"], lang + ".html")
+    return re.sub(r"<!--(?!VOIR ).*?-->", "", rd(p), flags=re.S).strip() if os.path.isfile(p) else ""
+
+
+def has_guide(s):
+    texts = {l: guide_text(s, l) for l in LANGS}
+    if any(texts.values()) and not all(texts.values()):
+        raise SystemExit("Secteur %s : texte présent en %s mais absent en %s (content/secteurs/%s/<langue>.html). Les trois "
+                         "langues sont nécessaires." % (s["adresse"]["fr"], ", ".join(l for l in LANGS if texts[l]),
+                                                       ", ".join(l for l in LANGS if not texts[l]), s["adresse"]["fr"]))
+    return all(texts.values())
+
+
 def sector_page(site, i):
     s = site.data["secteurs"][i]
+    guide = has_guide(s)
     p = photo("secteurs/" + s["adresse"]["fr"])
     img = '<figure class="sector-photo"><img src="%s" alt="%s"></figure>' % (p, s["titre"]) if p else ""
     others = "".join('<li><a href="#/secteur-%d">%s</a></li>' % (j, o["titre"]) for j, o in enumerate(site.data["secteurs"]) if j != i)
@@ -656,10 +676,24 @@ def sector_page(site, i):
         '<div><dt>Besoins typiques</dt><dd>%s</dd></div><div><dt>Enjeux fréquents</dt><dd>%s</dd></div>'
         '<div><dt>Ce que nous apportons</dt><dd>Sourcing ciblé, vérification proportionnée au risque, comparaison documentée des offres.</dd></div>'
         '<div><dt>Prochaine étape</dt><dd><a href="#/devis?s=%d" class="btn btn-primary btn-sm">Envoyer un besoin dans ce secteur</a></dd></div>'
-        '</dl></article>%s</div></div>\n'
+        '</dl></article>%s</div></div>\n%s'
         '  <div class="band alt"><div class="wrap"><h2>Huit secteurs, une même méthode</h2><ul class="sector-links">%s</ul></div></div>\n'
-        '</section>\n') % (s["titre"], img, s["besoins"], s["enjeux"], i,
-                            "<!--VOIR article:%s page:marches-->" % s["article"] if s.get("article") else "", others)
+        '</section>\n') % ("<!--H1-->" if s.get("h1") else s["titre"], img, s["besoins"], s["enjeux"], i,
+                            # avec un texte rédigé, ses propres liens « Voir aussi » remplacent la ligne automatique
+                            "<!--VOIR article:%s page:marches-->" % s["article"] if s.get("article") and not guide else "",
+                            '  <div class="band guide"><div class="wrap prose">\n<!--GUIDE-->\n</div></div>\n' if guide else "", others)
+
+
+def sector_text(site, i, lang, body):
+    """Après traduction : titre h1 propre à chaque langue (champ « h1 » de data.json) et texte rédigé de la page."""
+    s = site.data["secteurs"][i]
+    if s.get("h1"):
+        body = body.replace("<!--H1-->", esc(s["h1"][lang]))
+    if "<!--GUIDE-->" in body:
+        g = re.sub(r'href="((?:/(?:en|pt))?/?#/[^"]*)"',
+                   lambda m: 'href="%s"' % Rewriter(site, lang, "secteur-%d" % i, "texte du secteur").link(m.group(1)), guide_text(s, lang))
+        body = body.replace("<!--GUIDE-->", g)
+    return body
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -742,7 +776,7 @@ def website(site, lang):
 
 
 def faq(page):
-    """Questions fréquentes de l'accueil (<details class="faq">), telles qu'affichées dans la langue de la page."""
+    """Questions fréquentes de l'accueil et des pages secteurs (<details class="faq">), telles qu'affichées dans la langue de la page."""
     qa = re.findall(r'<details class="faq"><summary>(.*?)</summary>(.*?)</details>', page, re.S)
     clean = lambda t: norm(html.unescape(re.sub(r"<[^>]+>", " ", t)))
     if not qa:
@@ -858,6 +892,8 @@ def build_main(site):
         for lang in LANGS:
             where = "%s (%s)" % (pid, lang)
             body = translate(site, src, lang, pid, where)
+            if pid.startswith("secteur-"):
+                body = sector_text(site, int(pid.split("-")[1]), lang, body)
             hdr = translate(site, header, lang, pid, "en-tête").replace("<!--LANGUES-->", lang_switch(site, pid, lang))
             ftr = translate(site, footer, lang, pid, "pied de page")
             flt = translate(site, floating, lang, pid, "assistant")
@@ -867,8 +903,9 @@ def build_main(site):
                 title = s.get("titre_seo", {}).get(lang) or site.tr(s["titre"], lang, where) + " | CHANCELENO"
                 desc = s.get("description", {}).get(lang) or short(site.tr(s["besoins"], lang, where))
                 og_title = None
-                jsonld = breadcrumb(site, lang, [(site.tr("Secteurs", lang, where), site.url("secteurs", lang)),
-                                                 (site.tr(s["titre"], lang, where), site.url(pid, lang))])
+                jsonld = [x for x in (breadcrumb(site, lang, [(site.tr("Secteurs", lang, where), site.url("secteurs", lang)),
+                                                              (site.tr(s["titre"], lang, where), site.url(pid, lang))]),
+                                      faq(site.fill(body, lang))) if x]
             else:
                 p = site.site["pages"][pid][lang]
                 title, og_title = p["titre"], p.get("og_titre")
@@ -887,8 +924,14 @@ def build_main(site):
                      '<script src="/assets/site.js" defer></script>\n</body>\n</html>\n')
             wr(site.url(pid, lang), page)
             if pid not in NOINDEX:
-                src_file = os.path.join(CONTENT, "data.json") if pid.startswith("secteur-") else os.path.join(CONTENT, "pages", pid + ".html")
-                site.sitemap.append((site.url(pid, lang), {l: site.url(pid, l) for l in LANGS}, git_date(src_file)))
+                if pid.startswith("secteur-"):
+                    s = site.data["secteurs"][int(pid.split("-")[1])]
+                    files = [os.path.join(CONTENT, "data.json")] + [os.path.join(GUIDES, s["adresse"]["fr"], l + ".html") for l in LANGS
+                                                                    if os.path.isfile(os.path.join(GUIDES, s["adresse"]["fr"], l + ".html"))]
+                else:
+                    files = [os.path.join(CONTENT, "pages", pid + ".html")]
+                dates = [d for d in map(git_date, files) if d]
+                site.sitemap.append((site.url(pid, lang), {l: site.url(pid, l) for l in LANGS}, max(dates) if dates else None))
 
 
 # ---------------------------------------------------------------------------------------------------------------

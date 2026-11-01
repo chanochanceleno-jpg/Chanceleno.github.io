@@ -91,3 +91,15 @@ footer.site .socials a:hover,footer.site .socials a:focus-visible{color:var(--go
 .see-also{margin:24px 0 0;font-size:15.5px;line-height:1.6;color:var(--muted)}
 .see-also strong{display:block;color:var(--text);font-weight:600}
 .see-also a{display:block;width:fit-content;padding:4px 0;color:var(--copper);font-weight:600}
+
+/* Listes, tableau comparatif et encadré « L'engagement du fondateur » */
+.article ul{margin:0 0 16px;padding-left:1.2em}
+.article li{margin:0 0 8px}
+.article .table{overflow-x:auto;margin:0 0 16px}
+.article table{border-collapse:collapse;width:100%;font-size:15.5px}
+.article th,.article td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+.article th{font-weight:600}
+.avis{margin:40px 0;padding:24px 26px;border-left:3px solid var(--copper);background:var(--cream)}
+.avis h2,.article .avis h2{margin:0 0 10px;font:600 13px/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+.avis p{margin:0;font-family:var(--serif);font-size:20px;line-height:1.45}
+.avis .signature{margin:12px 0 0;font:600 14px/1.4 var(--sans);color:var(--muted)}
