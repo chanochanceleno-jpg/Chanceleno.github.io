@@ -409,7 +409,7 @@ class Rewriter(HTMLParser):
     def __init__(self, site, lang, page_id, where):
         super().__init__(convert_charrefs=False)
         self.s, self.lang, self.page_id, self.where = site, lang, page_id, where
-        self.out, self.buf, self.skip = [], [], 0
+        self.out, self.buf, self.skip, self.svg_title = [], [], 0, False
 
     # --- texte
     def flush(self):
@@ -458,6 +458,9 @@ class Rewriter(HTMLParser):
         self.out.append(self.tag(tag, attrs, self.get_starttag_text(), False))
         if tag in SKIP:
             self.skip += 1
+        elif tag == "title" and self.skip:
+            self.skip -= 1          # <title> d'un dessin SVG : texte lu par les lecteurs d'écran, donc traduit
+            self.svg_title = True
 
     def handle_startendtag(self, tag, attrs):
         self.flush()
@@ -467,6 +470,9 @@ class Rewriter(HTMLParser):
         self.flush()
         if tag in SKIP:
             self.skip -= 1
+        elif tag == "title" and self.svg_title:
+            self.skip += 1
+            self.svg_title = False
         self.out.append("</%s>" % tag)
 
     def tag(self, tag, attrs, raw, selfclose):
@@ -490,12 +496,19 @@ class Rewriter(HTMLParser):
             if a["data-route"] == cur:
                 a["aria-current"] = "page"
                 changed = True
-        if self.lang != "fr" and not self.skip:
+        if not self.skip:
+            # textes lus par les lecteurs d'écran (aria-label, alt, title, placeholder) : traduction obligatoire,
+            # comme le texte visible (sinon la génération s'arrête et liste les textes manquants)
             for k in ATTR_TR:
                 v = a.get(k)
-                if v and norm(v) in self.s.i18n and self.s.i18n[norm(v)].get(self.lang):
-                    self.s.used.add(norm(v))
-                    a[k] = self.s.i18n[norm(v)][self.lang]
+                if not v or not re.search(r"[A-Za-zÀ-ÿ]", v) or "{{" in v:
+                    continue
+                e = self.s.i18n.get(norm(v))
+                self.s.used.add(norm(v))
+                if e is None or not e.get("en") or not e.get("pt"):
+                    self.s.missing.setdefault(norm(v), set()).add(self.where)
+                elif self.lang != "fr":
+                    a[k] = e[self.lang]
                     changed = True
         if not changed:
             return raw
@@ -662,18 +675,60 @@ def head(site, lang, pid, title, desc, *, og_title=None, og_type="website", robo
               '<meta name="twitter:description" content="%s">' % esc(desc or ""),
               '<meta name="twitter:image" content="%s%s">' % (D, img),
               '<meta name="twitter:image:alt" content="%s">' % esc(img_alt)]
-    h += ['<meta name="theme-color" content="#0A1622">', extra, '<link rel="icon" href="/images/logo.png">',
-          '<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>',
+    # icônes carrées fabriquées depuis images/logo.png (make_icons) ; seule la police des titres (h1, élément le plus
+    # grand du haut de page) est préchargée, Archivo arrive par la feuille de style
+    h += ['<meta name="theme-color" content="#0A1622">', extra,
+          '<link rel="icon" href="/favicon.ico" sizes="32x32">',
+          '<link rel="icon" href="/images/icon-192.png" type="image/png" sizes="192x192">',
+          '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
           '<link rel="preload" href="/fonts/Newsreader.woff2" as="font" type="font/woff2" crossorigin>',
           '<link rel="stylesheet" href="%s">' % css]
-    if jsonld:
-        h.append('<script type="application/ld+json">%s</script>' % json.dumps(jsonld, ensure_ascii=False).replace("</", "<\\/"))
+    for ld in ([jsonld] if isinstance(jsonld, dict) else jsonld or []):
+        h.append('<script type="application/ld+json">%s</script>' % json.dumps(ld, ensure_ascii=False).replace("</", "<\\/"))
     h += ['<script src="%s"></script>' % s for s in scripts]
     if site.stats:
         h.append('<script data-goatcounter="%s/count" async src="/assets/count.js"></script>' % site.stats)
     h.append('<script src="/assets/stats.js" defer></script>')
     h.append("</head>")
     return "\n".join(x for x in h if x) + "\n"
+
+
+FONDATEUR = {"nom": "Chano Chanceleno", "autre_nom": "Chano Ndandu Chanceleno", "fonction": "Fondateur et CEO"}
+
+
+def founder(site, lang):
+    """Données structurées : le fondateur (même identifiant @id sur l'accueil et dans les articles)."""
+    D = site.domain
+    p = {"@type": "Person", "@id": D + "/#fondateur", "name": FONDATEUR["nom"], "alternateName": FONDATEUR["autre_nom"],
+         "jobTitle": site.tr(FONDATEUR["fonction"], lang, "données structurées"), "url": D + site.url("a-propos", lang),
+         "image": D + "/images/fondateur.jpg", "worksFor": {"@id": D + "/#organisation"}}
+    if site.founder_same_as():
+        p["sameAs"] = site.founder_same_as()
+    return p
+
+
+def website(site, lang):
+    D = site.domain
+    return {"@context": "https://schema.org", "@type": "WebSite", "@id": D + "/#site", "name": "CHANCELENO", "url": D + "/",
+            "inLanguage": site.light[lang]["langue_jsonld"], "publisher": {"@id": D + "/#organisation"}}
+
+
+def faq(page):
+    """Questions fréquentes de l'accueil (<details class="faq">), telles qu'affichées dans la langue de la page."""
+    qa = re.findall(r'<details class="faq"><summary>(.*?)</summary>(.*?)</details>', page, re.S)
+    clean = lambda t: norm(html.unescape(re.sub(r"<[^>]+>", " ", t)))
+    if not qa:
+        return None
+    return {"@context": "https://schema.org", "@type": "FAQPage",
+            "mainEntity": [{"@type": "Question", "name": clean(q), "acceptedAnswer": {"@type": "Answer", "text": clean(a)}} for q, a in qa]}
+
+
+def breadcrumb(site, lang, items):
+    """Fil d'Ariane : Accueil > … ; items = [(nom, chemin), …]."""
+    D = site.domain
+    items = [(site.light[lang]["pied"][0], site.url("home", lang))] + items
+    return {"@context": "https://schema.org", "@type": "BreadcrumbList",
+            "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": D + u} for i, (n, u) in enumerate(items)]}
 
 
 def organization(site, lang):
@@ -706,15 +761,13 @@ def organization(site, lang):
     org = {
         "@context": "https://schema.org", "@type": "Organization", "@id": D + "/#organisation",
         "name": "CHANCELENO", "url": D + "/", "logo": D + "/images/logo.png", "description": desc,
-        "founder": {"@type": "Person", "name": "Chano Chanceleno"},
+        "founder": founder(site, lang),
         "contactPoint": [
             {"@type": "ContactPoint", "telephone": wa_eu, "contactType": "sales",
              "areaServed": ["FR", "BE", "CH", "CG", "CD"], "availableLanguage": ["fr", "en"]},
             {"@type": "ContactPoint", "telephone": wa_af, "contactType": "sales",
-             "areaServed": ["AO", "MZ", "CV", "GW", "ST", "BR", "PT"], "availableLanguage": ["pt", "es"]}],
+             "areaServed": ["AO", "MZ", "CV", "GW", "ST", "BR", "PT"], "availableLanguage": ["pt", "fr", "ln"]}],
         "areaServed": ["Africa", "Europe", "Asia"], "knowsLanguage": ["fr", "pt", "en", "es", "ln"]}
-    if site.founder_same_as():
-        org["founder"]["sameAs"] = site.founder_same_as()
     if site.same_as():
         org["sameAs"] = site.same_as()
     org["subOrganization"] = [ao, fr]
@@ -738,7 +791,25 @@ def short(t, n=158):
 def lang_switch(site, pid, lang):
     links = "".join('<a href="%s" data-lang="%s" hreflang="%s" lang="%s"%s>%s</a>' % (
         site.url(pid, l), l, l, l, ' aria-current="true"' if l == lang else "", l.upper()) for l in LANGS)
-    return '<div class="lang" role="group" aria-label="Langue">%s</div>' % links
+    return '<div class="lang" role="group" aria-label="%s">%s</div>' % (esc(site.tr("Langue", lang, "en-tête")), links)
+
+
+# Pages publiées mais exclues des moteurs de recherche et du plan du site (données fictives de démonstration)
+NOINDEX = {"portail"}
+_dates = {}
+
+
+def git_date(path):
+    """Date (AAAA-MM-JJ) de la dernière modification du fichier source dans l'historique git, ou None (sans git).
+    Sert à la balise <lastmod> du plan du site."""
+    if path not in _dates:
+        import subprocess
+        try:
+            out = subprocess.run(["git", "log", "-1", "--format=%cs", "--", path], cwd=ROOT, capture_output=True, text=True, check=True)
+            _dates[path] = out.stdout.strip() or None
+        except (OSError, subprocess.CalledProcessError):
+            _dates[path] = None
+    return _dates[path]
 
 
 def build_main(site):
@@ -762,26 +833,34 @@ def build_main(site):
             hdr = translate(site, header, lang, pid, "en-tête").replace("<!--LANGUES-->", lang_switch(site, pid, lang))
             ftr = translate(site, footer, lang, pid, "pied de page")
             flt = translate(site, floating, lang, pid, "assistant")
+            jsonld = None
             if pid.startswith("secteur-"):
                 s = site.data["secteurs"][int(pid.split("-")[1])]
                 title = site.tr(s["titre"], lang, where) + " | CHANCELENO"
                 desc = short(site.tr(s["besoins"], lang, where))
                 og_title = None
+                jsonld = breadcrumb(site, lang, [(site.tr("Secteurs", lang, where), site.url("secteurs", lang)),
+                                                 (site.tr(s["titre"], lang, where), site.url(pid, lang))])
             else:
                 p = site.site["pages"][pid][lang]
                 title, og_title = p["titre"], p.get("og_titre")
                 filled = site.fill(body, lang)     # texte d'introduction tel qu'affiché (blocs et valeurs de config/site.yml)
                 desc = p.get("description") or short(first_text(filled, r'<p class="lead"[^>]*>(.*?)</p>') or
                                                      first_text(filled, r'<div class="band">.*?<p[^>]*>(.*?)</p>'))
+                if pid == "home":
+                    jsonld = [x for x in (organization(site, lang), website(site, lang), faq(filled)) if x]
+            robots = "noindex, follow" if pid in NOINDEX else "index, follow"
             extra = '<meta name="google-site-verification" content="%s">' % site.site["google_site_verification"] if pid == "home" else ""
-            page = head(site, lang, pid, title, desc, og_title=og_title, jsonld=organization(site, lang) if pid == "home" else None,
+            page = head(site, lang, pid, title, desc, og_title=og_title, jsonld=jsonld, robots=robots,
                         scripts=["/assets/redirect.js"], extra=extra)
             tel = '<script src="/assets/tel.js" defer></script>\n' if "data-tel" in body else ""
             page += ("<body>\n" + hdr + "\n" + '<main id="content" tabindex="-1">\n\n' + body + "\n</main>\n\n" + ftr + "\n" + flt +
                      '\n<script src="/assets/mail.js" defer></script>\n<script src="/assets/strings.js" defer></script>\n' + tel +
                      '<script src="/assets/site.js" defer></script>\n</body>\n</html>\n')
             wr(site.url(pid, lang), page)
-            site.sitemap.append((site.url(pid, lang), {l: site.url(pid, l) for l in LANGS}, None))
+            if pid not in NOINDEX:
+                src_file = os.path.join(CONTENT, "data.json") if pid.startswith("secteur-") else os.path.join(CONTENT, "pages", pid + ".html")
+                site.sitemap.append((site.url(pid, lang), {l: site.url(pid, l) for l in LANGS}, git_date(src_file)))
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -816,7 +895,7 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
         '<body>\n<a class="skip" href="#contenu">%s</a>\n<header class="site">\n  <div class="wrap hbar">\n'
         '    <a href="%s" class="brand" aria-label="%s"><img src="/images/logo.png" alt="%s"><span class="word">CHANCELENO</span></a>\n'
         '    <div class="hnav">\n      <a class="sec" href="%s"%s>%s</a>\n'
-        '      <nav class="lang" aria-label="Langue">%s</nav>\n'
+        '      <nav class="lang" aria-label="%s">%s</nav>\n'
         '      <a href="%s" class="btn btn-primary btn-sm hcta">%s</a>\n    </div>\n  </div>\n</header>\n'
         '<main id="contenu">\n%s\n</main>\n%s'
         '<footer class="site">\n  <div class="wrap">\n    <ul class="flinks">%s</ul>\n'
@@ -824,7 +903,7 @@ def light_page(site, lang, title_tag, robots, head_extra, sec_current, lang_link
         '    <div class="fbot"><span>© {{annee}} CHANCELENO</span><span><a data-mail href="%s">{{email}}</a></span></div>\n'
         '  </div>\n</footer>\n<script src="/assets/mail.js" defer></script>\n</body>\n</html>\n') % (
         esc(L["aller_au_contenu"]), home, esc(L["accueil_aria"]), esc(L["logo_alt"]), art,
-        ' aria-current="page"' if sec_current else "", esc(L["articles"]), nav, site.url("devis", lang), esc(L["devis"]),
+        ' aria-current="page"' if sec_current else "", esc(L["articles"]), esc(site.tr("Langue", lang, "articles")), nav, site.url("devis", lang), esc(L["devis"]),
         main, after_main, fl, "<!--ENTITES-->", site.url("contact", lang))
     return h + body
 
@@ -850,7 +929,7 @@ def build_articles(site):
     for lang in LANGS:
         L = site.light[lang]
         D = site.domain
-        publisher = {"@type": "Organization", "name": "CHANCELENO", "url": D + "/", "logo": {"@type": "ImageObject", "url": D + "/images/logo.png"}}
+        publisher = {"@type": "Organization", "@id": D + "/#organisation", "name": "CHANCELENO", "url": D + "/", "logo": {"@type": "ImageObject", "url": D + "/images/logo.png"}}
         # liste des articles
         cards = "\n".join('<a class="card" href="%s"><h2>%s</h2><p>%s</p><time datetime="%s">%s</time></a>' % (
             a["url"][lang], esc(a[lang]["titre"]), esc(a[lang]["description"]), a["date"], date_text(site, lang, a["date"])) for a in arts)
@@ -859,8 +938,9 @@ def build_articles(site):
         ld = {"@context": "https://schema.org", "@type": "CollectionPage", "name": L["liste_jsonld_nom"], "description": L["liste_description"],
               "inLanguage": L["langue_jsonld"], "url": D + base[lang], "publisher": publisher,
               "hasPart": [{"@type": "Article", "headline": a[lang]["titre"], "url": D + a["url"][lang], "datePublished": a["date"]} for a in arts]}
+        crumbs = breadcrumb(site, lang, [(L["articles"], base[lang])])
         wr(base[lang], light_page(site, lang, L["liste_titre"] + " | CHANCELENO", "index, follow", "", True, base, main,
-                                  desc=L["liste_description"], alternates=base, og_title=L["liste_titre"], jsonld=ld))
+                                  desc=L["liste_description"], alternates=base, og_title=L["liste_titre"], jsonld=[ld, crumbs]))
         site.sitemap.append((base[lang], base, arts[0]["date"] if arts else None))
         # chaque article
         for a in arts:
@@ -873,15 +953,14 @@ def build_articles(site):
             main = ('<article>\n<div class="pagehead"><div class="wrap">\n<a class="crumb" href="%s">%s</a>\n<h1>%s</h1>\n'
                     '<p class="byline">%s%s%s<time datetime="%s">%s</time></p>\n</div></div>\n<div class="article">\n%s\n</div>\n</article>') % (
                 base[lang], esc(L["articles"]), esc(t["titre"]), b1, author, b2, a["date"], date_text(site, lang, a["date"]), src)
-            person = {"@type": "Person", "name": "Chano Chanceleno", "jobTitle": t["fonction_auteur"]}
-            if li:
-                person.update({"url": li, "sameAs": [li]})
+            person = founder(site, lang)
             ld = {"@context": "https://schema.org", "@type": "Article", "headline": t["titre"], "description": t["description"],
                   "inLanguage": L["langue_jsonld"], "datePublished": a["date"], "dateModified": a.get("modifie", a["date"]),
                   "image": [D + site.site["og_image"][lang]], "mainEntityOfPage": {"@type": "WebPage", "@id": D + a["url"][lang]},
                   "author": person, "publisher": publisher}
+            crumbs = breadcrumb(site, lang, [(L["articles"], base[lang]), (t["titre"], a["url"][lang])])
             wr(a["url"][lang], light_page(site, lang, t["titre"] + " | CHANCELENO", "index, follow", "", False, a["url"], main,
-                                          desc=t["description"], alternates=a["url"], og_type="article", og_title=t["titre"], jsonld=ld))
+                                          desc=t["description"], alternates=a["url"], og_type="article", og_title=t["titre"], jsonld=[ld, crumbs]))
             site.sitemap.append((a["url"][lang], a["url"], a.get("modifie", a["date"])))
 
 
@@ -991,6 +1070,27 @@ def fill_static(site):
                         out.write(site.fill(t, None))
 
 
+def make_icons():
+    """Icônes carrées fabriquées depuis static/images/logo.png (160 × 146, fond transparent) : favicon.ico
+    (16, 32 et 48 px), images/icon-192.png (Android, onglets) et apple-touch-icon.png (iPhone, fond sombre du site)."""
+    from PIL import Image
+    logo = Image.open(os.path.join(STATIC, "images", "logo.png")).convert("RGBA")
+
+    def square(size, bg=(0, 0, 0, 0), margin=0.0):
+        inner = round(size * (1 - 2 * margin))
+        w, h = logo.size
+        k = inner / max(w, h)
+        im = logo.resize((round(w * k), round(h * k)), Image.LANCZOS)
+        out = Image.new("RGBA", (size, size), bg)
+        out.alpha_composite(im, ((size - im.width) // 2, (size - im.height) // 2))
+        return out
+    square(48).save(os.path.join(OUT, "favicon.ico"), sizes=[(16, 16), (32, 32), (48, 48)])
+    # palette de 256 couleurs : fichiers 4 à 5 fois plus légers, différence invisible à cette taille
+    small = lambda im: im.quantize(256, method=Image.Quantize.FASTOCTREE)
+    small(square(192)).save(os.path.join(OUT, "images", "icon-192.png"), optimize=True)
+    small(square(180, (10, 22, 34, 255), 0.12)).save(os.path.join(OUT, "apple-touch-icon.png"), optimize=True)
+
+
 def finish_photos():
     """Emplacements photo : seule la version WebP est publiée (l'original, souvent lourd, n'est pas copié)."""
     for folder in [""] + PHOTO_DIRS:
@@ -1027,6 +1127,7 @@ def main():
     build_sitemap(site)
     build_redirect(site)
     build_strings(site)
+    make_icons()
     finish_photos()
     leftovers()
     if site.missing:

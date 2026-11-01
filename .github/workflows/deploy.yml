@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0     # historique complet : date de dernière modification de chaque page (<lastmod> du sitemap)
       - name: Installer Python
         uses: actions/setup-python@v6
         with:

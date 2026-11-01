@@ -42,7 +42,8 @@ header.site{position:sticky;top:0;z-index:40;background:var(--ink);color:#EFE7D8
 
 /* Contenu */
 .pagehead{background:var(--ink);color:#EAE2D2;padding:clamp(48px,7vw,88px) 0 clamp(40px,5vw,64px)}
-.crumb{font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);text-decoration:none}
+.crumb{display:inline-block;padding:6px 0;font:600 12px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);text-decoration:none}
+.entities a,.fbot a{display:inline-block;padding:5px 0}
 h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;margin:0}
 .pagehead h1{font-size:clamp(34px,5vw,56px);line-height:1.06;max-width:22ch;margin-top:14px}
 .pagehead .lead{color:#B9C1C8;margin:18px 0 0;max-width:60ch;font-size:18px}
