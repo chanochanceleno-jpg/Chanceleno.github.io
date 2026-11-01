@@ -21,19 +21,19 @@
    "fr": {
     "chemin": "/",
     "titre": "Import-export Europe, Chine – Angola, RDC | CHANCELENO",
-    "description": "Import-export entre l'Europe, la Chine et l'Angola, la RDC et le Congo : fournisseurs vérifiés, un seul contrat, une seule facture. Demandez un devis.",
+    "description": "Import-export entre l'Europe, l'Asie et l'Angola, la RDC et le Congo : fournisseurs vérifiés, un seul contrat, une seule facture. Demandez un devis.",
     "og_titre": "CHANCELENO — Acheter à l'autre bout du monde, sans payer à l'aveugle"
    },
    "en": {
     "chemin": "/en/",
     "titre": "Import-export Europe, China – Angola, DR Congo | CHANCELENO",
-    "description": "Import-export between Europe, China and Angola, the DRC and Congo: verified suppliers, one contract, one invoice. Request a quote today.",
+    "description": "Import-export between Europe, Asia and Angola, the DRC and Congo: verified suppliers, one contract, one invoice. Request a quote today.",
     "og_titre": "CHANCELENO — Buy from the other side of the world without paying blind"
    },
    "pt": {
     "chemin": "/pt/",
     "titre": "Importação e exportação Europa, China – Angola | CHANCELENO",
-    "description": "Importação e exportação entre a Europa, a China e Angola, a RDC e o Congo: fornecedores verificados, um contrato, uma fatura. Peça uma cotação.",
+    "description": "Importação e exportação entre a Europa, a Ásia e Angola, a RDC e o Congo: fornecedores verificados, um contrato, uma fatura. Peça uma cotação.",
     "og_titre": "CHANCELENO — Comprar do outro lado do mundo, sem pagar às cegas"
    }
   },
@@ -85,7 +85,7 @@
    "pt": {
     "chemin": "/pt/metodo/",
     "titre": "Método: da sua necessidade à entrega | CHANCELENO",
-    "description": "O nosso método de compras internacionais: necessidade, fornecedores consultados, verificação, oferta firme, controlo e entrega em Angola. Peça cotação."
+    "description": "O nosso método de compras internacionais: necessidade, fornecedores consultados, verificação, oferta firme, controlo e entrega em Angola. Peça uma cotação."
    }
   },
   "fournisseurs": {
@@ -153,7 +153,7 @@
    "pt": {
     "chemin": "/pt/mercados/",
     "titre": "Mercados: Angola, RDC, Congo, África lusófona | CHANCELENO",
-    "description": "Importação e exportação para Angola, a RDC, o Congo e a África lusófona, a partir de Lyon e Luanda, com fornecedores na Europa e na Ásia. Peça cotação."
+    "description": "Importação e exportação para Angola, a RDC, o Congo e a África lusófona, a partir de Lyon e Luanda, com fornecedores na Europa e na Ásia. Peça uma cotação."
    }
   },
   "contact": {
@@ -177,17 +177,17 @@
    "fr": {
     "chemin": "/devis/",
     "titre": "Demander un devis | CHANCELENO",
-    "description": "Demandez un devis pour vos achats en Europe ou en Chine, livrés en Angola, en RDC ou au Congo : une référence, une BOQ ou une photo suffit."
+    "description": "Demandez un devis pour vos achats en Europe ou en Asie, livrés en Angola, en RDC ou au Congo : une référence, une BOQ ou une photo suffit."
    },
    "en": {
     "chemin": "/en/quote/",
     "titre": "Request a quote | CHANCELENO",
-    "description": "Request a quote for purchases in Europe or China delivered to Angola, the DRC or Congo: a part number, a BOQ or a photo is enough to start."
+    "description": "Request a quote for purchases in Europe or Asia delivered to Angola, the DRC or Congo: a part number, a BOQ or a photo is enough to start."
    },
    "pt": {
     "chemin": "/pt/cotacao/",
     "titre": "Pedir cotação | CHANCELENO",
-    "description": "Peça uma cotação para compras na Europa ou na China, entregues em Angola, na RDC ou no Congo: uma referência, uma BOQ ou uma foto bastam."
+    "description": "Peça uma cotação para compras na Europa ou na Ásia, entregues em Angola, na RDC ou no Congo: uma referência, uma BOQ ou uma foto bastam."
    }
   },
   "portail": {
