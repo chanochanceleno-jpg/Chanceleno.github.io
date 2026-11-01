@@ -427,7 +427,7 @@ body.cb-on .wa-menu{bottom:66px}
 .see-also strong{display:block;color:var(--text);font-weight:600}
 .see-also a{display:block;width:fit-content;padding:4px 0;color:var(--copper);font-weight:600}
 
-/* Texte rédigé d'une page secteur (content/secteurs/) et encadré « L'avis du fondateur » */
+/* Texte rédigé d'une page secteur (content/secteurs/) et encadré « L'engagement du fondateur » */
 .band.guide{padding-top:0}
 .prose>*{max-width:760px}
 .prose h2{font-size:clamp(26px,3.2vw,36px);line-height:1.15;margin:52px 0 14px}
@@ -440,3 +440,4 @@ body.cb-on .wa-menu{bottom:66px}
 .avis p{margin:0;font-family:var(--serif);font-size:20px;line-height:1.45}
 .prose .cta{margin-top:44px;padding:28px;border:1px solid var(--line);border-radius:4px;background:var(--cream)}
 .prose .cta p{margin:0 0 16px;font-family:var(--serif);font-size:22px;line-height:1.3}
+.avis .signature{margin:12px 0 0;font:600 14px/1.4 var(--sans);color:var(--muted)}

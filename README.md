@@ -194,17 +194,18 @@ Aujourd'hui, seule la page pilier `/secteurs/automobile-poids-lourds-flottes/` e
   `article` de `content/data.json`).
 - Le titre principal (h1) se règle dans `content/data.json`, champ `h1` du secteur (fr, en, pt).
 
-## L'avis du fondateur
+## L'engagement du fondateur
 
-La page pilier et les articles de sourcing contiennent un encadré à la première personne :
+La page pilier et les articles de sourcing contiennent un encadré à la première personne, écrit dans chaque langue
+(« L'engagement du fondateur », « O compromisso do fundador », « The founder's commitment ») :
 
 ```html
-<aside class="avis"><h2>L'avis du fondateur</h2><p>[HISTOIRE À FOURNIR PAR CHANO]</p></aside>
+<aside class="avis"><h2>L'engagement du fondateur</h2><p>Texte…</p><p class="signature">Chano Chanceleno, fondateur</p></aside>
 ```
 
-Remplacez `[HISTOIRE À FOURNIR PAR CHANO]` par votre texte, dans chaque langue (titre « A opinião do fundador » en
-portugais, « The founder's view » en anglais). Tant qu'un repère reste, `tools/check.py` affiche un avertissement
-(non bloquant) avec la liste des pages concernées.
+Il ne reprend que des faits déjà présents sur le site. Pour le modifier, changez le texte dans chacun des fichiers
+concernés (`content/secteurs/…` et `content/articles/…`). Un repère de texte provisoire (`[À COMPLÉTER]`,
+`[HISTOIRE À FOURNIR…]`) laissé dans une page **bloque** `tools/check.py` : rien n'est publié tant qu'il reste.
 
 ## Modifier un tarif ou un délai
 

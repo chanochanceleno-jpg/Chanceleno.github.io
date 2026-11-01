@@ -11,8 +11,8 @@ français destiné aux lecteurs d'écran (aria-label, alt, title, placeholder, t
 structurées (JSON-LD) sont illisibles ou incomplètes.
 
 Affiche aussi des avertissements, sans bloquer la mise en ligne : titre de page de plus de 60 caractères, description
-de moins de 120 ou de plus de 155 caractères, titre ou description identique sur plusieurs pages d'une même langue,
-repère [HISTOIRE À FOURNIR PAR CHANO] encore présent (encadré « L'avis du fondateur » à compléter).
+de moins de 120 ou de plus de 155 caractères, titre ou description identique sur plusieurs pages d'une même langue.
+Bloque aussi toute page qui contient encore un repère de texte à fournir ([À COMPLÉTER…], [HISTOIRE À FOURNIR…]).
 """
 import json
 import html
@@ -33,7 +33,7 @@ I18N = json.load(open(os.path.join(ROOT, "content", "i18n.json"), encoding="utf-
 ATTRS = ("aria-label", "alt", "title", "placeholder")
 EAGER = {"/images/logo.webp", "/images/accueil.webp"}   # haut de page : logo et photo de l'accueil
 IGNORED = {"google8a6c94d578320138.html"}
-A_FOURNIR = "[HISTOIRE À FOURNIR PAR CHANO]"   # encadré « L'avis du fondateur » en attente du texte   # fichier de vérification Google, servi tel quel
+A_FOURNIR = re.compile(r"\[(?:À COMPLÉTER|A COMPLETER|HISTOIRE À FOURNIR)[^\]]*\]", re.I)   # texte provisoire, jamais publié   # fichier de vérification Google, servi tel quel
 
 
 class Page(HTMLParser):
@@ -152,7 +152,7 @@ def main():
             if f.endswith(".html") and f not in IGNORED:
                 p = Page()
                 p.feed(open(full, encoding="utf-8").read())
-                p.a_fournir = A_FOURNIR in open(full, encoding="utf-8").read()
+                p.a_fournir = A_FOURNIR.search(open(full, encoding="utf-8").read())
                 url = rel[:-len("index.html")] if rel.endswith("/index.html") else rel
                 pages[url] = p
     warnings = []
@@ -240,9 +240,9 @@ def main():
               "images/icon-192.png", IGNORED.copy().pop()):
         if not os.path.isfile(os.path.join(OUT, f)):
             errors.append("fichier manquant : %s" % f)
-    todo = sorted(u for u, p in pages.items() if p.a_fournir)
-    if todo:
-        warnings.append("%s à remplacer sur %d page(s) : %s" % (A_FOURNIR, len(todo), ", ".join(todo)))
+    for u, p in sorted(pages.items()):
+        if p.a_fournir:
+            errors.append("%s : repère de texte à fournir %s" % (u, p.a_fournir.group(0)))
     for (lang, kind, _), urls in sorted(seen.items()):
         if len(urls) > 1:
             warnings.append("%s identique sur %d pages (%s) : %s" % (kind.capitalize(), len(urls), lang, ", ".join(sorted(urls))))
