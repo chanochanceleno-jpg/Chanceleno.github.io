@@ -1,18 +1,11 @@
 # Robots collectant des contenus pour entraîner des IA : refusés
-User-agent: GPTBot
 User-agent: CCBot
-User-agent: Google-Extended
-User-agent: ClaudeBot
 User-agent: Bytespider
 User-agent: anthropic-ai
 Disallow: /
 
-# Recherche assistée par IA : autorisée
-User-agent: OAI-SearchBot
-User-agent: PerplexityBot
-Allow: /
-
-# Moteurs de recherche et autres robots : autorisés
+# Moteurs de recherche, recherche assistée par IA et robots des assistants IA (dont GPTBot, ClaudeBot et
+# Google-Extended, pour que le site puisse être cité dans leurs réponses) : autorisés
 User-agent: *
 Allow: /
 

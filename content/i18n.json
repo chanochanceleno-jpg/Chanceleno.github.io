@@ -506,5 +506,17 @@
 "Vos visites ne sont pas comptées sur cet appareil.": {"en": "Your visits are not counted on this device.", "pt": "As suas visitas não são contadas neste dispositivo."},
 "Vos visites sont comptées de façon anonyme.": {"en": "Your visits are counted anonymously.", "pt": "As suas visitas são contadas de forma anónima."},
 "Statistiques de visite : GoatCounter, outil de statistiques sans cookie, reçoit pour chaque page vue l'adresse de la page, la page de provenance, le type de navigateur et le pays déduit de la connexion, sans conserver l'adresse IP. Vous pouvez désactiver ce comptage depuis la page Cookies.": {"en": "Visit statistics: GoatCounter, a cookie-free analytics tool, receives for each page view the page address, the referring page, the browser type and the country inferred from the connection, without keeping the IP address. You can turn this counting off from the Cookies page.", "pt": "Estatísticas de visita: o GoatCounter, ferramenta de estatísticas sem cookies, recebe para cada página vista o endereço da página, a página de origem, o tipo de navegador e o país deduzido da ligação, sem guardar o endereço IP. Pode desativar esta contagem a partir da página Cookies."},
-"Conditions générales de vente": {"en": "General terms and conditions of sale", "pt": "Condições gerais de venda"}
+"Conditions générales de vente": {"en": "General terms and conditions of sale", "pt": "Condições gerais de venda"},
+"CHANCELENO — accueil": {"en": "CHANCELENO — home", "pt": "CHANCELENO — início"},
+"Logo CHANCELENO": {"en": "CHANCELENO logo", "pt": "Logótipo CHANCELENO"},
+"Navigation principale": {"en": "Main navigation", "pt": "Navegação principal"},
+"Langue": {"en": "Language", "pt": "Idioma"},
+"Nous écrire sur WhatsApp": {"en": "Message us on WhatsApp", "pt": "Escreva-nos pelo WhatsApp"},
+"Chano Chanceleno, fondateur de CHANCELENO": {"en": "Chano Chanceleno, founder of CHANCELENO", "pt": "Chano Chanceleno, fundador da CHANCELENO"},
+"Contenu de l'historique d'une opération": {"en": "Contents of an operation's history", "pt": "Conteúdo do histórico de uma operação"},
+"Démonstration": {"en": "Demonstration", "pt": "Demonstração"},
+"Statuts fournisseur": {"en": "Supplier statuses", "pt": "Estatutos do fornecedor"},
+"Illustration des corridors d'approvisionnement entre l'Afrique centrale, l'Europe et les marchés internationaux": {"en": "Illustration of supply corridors between Central Africa, Europe and international markets", "pt": "Ilustração dos corredores de aprovisionamento entre a África Central, a Europa e os mercados internacionais"},
+"Bases, pays relais et marchés servis": {"en": "Bases, relay countries and markets served", "pt": "Bases, países de apoio e mercados servidos"},
+"Fondateur et CEO": {"en": "Founder and CEO", "pt": "Fundador e CEO"}
 }

@@ -131,6 +131,9 @@ p{margin:0 0 1em;max-width:66ch}
 .faq p{margin:0 0 22px;color:var(--muted)}
 .pagehead p{color:#B9C1C8;margin-top:18px}
 .crumb{font-size:14px;color:#9FA9B2;margin-bottom:18px;display:block}
+/* cibles tactiles d'au moins 24 px de haut (WCAG 2.2, critère 2.5.8) */
+.crumb a,.entities a,.fbot a{display:inline-block;padding:5px 0}
+.mk-h{margin-bottom:28px}
 
 /* Hero */
 .hero{background:var(--ink);color:#EFE7D8;position:relative;overflow:hidden}
@@ -237,7 +240,7 @@ p{margin:0 0 1em;max-width:66ch}
 @media (max-width:860px){.two{grid-template-columns:1fr}}
 
 /* Tables & demo */
-.demo-tag{display:inline-block;background:#8A5A12;color:#FFF3DC;font:700 11.5px var(--sans);letter-spacing:.08em;padding:4px 8px;border-radius:2px;vertical-align:middle}
+.demo-tag{display:inline-block;background:#8A5A12;color:#FFF3DC;font:700 12px var(--sans);letter-spacing:.08em;padding:4px 8px;border-radius:2px;vertical-align:middle}
 .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;min-width:560px;font-size:15px}
 th,td{text-align:left;padding:12px 12px;border-bottom:1px solid var(--line);vertical-align:top}

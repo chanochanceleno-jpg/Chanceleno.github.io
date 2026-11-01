@@ -6,8 +6,14 @@
 S'arrête avec une erreur si : un lien interne est cassé, une page n'a pas la politique de sécurité (CSP),
 contient un script en ligne ou l'adresse email en clair, n'a pas exactement un titre h1, si les liens entre
 langues (hreflang) ne sont pas réciproques, si le plan du site (sitemap.xml) est incohérent, si un marqueur {{nom}}
-n'a pas été remplacé ou si config/site.yml contient une erreur.
+n'a pas été remplacé ou si config/site.yml contient une erreur ; si une page anglaise ou portugaise contient un texte
+français destiné aux lecteurs d'écran (aria-label, alt, title, placeholder, titre d'un dessin SVG), ou si les données
+structurées (JSON-LD) sont illisibles ou incomplètes.
+
+Affiche aussi des avertissements, sans bloquer la mise en ligne : titre de page de plus de 60 caractères, description
+de moins de 70 ou de plus de 160 caractères, titre ou description identique sur plusieurs pages d'une même langue.
 """
+import json
 import html
 import os
 import re
@@ -22,6 +28,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import config as configfile  # noqa: E402  (tools/config.py)
 CONFIG = configfile.load()
 EMAIL = CONFIG["email"]
+I18N = json.load(open(os.path.join(ROOT, "content", "i18n.json"), encoding="utf-8"))
+ATTRS = ("aria-label", "alt", "title", "placeholder")
 EAGER = {"/images/logo.webp", "/images/accueil.webp"}   # haut de page : logo et photo de l'accueil
 IGNORED = {"google8a6c94d578320138.html"}   # fichier de vérification Google, servi tel quel
 
@@ -36,6 +44,12 @@ class Page(HTMLParser):
         self.title = ""
         self._in_title = False
         self._script = None
+        self.lang = None
+        self.labels = []        # textes lus par les lecteurs d'écran (attributs, titre des dessins SVG)
+        self.ld = []            # blocs JSON-LD (texte brut)
+        self.faq = 0            # questions fréquentes (<details class="faq">)
+        self._svg = 0
+        self._svg_title = None
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -44,11 +58,22 @@ class Page(HTMLParser):
         for k in a:
             if k.startswith("on"):
                 self.handlers.append("%s %s" % (tag, k))
+        if tag == "html":
+            self.lang = a.get("lang")
+        for k in ATTRS:
+            if a.get(k):
+                self.labels.append(a[k])
+        if tag == "svg":
+            self._svg += 1
+        if tag == "title" and self._svg:
+            self._svg_title = ""
+        if tag == "details" and "faq" in (a.get("class") or "").split():
+            self.faq += 1
         if tag == "h1":
             self.h1 += 1
         if tag == "img":
             self.imgs.append(a)
-        if tag == "title":
+        if tag == "title" and not self._svg:
             self._in_title = True
         if tag == "a" and a.get("href"):
             self.links.append(a["href"])
@@ -69,12 +94,21 @@ class Page(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "title":
             self._in_title = False
+            if self._svg_title is not None:
+                self.labels.append(self._svg_title)
+                self._svg_title = None
+        if tag == "svg":
+            self._svg -= 1
         if tag == "script":
             self._script = None
 
     def handle_data(self, d):
         if self._in_title:
             self.title += d
+        if self._svg_title is not None:
+            self._svg_title += d
+        if self._script is not None and self._script.get("type") == "application/ld+json":
+            self.ld.append(d)
         if self._script is not None and d.strip() and "src" not in self._script and self._script.get("type") != "application/ld+json":
             self.scripts.append(d.strip()[:60])
 
@@ -118,7 +152,23 @@ def main():
                 p.feed(open(full, encoding="utf-8").read())
                 url = rel[:-len("index.html")] if rel.endswith("/index.html") else rel
                 pages[url] = p
+    warnings = []
+    seen = {}               # (langue, "titre"/"description", texte) -> pages
     for url, p in pages.items():
+        errors += check_jsonld(url, p, pages)
+        if p.lang in ("en", "pt"):
+            for v in p.labels:
+                e = I18N.get(" ".join(v.split()))
+                if e and e.get(p.lang) and e[p.lang] != " ".join(v.split()):
+                    errors.append("%s : texte français non traduit pour les lecteurs d'écran (%r)" % (url, v))
+        if "noindex" not in p.metas.get("robots", ""):
+            t, d = p.title.strip(), p.metas.get("description", "")
+            if len(t) > 60:
+                warnings.append("%s : titre de %d caractères (60 au plus conseillés)" % (url, len(t)))
+            if not 70 <= len(d) <= 160:
+                warnings.append("%s : description de %d caractères (70 à 160 conseillés)" % (url, len(d)))
+            seen.setdefault((p.lang, "titre", t), []).append(url)
+            seen.setdefault((p.lang, "description", d), []).append(url)
         csp = p.metas.get("Content-Security-Policy", "")
         if "script-src 'self'" not in csp or "form-action 'self' https://formsubmit.co" not in csp:
             errors.append("%s : politique de sécurité (CSP) absente ou incomplète" % url)
@@ -180,15 +230,59 @@ def main():
     for url, p in pages.items():
         if "noindex" not in p.metas.get("robots", "") and url not in locs:
             errors.append("sitemap.xml : page indexable absente %s" % url)
-    for f in (".well-known/security.txt", "robots.txt", "CNAME", "404.html", IGNORED.copy().pop()):
+    for loc, date in re.findall(r"<loc>([^<]+)</loc>(?:(?!</url>).)*?<lastmod>([^<]*)</lastmod>", sm, re.S):
+        if not re.match(r"^\d{4}-\d{2}-\d{2}$", date):
+            errors.append("sitemap.xml : date <lastmod> invalide pour %s (%r)" % (loc, date))
+    for f in (".well-known/security.txt", "robots.txt", "CNAME", "404.html", "favicon.ico", "apple-touch-icon.png",
+              "images/icon-192.png", IGNORED.copy().pop()):
         if not os.path.isfile(os.path.join(OUT, f)):
             errors.append("fichier manquant : %s" % f)
+    for (lang, kind, _), urls in sorted(seen.items()):
+        if len(urls) > 1:
+            warnings.append("%s identique sur %d pages (%s) : %s" % (kind.capitalize(), len(urls), lang, ", ".join(sorted(urls))))
+    if warnings:
+        print("Avertissements référencement (%d, non bloquants) :" % len(warnings))
+        for w in warnings:
+            print("  - " + w)
     if errors:
         print("ERREUR : %d problème(s) dans le site généré :" % len(errors))
         for e in errors:
             print("  - " + e)
         sys.exit(1)
     print("Contrôles OK : %d pages, %d dans le plan du site." % (len(pages), len(locs)))
+
+
+def check_jsonld(url, p, pages):
+    """Données structurées : JSON lisible, schema.org, et cohérence des blocs générés (FAQ, fil d'Ariane, auteur)."""
+    errors = []
+    for raw in p.ld:
+        try:
+            ld = json.loads(raw)
+        except ValueError as e:
+            errors.append("%s : données structurées illisibles (%s)" % (url, e))
+            continue
+        if ld.get("@context") != "https://schema.org" or not ld.get("@type"):
+            errors.append("%s : données structurées sans @context schema.org ou sans @type" % url)
+            continue
+        t = ld["@type"]
+        if t == "FAQPage":
+            qs = ld.get("mainEntity") or []
+            if len(qs) != p.faq or not all(q.get("name") and q.get("acceptedAnswer", {}).get("text") for q in qs):
+                errors.append("%s : FAQ des données structurées incomplète (%d questions pour %d affichées)" % (url, len(qs), p.faq))
+        if t == "BreadcrumbList":
+            items = ld.get("itemListElement") or []
+            for i, it in enumerate(items):
+                path = urlsplit(it.get("item", "")).path
+                if it.get("position") != i + 1 or not it.get("name") or not it.get("item", "").startswith(DOMAIN) or path not in pages:
+                    errors.append("%s : fil d'Ariane incorrect (%s)" % (url, it))
+            if items and urlsplit(items[-1]["item"]).path != url:
+                errors.append("%s : le fil d'Ariane ne se termine pas par la page elle-même" % url)
+        person = ld.get("founder") if t == "Organization" else ld.get("author") if t == "Article" else None
+        if person is not None and (person.get("@id") != DOMAIN + "/#fondateur" or not person.get("name")):
+            errors.append("%s : fondateur ou auteur sans identifiant %s/#fondateur" % (url, DOMAIN))
+    if p.faq and not any('"FAQPage"' in raw for raw in p.ld):
+        errors.append("%s : questions fréquentes sans données structurées FAQPage" % url)
+    return errors
 
 
 def _lang(url, p):

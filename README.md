@@ -300,6 +300,31 @@ python3 tools/build.py --serve
 
 puis ouvrez http://localhost:8000. Pour vérifier les liens et la sécurité : `python3 tools/check.py`.
 
+## Référencement (SEO)
+
+Tout est produit automatiquement par `tools/build.py` ; `tools/check.py` le vérifie avant chaque mise en ligne.
+
+- **Traductions pour les lecteurs d'écran** : les textes des attributs `aria-label`, `alt`, `title`, `placeholder`
+  et le titre des dessins SVG se traduisent dans `content/i18n.json`, comme le texte visible. Une traduction
+  manquante arrête la génération ; un texte français resté sur une page EN ou PT bloque les contrôles.
+- **Données structurées (schema.org)** :
+  - sur l'accueil : l'organisation, le fondateur, le site et la FAQ, construite à partir des questions affichées
+    (`<details class="faq">` de `content/pages/home.html`) ;
+  - dans les articles : l'article, avec le fondateur comme auteur ;
+  - sur les pages secteurs et les articles : le fil d'Ariane (« Accueil > Secteurs > … »).
+
+  Le nom, l'autre nom et la fonction du fondateur sont dans `FONDATEUR` (`tools/build.py`) ; ses réseaux sont
+  dans `config/site.yml`.
+- **Plan du site** : chaque page porte la date de dernière modification de son fichier source (historique git ;
+  date de l'article pour les articles). Le portail DEMO (données fictives) est exclu des moteurs (`noindex`) et du
+  plan du site (`NOINDEX` dans `tools/build.py`).
+- **Icônes** : `favicon.ico`, `images/icon-192.png` et `apple-touch-icon.png` sont fabriquées à chaque génération
+  à partir de `static/images/logo.png` : remplacer ce fichier suffit.
+- **robots.txt** : moteurs de recherche et robots des IA (GPTBot, ClaudeBot, Google-Extended…) autorisés ; seuls
+  CCBot, Bytespider et anthropic-ai sont refusés.
+- **Avertissements** (non bloquants) affichés par `tools/check.py` : titre de plus de 60 caractères, description de
+  moins de 70 ou de plus de 160 caractères, titre ou description en double dans une même langue.
+
 ## Mise en ligne
 
 - Chaque **pull request** lance la génération et les contrôles (onglet « Checks ») : si quelque chose est cassé,
