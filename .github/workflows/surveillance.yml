@@ -21,7 +21,7 @@ jobs:
       - name: Récupérer le dépôt
         uses: actions/checkout@v7
       - name: Installer Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Installer les modules Python (PyYAML, Pillow)
