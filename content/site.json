@@ -1,5 +1,5 @@
 {
- "_aide": "Adresses, titres et descriptions des pages. « chemin » = adresse de la page ; « titre » = titre affiché dans l'onglet et dans Google ; « description » (facultative) = résumé pour Google. Sans description, le générateur reprend le texte d'introduction de la page.",
+ "_aide": "Adresses, titres et descriptions des pages. « chemin » = adresse de la page ; « titre » = titre affiché dans l'onglet et dans Google (60 caractères au plus, « | CHANCELENO » compris) ; « description » = résumé pour Google (120 à 155 caractères, avec le mot-clé de la page et une invitation : « Demandez un devis », « Contactez-nous »…). Sans description, le générateur reprend le texte d'introduction de la page. Pages secteurs : voir data.json ; articles : meta.json.",
  "domaine": "https://chanceleno.com",
  "og_image": {
   "fr": "/images/og-image.jpg",
@@ -20,147 +20,174 @@
   "home": {
    "fr": {
     "chemin": "/",
-    "titre": "CHANCELENO — Achats internationaux vérifiés entre l’Europe, l’Asie et l’Afrique",
-    "description": "CHANCELENO achète pour vous auprès de fournisseurs vérifiés en Europe, en Asie et en Afrique, et vous livre. Un seul interlocuteur, un seul contrat, une seule facture.",
+    "titre": "Import-export Europe, Chine – Angola, RDC | CHANCELENO",
+    "description": "Import-export entre l'Europe, la Chine et l'Angola, la RDC et le Congo : fournisseurs vérifiés, un seul contrat, une seule facture. Demandez un devis.",
     "og_titre": "CHANCELENO — Acheter à l'autre bout du monde, sans payer à l'aveugle"
    },
    "en": {
     "chemin": "/en/",
-    "titre": "CHANCELENO — Verified international procurement between Europe, Asia and Africa",
-    "description": "CHANCELENO buys for you from verified suppliers in Europe, Asia and Africa, and delivers to you. One contact, one contract, one invoice.",
+    "titre": "Import-export Europe, China – Angola, DR Congo | CHANCELENO",
+    "description": "Import-export between Europe, China and Angola, the DRC and Congo: verified suppliers, one contract, one invoice. Request a quote today.",
     "og_titre": "CHANCELENO — Buy from the other side of the world without paying blind"
    },
    "pt": {
     "chemin": "/pt/",
-    "titre": "CHANCELENO — Compras internacionais verificadas entre a Europa, a Ásia e África",
-    "description": "A CHANCELENO compra por si junto de fornecedores verificados na Europa, na Ásia e em África, e entrega-lhe a mercadoria. Um único interlocutor, um único contrato, uma única fatura.",
+    "titre": "Importação e exportação Europa, China – Angola | CHANCELENO",
+    "description": "Importação e exportação entre a Europa, a China e Angola, a RDC e o Congo: fornecedores verificados, um contrato, uma fatura. Peça uma cotação.",
     "og_titre": "CHANCELENO — Comprar do outro lado do mundo, sem pagar às cegas"
    }
   },
   "solutions": {
    "fr": {
     "chemin": "/solutions/",
-    "titre": "Solutions : sourcing, achats, vérification, logistique | CHANCELENO"
+    "titre": "Solutions : sourcing, achats, logistique | CHANCELENO",
+    "description": "Sourcing, achats internationaux, vérification de fournisseurs et logistique vers l'Angola et l'Afrique centrale, un seul interlocuteur. Demandez un devis."
    },
    "en": {
     "chemin": "/en/solutions/",
-    "titre": "Solutions: sourcing, procurement, verification, logistics | CHANCELENO"
+    "titre": "Solutions: sourcing, procurement, logistics | CHANCELENO",
+    "description": "Sourcing, international procurement, supplier verification and logistics to Angola and Central Africa, with one contact. Request a quote."
    },
    "pt": {
     "chemin": "/pt/solucoes/",
-    "titre": "Soluções: sourcing, compras, verificação, logística | CHANCELENO"
+    "titre": "Soluções: sourcing, compras, logística | CHANCELENO",
+    "description": "Sourcing, compras internacionais, verificação de fornecedores e logística para Angola e a África Central, com um só interlocutor. Peça uma cotação."
    }
   },
   "secteurs": {
    "fr": {
     "chemin": "/secteurs/",
-    "titre": "Secteurs : huit secteurs, une même méthode | CHANCELENO"
+    "titre": "Secteurs : huit secteurs, une même méthode | CHANCELENO",
+    "description": "Achats industriels pour l'Angola, la RDC et le Congo dans huit secteurs : poids lourds, mines, pétrole, santé, énergie… Décrivez-nous votre besoin."
    },
    "en": {
     "chemin": "/en/industries/",
-    "titre": "Industries: eight industries, one method | CHANCELENO"
+    "titre": "Industries: eight industries, one method | CHANCELENO",
+    "description": "Industrial procurement for Angola, the DRC and Congo across eight industries: trucks, mining, oil and gas, healthcare, energy… Tell us your need."
    },
    "pt": {
     "chemin": "/pt/setores/",
-    "titre": "Setores: oito setores, um só método | CHANCELENO"
+    "titre": "Setores: oito setores, um só método | CHANCELENO",
+    "description": "Compras industriais para Angola, a RDC e o Congo em oito setores: pesados, minas, petróleo, saúde, energia… Descreva-nos a sua necessidade."
    }
   },
   "methode": {
    "fr": {
     "chemin": "/methode/",
-    "titre": "Méthode : de votre besoin à la livraison | CHANCELENO"
+    "titre": "Méthode : de votre besoin à la livraison | CHANCELENO",
+    "description": "Notre méthode d'achat international : besoin, fournisseurs consultés, vérification, offre ferme, contrôle et livraison en Angola. Demandez un devis."
    },
    "en": {
     "chemin": "/en/method/",
-    "titre": "Method: from your requirement to delivery | CHANCELENO"
+    "titre": "Method: from your requirement to delivery | CHANCELENO",
+    "description": "Our international procurement method: requirement, suppliers consulted, verification, firm offer, inspection and delivery to Angola. Request a quote."
    },
    "pt": {
     "chemin": "/pt/metodo/",
-    "titre": "Método: da sua necessidade à entrega | CHANCELENO"
+    "titre": "Método: da sua necessidade à entrega | CHANCELENO",
+    "description": "O nosso método de compras internacionais: necessidade, fornecedores consultados, verificação, oferta firme, controlo e entrega em Angola. Peça cotação."
    }
   },
   "fournisseurs": {
    "fr": {
     "chemin": "/fournisseurs/",
-    "titre": "Devenir fournisseur | CHANCELENO"
+    "titre": "Devenir fournisseur | CHANCELENO",
+    "description": "Fabricants et distributeurs : rejoignez le réseau de fournisseurs CHANCELENO et répondez à des besoins réels en Angola et en Afrique. Inscription gratuite."
    },
    "en": {
     "chemin": "/en/suppliers/",
-    "titre": "Become a supplier | CHANCELENO"
+    "titre": "Become a supplier | CHANCELENO",
+    "description": "Manufacturers and distributors: join the CHANCELENO supplier network and answer real requirements in Angola and Africa. Free registration."
    },
    "pt": {
     "chemin": "/pt/fornecedores/",
-    "titre": "Tornar-se fornecedor | CHANCELENO"
+    "titre": "Tornar-se fornecedor | CHANCELENO",
+    "description": "Fabricantes e distribuidores: junte-se à rede de fornecedores CHANCELENO e responda a necessidades reais em Angola e em África. Registo gratuito."
    }
   },
   "partenaires": {
    "fr": {
     "chemin": "/partenaires/",
-    "titre": "Fabricants, OEM et partenaires | CHANCELENO"
+    "titre": "Fabricants, OEM et partenaires | CHANCELENO",
+    "description": "Fabricants et OEM : représentation commerciale et accès au marché en Angola, en RDC, au Congo et en Afrique lusophone. Contactez-nous pour en parler."
    },
    "en": {
     "chemin": "/en/partners/",
-    "titre": "Manufacturers, OEMs and partners | CHANCELENO"
+    "titre": "Manufacturers, OEMs and partners | CHANCELENO",
+    "description": "Manufacturers and OEMs: commercial representation and market access in Angola, the DRC, Congo and Lusophone Africa. Contact us to discuss it."
    },
    "pt": {
     "chemin": "/pt/parceiros/",
-    "titre": "Fabricantes, OEM e parceiros | CHANCELENO"
+    "titre": "Fabricantes, OEM e parceiros | CHANCELENO",
+    "description": "Fabricantes e OEM: representação comercial e acesso ao mercado em Angola, na RDC, no Congo e na África lusófona. Contacte-nos para falarmos."
    }
   },
   "a-propos": {
    "fr": {
     "chemin": "/a-propos/",
-    "titre": "À propos : le fondateur et la méthode | CHANCELENO"
+    "titre": "À propos : le fondateur et la méthode | CHANCELENO",
+    "description": "Chano Chanceleno a fondé CHANCELENO après vingt ans dans les achats et la logistique internationale, en Angola puis en France. Contactez-nous."
    },
    "en": {
     "chemin": "/en/about/",
-    "titre": "About: the founder and the method | CHANCELENO"
+    "titre": "About: the founder and the method | CHANCELENO",
+    "description": "Chano Chanceleno founded CHANCELENO after twenty years in purchasing and international logistics, in Angola and then France. Contact us."
    },
    "pt": {
     "chemin": "/pt/sobre/",
-    "titre": "Sobre nós: o fundador e o método | CHANCELENO"
+    "titre": "Sobre nós: o fundador e o método | CHANCELENO",
+    "description": "Chano Chanceleno fundou a CHANCELENO após vinte anos em compras e logística internacional, em Angola e depois em França. Contacte-nos."
    }
   },
   "marches": {
    "fr": {
     "chemin": "/marches/",
-    "titre": "Marchés : Angola, Afrique centrale, Europe | CHANCELENO"
+    "titre": "Marchés : Angola, RDC, Congo, Afrique lusophone | CHANCELENO",
+    "description": "Import-export vers l'Angola, la RDC, le Congo et l'Afrique lusophone, depuis Lyon et Luanda, avec des fournisseurs en Europe et en Asie. Demandez un devis."
    },
    "en": {
     "chemin": "/en/markets/",
-    "titre": "Markets: Angola, Central Africa, Europe | CHANCELENO"
+    "titre": "Markets: Angola, DR Congo, Lusophone Africa | CHANCELENO",
+    "description": "Import-export to Angola, the DRC, Congo and Lusophone Africa, from Lyon and Luanda, with suppliers in Europe and Asia. Request a quote."
    },
    "pt": {
     "chemin": "/pt/mercados/",
-    "titre": "Mercados: Angola, África Central, Europa | CHANCELENO"
+    "titre": "Mercados: Angola, RDC, Congo, África lusófona | CHANCELENO",
+    "description": "Importação e exportação para Angola, a RDC, o Congo e a África lusófona, a partir de Lyon e Luanda, com fornecedores na Europa e na Ásia. Peça cotação."
    }
   },
   "contact": {
    "fr": {
     "chemin": "/contact/",
-    "titre": "Contact | CHANCELENO"
+    "titre": "Contact | CHANCELENO",
+    "description": "Contactez CHANCELENO à Lyon ou à Luanda, par formulaire, e-mail ou WhatsApp, en français, portugais ou anglais, pour vos achats internationaux."
    },
    "en": {
     "chemin": "/en/contact/",
-    "titre": "Contact | CHANCELENO"
+    "titre": "Contact us | CHANCELENO",
+    "description": "Contact CHANCELENO in Lyon or Luanda by form, email or WhatsApp, in English, French or Portuguese, for your international procurement."
    },
    "pt": {
     "chemin": "/pt/contacto/",
-    "titre": "Contacto | CHANCELENO"
+    "titre": "Contacto | CHANCELENO",
+    "description": "Contacte a CHANCELENO em Lyon ou em Luanda, por formulário, e-mail ou WhatsApp, em português, francês ou inglês, para as suas compras internacionais."
    }
   },
   "devis": {
    "fr": {
     "chemin": "/devis/",
-    "titre": "Demander un devis | CHANCELENO"
+    "titre": "Demander un devis | CHANCELENO",
+    "description": "Demandez un devis pour vos achats en Europe ou en Chine, livrés en Angola, en RDC ou au Congo : une référence, une BOQ ou une photo suffit."
    },
    "en": {
     "chemin": "/en/quote/",
-    "titre": "Request a quote | CHANCELENO"
+    "titre": "Request a quote | CHANCELENO",
+    "description": "Request a quote for purchases in Europe or China delivered to Angola, the DRC or Congo: a part number, a BOQ or a photo is enough to start."
    },
    "pt": {
     "chemin": "/pt/cotacao/",
-    "titre": "Pedir cotação | CHANCELENO"
+    "titre": "Pedir cotação | CHANCELENO",
+    "description": "Peça uma cotação para compras na Europa ou na China, entregues em Angola, na RDC ou no Congo: uma referência, uma BOQ ou uma foto bastam."
    }
   },
   "portail": {
@@ -180,74 +207,86 @@
   "mentions": {
    "fr": {
     "chemin": "/mentions-legales/",
-    "titre": "Mentions légales | CHANCELENO"
+    "titre": "Mentions légales | CHANCELENO",
+    "description": "Mentions légales de chanceleno.com : sociétés éditrices à Luanda et à Lyon, directeur de la publication et hébergeur. Une question ? Contactez-nous."
    },
    "en": {
     "chemin": "/en/legal-notice/",
-    "titre": "Legal notice | CHANCELENO"
+    "titre": "Legal notice | CHANCELENO",
+    "description": "Legal notice for chanceleno.com: publishing companies in Luanda and Lyon, publication director and hosting provider. A question? Contact us."
    },
    "pt": {
     "chemin": "/pt/aviso-legal/",
-    "titre": "Aviso legal | CHANCELENO"
+    "titre": "Aviso legal | CHANCELENO",
+    "description": "Aviso legal de chanceleno.com: sociedades editoras em Luanda e em Lyon, diretor da publicação e alojamento do site. Uma dúvida? Contacte-nos."
    }
   },
   "confidentialite": {
    "fr": {
     "chemin": "/confidentialite/",
-    "titre": "Politique de confidentialité | CHANCELENO"
+    "titre": "Politique de confidentialité | CHANCELENO",
+    "description": "Politique de confidentialité de CHANCELENO : données collectées, finalités, destinataires, conservation et vos droits. Une question ? Écrivez-nous."
    },
    "en": {
     "chemin": "/en/privacy/",
-    "titre": "Privacy policy | CHANCELENO"
+    "titre": "Privacy policy | CHANCELENO",
+    "description": "CHANCELENO privacy policy: data collected, purposes, recipients, retention period and your rights. Any question about your data? Contact us."
    },
    "pt": {
     "chemin": "/pt/privacidade/",
-    "titre": "Política de privacidade | CHANCELENO"
+    "titre": "Política de privacidade | CHANCELENO",
+    "description": "Política de privacidade da CHANCELENO: dados recolhidos, finalidades, destinatários, prazo de conservação e os seus direitos. Dúvidas? Contacte-nos."
    }
   },
   "cookies": {
    "fr": {
     "chemin": "/cookies/",
-    "titre": "Cookies | CHANCELENO"
+    "titre": "Cookies | CHANCELENO",
+    "description": "Le site chanceleno.com n'utilise aucun cookie : statistiques anonymes sans cookie ni adresse IP. Désactivez le comptage de vos visites sur cette page."
    },
    "en": {
     "chemin": "/en/cookies/",
-    "titre": "Cookies | CHANCELENO"
+    "titre": "Cookie policy | CHANCELENO",
+    "description": "chanceleno.com uses no cookies: anonymous statistics with no cookie and no IP address stored. Turn off the counting of your visits on this page."
    },
    "pt": {
     "chemin": "/pt/cookies/",
-    "titre": "Cookies | CHANCELENO"
+    "titre": "Política de cookies | CHANCELENO",
+    "description": "O site chanceleno.com não utiliza cookies: estatísticas anónimas, sem cookies nem endereço IP. Desative a contagem das suas visitas nesta página."
    }
   },
   "conditions": {
    "fr": {
     "chemin": "/conditions/",
-    "titre": "Informations contractuelles | CHANCELENO"
+    "titre": "Informations contractuelles | CHANCELENO",
+    "description": "Informations contractuelles de CHANCELENO : périmètre, paiement, contrôle et responsabilités fixés par le contrat de chaque opération. Demandez un devis."
    },
    "en": {
     "chemin": "/en/terms/",
-    "titre": "Contractual information | CHANCELENO"
+    "titre": "Contractual information | CHANCELENO",
+    "description": "CHANCELENO contractual information: scope, payment, inspection and responsibilities set out in the contract of each operation. Request a quote."
    },
    "pt": {
     "chemin": "/pt/condicoes/",
-    "titre": "Informações contratuais | CHANCELENO"
+    "titre": "Informações contratuais | CHANCELENO",
+    "description": "Informações contratuais da CHANCELENO: âmbito, pagamento, controlo e responsabilidades definidos no contrato de cada operação. Peça uma cotação."
    }
   },
   "cgv": {
    "fr": {
     "chemin": "/cgv/",
     "titre": "Conditions générales de vente | CHANCELENO",
-    "description": "Conditions générales de vente de CHANCELENO, applicables aux opérations conclues entre professionnels."
+    "description": "Conditions générales de vente de CHANCELENO pour les opérations entre professionnels : offre, paiement, livraison, responsabilités. Demandez un devis."
    },
    "en": {
     "chemin": "/en/terms-of-sale/",
     "titre": "General terms and conditions of sale | CHANCELENO",
-    "description": "CHANCELENO general terms and conditions of sale, applicable to operations between businesses."
+    "description": "CHANCELENO general terms and conditions of sale for business operations: offer, payment, delivery and responsibilities. Request a quote."
    },
    "pt": {
     "chemin": "/pt/condicoes-gerais-de-venda/",
     "titre": "Condições gerais de venda | CHANCELENO",
-    "description": "Condições gerais de venda da CHANCELENO, aplicáveis às operações entre profissionais."
+    "description": "Condições gerais de venda da CHANCELENO para operações entre profissionais: oferta, pagamento, entrega e responsabilidades. Peça uma cotação."
    }
   }
  },

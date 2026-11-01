@@ -11,7 +11,7 @@ français destiné aux lecteurs d'écran (aria-label, alt, title, placeholder, t
 structurées (JSON-LD) sont illisibles ou incomplètes.
 
 Affiche aussi des avertissements, sans bloquer la mise en ligne : titre de page de plus de 60 caractères, description
-de moins de 70 ou de plus de 160 caractères, titre ou description identique sur plusieurs pages d'une même langue.
+de moins de 120 ou de plus de 155 caractères, titre ou description identique sur plusieurs pages d'une même langue.
 """
 import json
 import html
@@ -165,8 +165,8 @@ def main():
             t, d = p.title.strip(), p.metas.get("description", "")
             if len(t) > 60:
                 warnings.append("%s : titre de %d caractères (60 au plus conseillés)" % (url, len(t)))
-            if not 70 <= len(d) <= 160:
-                warnings.append("%s : description de %d caractères (70 à 160 conseillés)" % (url, len(d)))
+            if not 120 <= len(d) <= 155:
+                warnings.append("%s : description de %d caractères (120 à 155 conseillés)" % (url, len(d)))
             seen.setdefault((p.lang, "titre", t), []).append(url)
             seen.setdefault((p.lang, "description", d), []).append(url)
         csp = p.metas.get("Content-Security-Policy", "")

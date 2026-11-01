@@ -167,7 +167,12 @@ def load(path=CONFIG):
         if cid in seen:
             errors.append("%s : id %r déjà utilisé par une autre carte" % (where, cid))
         seen.add(cid)
-        cards.append({"id": cid, "affiche": oui(c.get("affiche", "oui"), where + " : affiche", errors),
+        liens = c.get("liens") or []
+        if not isinstance(liens, list) or not all(isinstance(x, str) and re.match(r"^(article|secteur|page):[a-z0-9-]+$", x) for x in liens):
+            errors.append("%s : liens attendus sous la forme [article:<dossier>, secteur:<adresse>, page:<page>] (valeur actuelle : %r)"
+                          % (where, c.get("liens")))
+            liens = []
+        cards.append({"id": cid, "affiche": oui(c.get("affiche", "oui"), where + " : affiche", errors), "liens": liens,
                       **{k: per_lang(c.get(k), "%s : %s" % (where, k), errors) for k in ("role", "titre", "texte")}})
     cfg["marches"] = cards
 

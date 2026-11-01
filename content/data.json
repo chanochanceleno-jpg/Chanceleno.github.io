@@ -1,5 +1,5 @@
 {
- "_aide": "Listes affichées sur le site. Les textes sont en français ; leurs traductions sont dans i18n.json.",
+ "_aide": "Listes affichées sur le site. Les textes sont en français ; leurs traductions sont dans i18n.json. Secteurs : « description » = résumé pour Google dans chaque langue (120 à 155 caractères) ; « titre_seo » (facultatif) = titre de l'onglet et de Google, 60 caractères au plus, à la place du nom du secteur ; « article » (facultatif) = dossier d'un article à recommander sur la page du secteur.",
  "capacites": [
   {
    "titre": "Sourcing international",
@@ -35,7 +35,18 @@
     "fr": "automobile-poids-lourds-flottes",
     "en": "automotive-trucks-fleets",
     "pt": "automovel-pesados-frotas"
-   }
+   },
+   "description": {
+    "fr": "Pièces détachées poids lourds, camions et flottes en Angola : pièces d'origine ou équivalentes, références vérifiées avant achat. Demandez un devis.",
+    "en": "Heavy truck and fleet spare parts for Angola: genuine or OE-quality parts, with part numbers checked before purchase. Request a quote today.",
+    "pt": "Peças para camiões, pesados e frotas em Angola: peças originais ou equivalentes, com referências verificadas antes da compra. Peça uma cotação."
+   },
+   "titre_seo": {
+    "fr": "Pièces détachées poids lourds en Angola | CHANCELENO",
+    "en": "Heavy truck spare parts for Angola | CHANCELENO",
+    "pt": "Peças para camiões e pesados em Angola | CHANCELENO"
+   },
+   "article": "importer-pieces-camions"
   },
   {
    "titre": "Pétrole, gaz & sécurité HSE",
@@ -45,6 +56,11 @@
     "fr": "petrole-gaz-securite-hse",
     "en": "oil-gas-hse-safety",
     "pt": "petroleo-gas-seguranca-hse"
+   },
+   "description": {
+    "fr": "EPI ignifugés, détection H2S, matériel ATEX et vannes certifiées pour le pétrole et le gaz en Angola, avec les certificats exigés. Demandez un devis.",
+    "en": "Flame-resistant PPE, H2S detection, ATEX equipment and certified valves for oil and gas in Angola, with the required certificates. Request a quote.",
+    "pt": "EPI ignífugo, deteção de H2S, material ATEX e válvulas certificadas para petróleo e gás em Angola, com os certificados exigidos. Peça uma cotação."
    }
   },
   {
@@ -55,6 +71,11 @@
     "fr": "industrie-maintenance-mro",
     "en": "industrial-mro",
     "pt": "industria-manutencao-mro"
+   },
+   "description": {
+    "fr": "Pièces d'usure, roulements, transmissions et outillage pour l'industrie et la maintenance (MRO) en Angola, pour limiter vos arrêts. Demandez un devis.",
+    "en": "Wear parts, bearings, transmissions and tools for industrial maintenance (MRO) in Angola, to limit costly downtime. Request a quote today.",
+    "pt": "Peças de desgaste, rolamentos, transmissões e ferramentas para a indústria e a manutenção (MRO) em Angola, para evitar paragens. Peça cotação."
    }
   },
   {
@@ -65,6 +86,11 @@
     "fr": "mines-ressources",
     "en": "mining-resources",
     "pt": "minas-recursos"
+   },
+   "description": {
+    "fr": "Pièces pour engins miniers, équipements de traitement, EPI et consommables pour les mines en Angola, en RDC et au Congo. Demandez un devis.",
+    "en": "Parts for mining machinery, processing equipment, PPE and consumables for mines in Angola, the DRC and Congo. Request a quote from CHANCELENO.",
+    "pt": "Peças para máquinas de mineração, equipamentos de tratamento, EPI e consumíveis para minas em Angola, na RDC e no Congo. Peça uma cotação."
    }
   },
   {
@@ -75,6 +101,11 @@
     "fr": "sante-laboratoire",
     "en": "healthcare-laboratory",
     "pt": "saude-laboratorio"
+   },
+   "description": {
+    "fr": "Équipements de laboratoire, consommables, dispositifs médicaux et parapharmacie pour l'Angola, avec traçabilité et transport adapté. Demandez un devis.",
+    "en": "Laboratory equipment, consumables, medical devices and parapharmacy products for Angola, with traceability and suitable transport. Request a quote.",
+    "pt": "Equipamentos de laboratório, consumíveis, dispositivos médicos e parafarmácia para Angola, com rastreabilidade e transporte adequado. Peça cotação."
    }
   },
   {
@@ -85,6 +116,11 @@
     "fr": "electricite-eau-energie-solaire",
     "en": "power-water-solar-energy",
     "pt": "eletricidade-agua-energia-solar"
+   },
+   "description": {
+    "fr": "Pompes, câbles, transformateurs, panneaux solaires, batteries et onduleurs pour l'électricité, l'eau et le solaire en Angola. Demandez un devis.",
+    "en": "Pumps, cables, transformers, solar panels, batteries and inverters for power, water and solar energy projects in Angola. Request a quote.",
+    "pt": "Bombas, cabos, transformadores, painéis solares, baterias e inversores para eletricidade, água e energia solar em Angola. Peça uma cotação."
    }
   },
   {
@@ -95,6 +131,11 @@
     "fr": "agroalimentaire-equipement-agricole",
     "en": "agri-food-farm-equipment",
     "pt": "agroindustria-equipamento-agricola"
+   },
+   "description": {
+    "fr": "Machines de transformation, de conditionnement et équipements agricoles pour l'agroalimentaire en Angola, avec pièces disponibles. Demandez un devis.",
+    "en": "Processing and packaging machinery and farm equipment for agri-food businesses in Angola, with spare parts available. Request a quote today.",
+    "pt": "Máquinas de transformação e embalagem e equipamentos agrícolas para a agroindústria em Angola, com peças disponíveis. Peça uma cotação."
    }
   },
   {
@@ -105,6 +146,11 @@
     "fr": "informatique-telecoms-technologie",
     "en": "it-telecom-technology",
     "pt": "informatica-telecomunicacoes-tecnologia"
+   },
+   "description": {
+    "fr": "Équipements réseau, matériel informatique et infrastructures passives pour l'Angola, produits authentiques et garantie constructeur. Demandez un devis.",
+    "en": "Network equipment, IT hardware and passive infrastructure for Angola: authentic products with the manufacturer's warranty. Request a quote.",
+    "pt": "Equipamentos de rede, material informático e infraestruturas passivas para Angola: produtos autênticos com garantia do fabricante. Peça cotação."
    }
   }
  ],
