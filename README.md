@@ -172,7 +172,9 @@ references:
 1. Copiez le dossier `content/articles/_modele` et renommez la copie (par exemple `content/articles/dedouanement-luanda`).
    Ne mettez pas de `_` au début du nom : les dossiers qui commencent par `_` sont ignorés.
 2. Remplissez `meta.json` : la date de publication, puis pour chaque langue l'adresse (minuscules, tirets, sans
-   accents), le titre et le résumé.
+   accents), le titre et le résumé. Facultatif : `titre_seo` (titre de l'onglet et de Google, 60 caractères au plus,
+   « | CHANCELENO » compris) et `description_seo` (résumé pour Google, 120 à 155 caractères), quand le titre ou le
+   résumé affichés sont trop longs.
 3. Écrivez l'article dans `fr.html`, `en.html` et `pt.html` (paragraphes `<p>`, intertitres `<h2>`, encadré final).
 4. La liste des articles, le plan du site (`sitemap.xml`) et les liens entre langues sont mis à jour automatiquement.
    L'article sera en ligne à l'adresse `/articles/<adresse>/` (et `/en/articles/…`, `/pt/artigos/…`).
@@ -214,6 +216,10 @@ fr, en et pt :
 ```
 
 - Pour **masquer** une carte sans l'effacer : `affiche: non`.
+- Pour ajouter des liens **« Voir aussi »** sous le texte d'une carte (ex. la carte Luanda) :
+  `liens: [secteur:automobile-poids-lourds-flottes, article:importer-pieces-camions, page:devis]`
+  (`article:` + dossier de `content/articles`, `secteur:` + adresse française du secteur, `page:` + nom de la page
+  dans `content/site.json`). Le texte de chaque lien est le titre de la page visée, dans la bonne langue.
 - Pour **ajouter** une carte : recopiez un bloc à partir de `- id:`, avec un nouvel `id` (minuscules et tirets).
 - Les cartes s'affichent dans l'ordre du fichier. La carte Lyon utilise `{{france_nom}}, {{france_statut}}` :
   son statut se met à jour tout seul avec le Kbis.
@@ -322,8 +328,15 @@ Tout est produit automatiquement par `tools/build.py` ; `tools/check.py` le vér
   à partir de `static/images/logo.png` : remplacer ce fichier suffit.
 - **robots.txt** : moteurs de recherche et robots des IA (GPTBot, ClaudeBot, Google-Extended…) autorisés ; seuls
   CCBot, Bytespider et anthropic-ai sont refusés.
+- **Titres et descriptions Google** : `content/site.json` (pages), `content/data.json` (secteurs : `description`,
+  `titre_seo`), `meta.json` de chaque article (`titre_seo`, `description_seo`), `content/layout/light.json`
+  (liste des articles : `liste_titre_seo`, `liste_meta`). Titre : 60 caractères au plus ; description : 120 à
+  155 caractères, avec le mot-clé de la page et une invitation (« Demandez un devis », « Contactez-nous »…).
+- **Liens « Voir aussi »** : dans une page ou un article, le repère `<!--VOIR secteur:… article:… page:…-->`
+  devient une ligne de liens traduits (accueil, secteur automobile, article). Sur une page secteur, le champ
+  `article` de `content/data.json` ajoute le lien vers cet article et vers Marchés.
 - **Avertissements** (non bloquants) affichés par `tools/check.py` : titre de plus de 60 caractères, description de
-  moins de 70 ou de plus de 160 caractères, titre ou description en double dans une même langue.
+  moins de 120 ou de plus de 155 caractères, titre ou description en double dans une même langue.
 
 ## Mise en ligne
 

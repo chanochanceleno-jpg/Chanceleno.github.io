@@ -35,7 +35,9 @@
    "novembre",
    "décembre"
   ],
-  "format_date": "{j} {m} {a}"
+  "format_date": "{j} {m} {a}",
+  "liste_titre_seo": "Articles et guides d'importation | CHANCELENO",
+  "liste_meta": "Guides pratiques pour importer en Angola et en Afrique centrale : fournisseurs, paiements, Incoterms et douane. Lisez nos articles et contactez-nous."
  },
  "en": {
   "aller_au_contenu": "Skip to content",
@@ -73,7 +75,9 @@
    "November",
    "December"
   ],
-  "format_date": "{j} {m} {a}"
+  "format_date": "{j} {m} {a}",
+  "liste_titre_seo": "Import guides and articles | CHANCELENO",
+  "liste_meta": "Practical guides to importing into Angola and Central Africa: suppliers, payments, Incoterms and customs. Read our articles and contact us."
  },
  "pt": {
   "aller_au_contenu": "Ir para o conteúdo",
@@ -111,7 +115,9 @@
    "novembro",
    "dezembro"
   ],
-  "format_date": "{j} de {m} de {a}"
+  "format_date": "{j} de {m} de {a}",
+  "liste_titre_seo": "Artigos e guias de importação | CHANCELENO",
+  "liste_meta": "Guias práticos para importar para Angola e a África Central: fornecedores, pagamentos, Incoterms e alfândega. Leia os artigos e contacte-nos."
  },
  "_aide": "Libellés de la mise en page légère (articles et pages de remerciement), déjà rédigés dans chaque langue."
 }

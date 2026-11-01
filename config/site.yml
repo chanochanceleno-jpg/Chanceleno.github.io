@@ -87,6 +87,8 @@ tarifs:
 # Cartes de la page Marchés, dans l'ordre d'affichage.
 #   id      : nom court, sans espace ni accent ; sert aussi au nom de la photo (images/marches/<id>.jpg)
 #   affiche : oui = carte visible, non = carte masquée
+#   liens   : facultatif, liens « Voir aussi » sous le texte, dans cet ordre :
+#             article:<dossier de content/articles>, secteur:<adresse française du secteur>, page:<page> (ex. page:devis)
 # ----------------------------------------------------------------------------------------------------------------
 marches:
   - id: lyon
@@ -117,6 +119,7 @@ marches:
       fr: "{{angola_nom}}. Base pour l'Afrique et les pays lusophones, marché africain prioritaire."
       en: "{{angola_nom}}. Base for Africa and Portuguese-speaking countries, priority African market."
       pt: "{{angola_nom}}. Base para África e os países lusófonos, mercado africano prioritário."
+    liens: [secteur:automobile-poids-lourds-flottes, article:importer-pieces-camions, page:devis]
   - id: pointe-noire
     affiche: oui
     role:

@@ -219,6 +219,30 @@ class Site:
         for i, s in enumerate(self.data["secteurs"]):
             self.pages["secteur-%d" % i] = {l: self.site["secteurs_base"][l] + s["adresse"][l] + "/" for l in LANGS}
         self.sitemap = []          # (chemin, {langue: chemin}, date)
+        self.articles = load_articles()
+
+    def target(self, ref, lang, where):
+        """Lien « Voir aussi » : « article:<dossier> », « secteur:<adresse française> » ou « page:<page> »
+        -> (adresse, texte du lien) dans la langue."""
+        kind, _, key = ref.partition(":")
+        if kind == "article":
+            for a in self.articles:
+                if a["id"] == key:
+                    return a["url"][lang], a[lang]["titre"]
+        elif kind == "secteur":
+            for i, s in enumerate(self.data["secteurs"]):
+                if s["adresse"]["fr"] == key:
+                    seo = s.get("titre_seo", {}).get(lang)
+                    return self.url("secteur-%d" % i, lang), seo.split(" | ")[0] if seo else self.tr(s["titre"], lang, where)
+        elif kind == "page" and key in self.site["pages"] and (key != "cgv" or self.cgv):
+            return self.url(key, lang), self.site["pages"][key][lang]["titre"].split(" | ")[0]
+        raise SystemExit("Lien « Voir aussi » inconnu : %r (%s). Formes acceptées : article:<dossier de content/articles>, "
+                         "secteur:<adresse française du secteur>, page:<page de content/site.json>." % (ref, where))
+
+    def see_also(self, refs, lang, where):
+        links = "".join('<a href="%s">%s</a>' % (u, esc(t).replace("&#x27;", "'"))
+                           for u, t in (self.target(r, lang, where) for r in refs))
+        return '<p class="see-also"><strong>%s</strong>%s</p>' % (esc(self.tr("Voir aussi :", lang, where)), links)
 
     def url(self, pid, lang):
         return self.pages[pid][lang]
@@ -253,6 +277,8 @@ class Site:
                     block = fn(lang)
                     # bloc vide : la ligne du repère disparaît aussi (page identique à une page sans ce bloc)
                     page = page.replace("<!--%s-->" % name, block) if block else re.sub(r"[ \t]*<!--%s-->\n*" % name, "", page)
+            # liens « Voir aussi » : <!--VOIR article:… secteur:… page:…-->
+            page = re.sub(r"<!--VOIR ([^>]*?)-->", lambda m: self.see_also(m.group(1).split(), lang, "repère VOIR"), page)
         values = self.tokens(lang)
         page = drop_empty(page, values)
 
@@ -317,8 +343,9 @@ class Site:
                 continue
             src = photo("marches/" + c["id"])
             img = '<img class="node-photo" src="%s" alt="%s">' % (src, e(c["titre"][lang])) if src else ""
-            out.append('<div>%s<span class="role">%s</span><h3>%s</h3><p class="muted">%s</p></div>' % (
-                img, e(c["role"][lang]), e(c["titre"][lang]), e(c["texte"][lang])))
+            links = self.see_also(c["liens"], lang, "carte Marchés %s" % c["id"]) if c.get("liens") else ""
+            out.append('<div>%s<span class="role">%s</span><h3>%s</h3><p class="muted">%s</p>%s</div>' % (
+                img, e(c["role"][lang]), e(c["titre"][lang]), e(c["texte"][lang]), links))
         return "\n      ".join(out)
 
     def references_html(self, lang):
@@ -629,9 +656,10 @@ def sector_page(site, i):
         '<div><dt>Besoins typiques</dt><dd>%s</dd></div><div><dt>Enjeux fréquents</dt><dd>%s</dd></div>'
         '<div><dt>Ce que nous apportons</dt><dd>Sourcing ciblé, vérification proportionnée au risque, comparaison documentée des offres.</dd></div>'
         '<div><dt>Prochaine étape</dt><dd><a href="#/devis?s=%d" class="btn btn-primary btn-sm">Envoyer un besoin dans ce secteur</a></dd></div>'
-        '</dl></article></div></div>\n'
+        '</dl></article>%s</div></div>\n'
         '  <div class="band alt"><div class="wrap"><h2>Huit secteurs, une même méthode</h2><ul class="sector-links">%s</ul></div></div>\n'
-        '</section>\n') % (s["titre"], img, s["besoins"], s["enjeux"], i, others)
+        '</section>\n') % (s["titre"], img, s["besoins"], s["enjeux"], i,
+                            "<!--VOIR article:%s page:marches-->" % s["article"] if s.get("article") else "", others)
 
 
 # ---------------------------------------------------------------------------------------------------------------
@@ -836,8 +864,8 @@ def build_main(site):
             jsonld = None
             if pid.startswith("secteur-"):
                 s = site.data["secteurs"][int(pid.split("-")[1])]
-                title = site.tr(s["titre"], lang, where) + " | CHANCELENO"
-                desc = short(site.tr(s["besoins"], lang, where))
+                title = s.get("titre_seo", {}).get(lang) or site.tr(s["titre"], lang, where) + " | CHANCELENO"
+                desc = s.get("description", {}).get(lang) or short(site.tr(s["besoins"], lang, where))
                 og_title = None
                 jsonld = breadcrumb(site, lang, [(site.tr("Secteurs", lang, where), site.url("secteurs", lang)),
                                                  (site.tr(s["titre"], lang, where), site.url(pid, lang))])
@@ -914,8 +942,10 @@ def date_text(site, lang, iso):
     return L["format_date"].format(j=int(j), m=L["mois"][int(m) - 1], a=a)
 
 
-def build_articles(site):
-    base = {"fr": "/articles/", "en": "/en/articles/", "pt": "/pt/artigos/"}
+ART_BASE = {"fr": "/articles/", "en": "/en/articles/", "pt": "/pt/artigos/"}
+
+
+def load_articles():
     adir = os.path.join(CONTENT, "articles")
     arts = []
     for aid in sorted(os.listdir(adir)):
@@ -923,9 +953,15 @@ def build_articles(site):
             continue      # dossier modèle
         m = rjson(adir, aid, "meta.json")
         m["id"] = aid
-        m["url"] = {l: base[l] + m[l]["adresse"] + "/" for l in LANGS}
+        m["url"] = {l: ART_BASE[l] + m[l]["adresse"] + "/" for l in LANGS}
         arts.append(m)
-    arts.sort(key=lambda a: a["date"], reverse=True)
+    return sorted(arts, key=lambda a: a["date"], reverse=True)
+
+
+def build_articles(site):
+    base = ART_BASE
+    adir = os.path.join(CONTENT, "articles")
+    arts = site.articles
     for lang in LANGS:
         L = site.light[lang]
         D = site.domain
@@ -939,8 +975,8 @@ def build_articles(site):
               "inLanguage": L["langue_jsonld"], "url": D + base[lang], "publisher": publisher,
               "hasPart": [{"@type": "Article", "headline": a[lang]["titre"], "url": D + a["url"][lang], "datePublished": a["date"]} for a in arts]}
         crumbs = breadcrumb(site, lang, [(L["articles"], base[lang])])
-        wr(base[lang], light_page(site, lang, L["liste_titre"] + " | CHANCELENO", "index, follow", "", True, base, main,
-                                  desc=L["liste_description"], alternates=base, og_title=L["liste_titre"], jsonld=[ld, crumbs]))
+        wr(base[lang], light_page(site, lang, L.get("liste_titre_seo") or L["liste_titre"] + " | CHANCELENO", "index, follow", "", True,
+                                  base, main, desc=L.get("liste_meta") or L["liste_description"], alternates=base, og_title=L["liste_titre"], jsonld=[ld, crumbs]))
         site.sitemap.append((base[lang], base, arts[0]["date"] if arts else None))
         # chaque article
         for a in arts:
@@ -959,8 +995,8 @@ def build_articles(site):
                   "image": [D + site.site["og_image"][lang]], "mainEntityOfPage": {"@type": "WebPage", "@id": D + a["url"][lang]},
                   "author": person, "publisher": publisher}
             crumbs = breadcrumb(site, lang, [(L["articles"], base[lang]), (t["titre"], a["url"][lang])])
-            wr(a["url"][lang], light_page(site, lang, t["titre"] + " | CHANCELENO", "index, follow", "", False, a["url"], main,
-                                          desc=t["description"], alternates=a["url"], og_type="article", og_title=t["titre"], jsonld=[ld, crumbs]))
+            wr(a["url"][lang], light_page(site, lang, t.get("titre_seo") or t["titre"] + " | CHANCELENO", "index, follow", "", False,
+                                          a["url"], main, desc=t.get("description_seo") or t["description"], alternates=a["url"], og_type="article", og_title=t["titre"], jsonld=[ld, crumbs]))
             site.sitemap.append((a["url"][lang], a["url"], a.get("modifie", a["date"])))
 
 

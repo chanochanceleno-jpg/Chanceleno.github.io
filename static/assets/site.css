@@ -422,3 +422,7 @@ body.cb-on .wa-menu{bottom:66px}
 /* Pages secteur : liens vers les autres secteurs */
 .sector-links{list-style:none;padding:0;margin:22px 0 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px 28px}
 .sector-links a{color:var(--text);font-size:16.5px}
+/* liens « Voir aussi » (repère <!--VOIR …--> et cartes Marchés) */
+.see-also{margin:24px 0 0;font-size:15.5px;line-height:1.6;color:var(--muted)}
+.see-also strong{display:block;color:var(--text);font-weight:600}
+.see-also a{display:block;width:fit-content;padding:4px 0;color:var(--copper);font-weight:600}
