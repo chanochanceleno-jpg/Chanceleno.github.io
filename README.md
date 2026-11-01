@@ -29,6 +29,7 @@ un numéro WhatsApp ou un prix dans `config/site.yml` le met à jour sur toutes 
 | `content/layout/` | En-tête, pied de page, assistant « Besoin d'aide ? », WhatsApp, mise en page des articles ; `blocs.json` : libellés des blocs construits depuis `config/site.yml` (mentions légales, entités, références) |
 | `content/legal/` | Texte des CGV entre professionnels (`cgv.fr.html`, `cgv.en.html`, `cgv.pt.html`), vide tant qu'il n'est pas rédigé |
 | `content/articles/` | Les articles (un dossier par article) |
+| `content/secteurs/` | Textes rédigés des pages secteurs, un fichier par langue (voir « Texte rédigé d'une page secteur ») |
 | `content/thanks/` | Pages de remerciement après l'envoi d'un formulaire |
 | `static/` | Images, polices, styles, scripts, `robots.txt`, `.well-known/security.txt`, fichier Google |
 | `tools/build.py` | Le générateur (ne pas modifier sauf évolution du site) |
@@ -178,6 +179,32 @@ references:
 3. Écrivez l'article dans `fr.html`, `en.html` et `pt.html` (paragraphes `<p>`, intertitres `<h2>`, encadré final).
 4. La liste des articles, le plan du site (`sitemap.xml`) et les liens entre langues sont mis à jour automatiquement.
    L'article sera en ligne à l'adresse `/articles/<adresse>/` (et `/en/articles/…`, `/pt/artigos/…`).
+
+## Texte rédigé d'une page secteur
+
+Une page secteur peut recevoir un texte long, écrit **directement dans chaque langue** (il ne passe pas par
+`content/i18n.json`) : `content/secteurs/<adresse française du secteur>/fr.html`, `en.html` et `pt.html`.
+Aujourd'hui, seule la page pilier `/secteurs/automobile-poids-lourds-flottes/` en a un.
+
+- Le texte s'affiche sous le bloc « Besoins typiques / Enjeux fréquents ». Si un seul fichier de langue existe, la
+  génération s'arrête et l'indique : les trois sont nécessaires.
+- Les questions écrites `<details class="faq"><summary>Question</summary><p>Réponse</p></details>` deviennent
+  automatiquement des données structurées FAQ pour Google.
+- Un repère `<!--VOIR …-->` y ajoute ses liens « Voir aussi » (il remplace alors la ligne automatique du champ
+  `article` de `content/data.json`).
+- Le titre principal (h1) se règle dans `content/data.json`, champ `h1` du secteur (fr, en, pt).
+
+## L'avis du fondateur
+
+La page pilier et les articles de sourcing contiennent un encadré à la première personne :
+
+```html
+<aside class="avis"><h2>L'avis du fondateur</h2><p>[HISTOIRE À FOURNIR PAR CHANO]</p></aside>
+```
+
+Remplacez `[HISTOIRE À FOURNIR PAR CHANO]` par votre texte, dans chaque langue (titre « A opinião do fundador » en
+portugais, « The founder's view » en anglais). Tant qu'un repère reste, `tools/check.py` affiche un avertissement
+(non bloquant) avec la liste des pages concernées.
 
 ## Modifier un tarif ou un délai
 

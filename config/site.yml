@@ -134,6 +134,7 @@ marches:
       fr: "Un partenaire sur place pour la prospection et le suivi des opérations."
       en: "A partner on the ground for prospecting and following up operations."
       pt: "Um parceiro no terreno para a prospeção e o acompanhamento das operações."
+    liens: [article:import-export-rdc-congo]
   - id: kinshasa
     affiche: oui
     role:
@@ -148,6 +149,7 @@ marches:
       fr: "Un partenaire sur place pour la prospection et le suivi des opérations."
       en: "A partner on the ground for prospecting and following up operations."
       pt: "Um parceiro no terreno para a prospeção e o acompanhamento das operações."
+    liens: [article:import-export-rdc-congo]
   - id: lusophonie
     affiche: oui
     role:
@@ -169,13 +171,14 @@ marches:
       en: "Supply markets"
       pt: "Mercados de aprovisionamento"
     titre:
-      fr: "Asie, Europe, Afrique, Moyen-Orient"
-      en: "Asia, Europe, Africa, Middle East"
-      pt: "Ásia, Europa, África, Médio Oriente"
+      fr: "Europe, Turquie et Asie (Chine, Inde, Thaïlande)"
+      en: "Europe, Turkey and Asia (China, India, Thailand)"
+      pt: "Europa, Turquia e Ásia (China, Índia, Tailândia)"
     texte:
-      fr: "Sourcing selon le besoin, le produit et le niveau de risque acceptable. Nous restons ouverts à d'autres régions."
-      en: "Sourcing according to the need, the product and the acceptable level of risk. We remain open to other regions."
-      pt: "Sourcing consoante a necessidade, o produto e o nível de risco aceitável. Mantemo-nos abertos a outras regiões."
+      fr: "Nous comparons les fournisseurs selon le produit, la qualité exigée, le délai et le niveau de risque acceptable. Nous restons ouverts à d'autres régions."
+      en: "We compare suppliers according to the product, the quality required, the lead time and the acceptable level of risk. We remain open to other regions."
+      pt: "Comparamos os fornecedores consoante o produto, a qualidade exigida, o prazo e o nível de risco aceitável. Mantemo-nos abertos a outras regiões."
+    liens: [article:sourcing-asie-angola, article:alibaba-ou-agent-sourcing, secteur:automobile-poids-lourds-flottes]
   - id: devises
     affiche: oui
     role:
