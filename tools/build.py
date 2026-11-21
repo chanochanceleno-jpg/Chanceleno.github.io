@@ -258,6 +258,8 @@ class Site:
              "france_ville": f["ville"], "angola_ville": c["angola"]["ville"], "cgv": "oui" if self.cgv else ""}
         # WhatsApp selon la langue (Afrique en portugais, Europe sinon) : lien de la bulle d'aide sans JavaScript
         v["wa_langue_num"] = v["wa_afrique_num"] if lang == "pt" else v["wa_europe_num"]
+        # numéro de TVA intracommunautaire de la société française (CGV du Pack Audit, page Informations contractuelles)
+        v["france_tva"] = f["tva"]
         # adresses de la page Devis (FR, EN, PT), pour compter les clics « Demander un devis » (assets/stats.js)
         v["chemins_devis"] = ",".join(self.site["pages"]["devis"][l]["chemin"] for l in LANGS)
         v.update(c["reseaux"])
