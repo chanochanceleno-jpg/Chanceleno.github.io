@@ -30,6 +30,7 @@ un numéro WhatsApp ou un prix dans `config/site.yml` le met à jour sur toutes 
 | `content/legal/` | Texte des CGV entre professionnels (`cgv.fr.html`, `cgv.en.html`, `cgv.pt.html`), vide tant qu'il n'est pas rédigé |
 | `content/articles/` | Les articles (un dossier par article) |
 | `content/thanks/` | Pages de remerciement après l'envoi d'un formulaire |
+| `content/llms/` | Résumé du site pour les assistants IA (`llms.txt`), en FR, EN et PT |
 | `static/` | Images, polices, styles, scripts, `robots.txt`, `.well-known/security.txt`, fichier Google |
 | `tools/build.py` | Le générateur (ne pas modifier sauf évolution du site) |
 | `tools/config.py` | La vérification de `config/site.yml` (messages d'erreur en français) |
@@ -334,8 +335,17 @@ Tout est produit automatiquement par `tools/build.py` ; `tools/check.py` le vér
   plan du site (`NOINDEX` dans `tools/build.py`).
 - **Icônes** : `favicon.ico`, `images/icon-192.png` et `apple-touch-icon.png` sont fabriquées à chaque génération
   à partir de `static/images/logo.png` : remplacer ce fichier suffit.
-- **robots.txt** : moteurs de recherche et robots des IA (GPTBot, ClaudeBot, Google-Extended…) autorisés ; seuls
-  CCBot, Bytespider et anthropic-ai sont refusés.
+- **robots.txt** : moteurs de recherche et robots des IA autorisés, explicitement pour GPTBot, OAI-SearchBot,
+  ChatGPT-User, ClaudeBot, Claude-User, Claude-SearchBot, anthropic-ai, PerplexityBot, Perplexity-User,
+  Google-Extended et CCBot ; seul Bytespider est refusé.
+- **llms.txt** (résumé du site pour les assistants IA, format llmstxt.org) : généré à chaque publication à partir
+  de `content/llms/` (`entete.md`, puis `fr.md`, `en.md`, `pt.md`). Les valeurs viennent de `config/site.yml`
+  (sociétés, identifiants, prix, délais, WhatsApp) et de `content/data.json` (8 secteurs) : `{{nom}}` reprend une
+  valeur, `{{lien:page}}` l'adresse complète d'une page, `{{secteurs}}` la liste des secteurs avec leurs liens.
+  N'y écrire que des informations publiées sur le site (aucun client, chiffre ou référence non publié).
+- **Données structurées des sociétés** (schema.org) : la marque CHANCELENO et ses deux sociétés (identifiants
+  `/#chanceleno-international` et `/#chanceleno-comercio-geral`, RCS, SIREN, TVA, NIF, dates, adresses) sur
+  l'accueil, À propos, Mentions légales et Contact (`ORG_PAGES` dans `tools/build.py`).
 - **Titres et descriptions Google** : `content/site.json` (pages), `content/data.json` (secteurs : `description`,
   `titre_seo`), `meta.json` de chaque article (`titre_seo`, `description_seo`), `content/layout/light.json`
   (liste des articles : `liste_titre_seo`, `liste_meta`). Titre : 60 caractères au plus ; description : 120 à

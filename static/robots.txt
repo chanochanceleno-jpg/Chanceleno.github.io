@@ -1,11 +1,23 @@
-# Robots collectant des contenus pour entraîner des IA : refusés
-User-agent: CCBot
+# Robot refusé : Bytespider (ByteDance)
 User-agent: Bytespider
-User-agent: anthropic-ai
 Disallow: /
 
-# Moteurs de recherche, recherche assistée par IA et robots des assistants IA (dont GPTBot, ClaudeBot et
-# Google-Extended, pour que le site puisse être cité dans leurs réponses) : autorisés
+# Robots des assistants et moteurs IA : autorisés explicitement, pour que le site puisse être lu et cité
+# (OpenAI, Anthropic, Perplexity, Google, Common Crawl). Résumé du site pour les assistants : /llms.txt
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: anthropic-ai
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: CCBot
+Allow: /
+
+# Tous les autres robots, dont les moteurs de recherche : autorisés
 User-agent: *
 Allow: /
 
