@@ -74,6 +74,8 @@ footer.site{background:var(--ink);color:#C9C1B2;padding:56px 0 32px;font-size:14
 footer.site a{text-decoration:none;color:#C9C1B2}
 footer.site a:hover{color:#fff;text-decoration:underline}
 .flinks{display:flex;flex-wrap:wrap;gap:8px 22px;list-style:none;margin:0;padding:0}
+/* zone cliquable d'au moins 24 px de haut (WCAG 2.2, 2.5.8), marges négatives : mise en page inchangée */
+.flinks a{display:inline-block;vertical-align:top;padding:4px 0;margin:-4px 0}
 .entities{display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid rgba(239,231,216,.12);margin-top:32px;padding-top:24px;font-size:13.5px}
 .entities strong{color:#EFE7D8;font-weight:600}
 .fbot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:28px;font-size:13px;color:#8E99A3}

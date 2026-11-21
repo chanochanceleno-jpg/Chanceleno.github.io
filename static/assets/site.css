@@ -344,6 +344,8 @@ footer.site{background:var(--ink);color:#C9C1B2;padding:64px 0 32px;font-size:14
 footer.site h2.fh{font:600 13.5px var(--sans);color:#EFE7D8;margin:0 0 12px;letter-spacing:normal;max-width:none}
 footer.site ul{list-style:none;margin:0;padding:0}
 footer.site li{margin-bottom:8px}
+/* liens du pied de page : zone cliquable d'au moins 24 px de haut (WCAG 2.2, 2.5.8), marges négatives : mise en page inchangée */
+footer.site ul:not(.socials) li>a{display:inline-block;vertical-align:top;padding:4px 0;margin:-4px 0}
 footer.site a{text-decoration:none;color:#C9C1B2}
 footer.site a:hover{color:#fff;text-decoration:underline}
 .entities{display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid rgba(239,231,216,.12);margin-top:40px;padding-top:24px;font-size:13.5px}
@@ -384,6 +386,12 @@ footer.site .socials a:hover,footer.site .socials a:focus-visible{color:var(--go
 .founder .ph{aspect-ratio:4/5;background:var(--navy);color:#C8A064;display:none;align-items:center;justify-content:center;font:400 64px var(--serif)}
 .founder figure.noimg img{display:none}.founder figure.noimg .ph{display:flex}
 @media (max-width:760px){.founder{grid-template-columns:1fr}.founder figure{max-width:300px}}
+/* Mobile : photo du fondateur entière (sans recadrage), centrée, au plus 60 % de la hauteur de l'écran */
+@media (max-width:480px){
+  .founder figure{max-width:none;margin:0 auto;display:flex;justify-content:center}
+  .founder img{width:auto;max-width:100%;height:auto;max-height:60vh;aspect-ratio:auto;object-fit:contain}
+  .founder .ph{width:min(300px,100%);max-height:60vh}
+}
 .audit{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:0;border:1px solid var(--line)}
 .audit>div{padding:clamp(22px,3vw,34px)}
 .audit>div+div{border-left:1px solid var(--line)}
@@ -413,6 +421,17 @@ body.cb-on .wa-menu{bottom:66px}
 /* Vert foncé de WhatsApp (#075E54) : texte blanc lisible, 7,7:1 (l'ancien #1F9D55 n'offrait que 3,5:1) */
 .cbx-wa{background:#075E54;color:#fff;border-color:#075E54}
 .cbx-wa:hover,.cbx-wa:focus{background:#054C44}
+#cbBtn .cb-ico{display:none}
+/* Mobile : bulle d'aide réduite à une icône (le libellé reste lu par les lecteurs d'écran), boutons alignés
+   dans la colonne de WhatsApp, et marge sous le contenu pour qu'aucun texte ne reste caché sous les boutons */
+@media (max-width:480px){
+  #cbBtn{width:48px;height:48px;min-height:0;padding:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  #cbBtn .cb-ico{display:block}
+  #cbBtn .cb-txt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .cbx{right:20px;bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  main>section.page>:last-child{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  html{scroll-padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+}
 
 /* Cookie banner */
 
