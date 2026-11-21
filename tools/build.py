@@ -770,6 +770,9 @@ def breadcrumb(site, lang, items):
             "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": n, "item": D + u} for i, (n, u) in enumerate(items)]}
 
 
+ORG_PAGES = ("a-propos", "mentions", "contact")
+
+
 def organization(site, lang):
     """Données structurées : la marque CHANCELENO et ses deux entités (valeurs de config/site.yml)."""
     D = site.domain
@@ -777,15 +780,21 @@ def organization(site, lang):
     a, f = c["angola"], c["france"]
     desc = site.site["pages"]["home"][lang]["description"]
     wa_eu, wa_af = "+" + re.sub(r"\D", "", c["wa_europe"]), "+" + re.sub(r"\D", "", c["wa_afrique"])
-    ao = {"@type": "Organization", "name": a["denomination"], "legalName": a["denomination"]}
+    parent = {"@id": D + "/#organisation"}
+    pv = lambda k, val: {"@type": "PropertyValue", "propertyID": k, "value": val}
+    # Société angolaise
+    ao = {"@type": "Organization", "@id": D + "/#chanceleno-comercio-geral", "name": a["denomination"], "legalName": a["denomination"],
+          "url": D + "/", "parentOrganization": parent}
     if a["date_creation"]:
         ao["foundingDate"] = a["date_creation"]
-    ao.update({"taxID": a["nif"], "telephone": wa_af,
+    ao.update({"taxID": a["nif"], "identifier": [pv("NIF", a["nif"])], "telephone": wa_af,
                "address": {"@type": "PostalAddress", "streetAddress": a["adresse"].split(", " + a["ville"])[0],
                            "addressLocality": a["ville"], "addressCountry": "AO"}})
-    fr = {"@type": "Organization", "name": f["denomination"]}
+    # Société française
+    fr = {"@type": "Organization", "@id": D + "/#chanceleno-international", "name": f["denomination"], "url": D + "/", "parentOrganization": parent}
     if f["immatriculee"]:
-        fr.update({"legalName": f["denomination"], "taxID": f["siren"].replace(" ", "")})
+        fr.update({"legalName": f["denomination"], "taxID": f["siren"].replace(" ", ""),
+                   "identifier": [pv("SIREN", f["siren"].replace(" ", "")), pv("RCS", "RCS " + f["rcs"])]})
         if f["tva"]:
             fr["vatID"] = f["tva"].replace(" ", "")
         if f["date_immatriculation"]:
@@ -796,7 +805,11 @@ def organization(site, lang):
     fr["telephone"] = wa_eu
     fr["address"] = {"@type": "PostalAddress", "addressLocality": f["ville"], "addressCountry": "FR"}
     if f["immatriculee"] and f["adresse"]:
-        fr["address"]["streetAddress"] = f["adresse"].split(", ")[0]
+        rue, _, reste = f["adresse"].partition(", ")
+        fr["address"]["streetAddress"] = rue
+        cp = re.match(r"(\d{5})\b", reste)
+        if cp:
+            fr["address"]["postalCode"] = cp.group(1)
     org = {
         "@context": "https://schema.org", "@type": "Organization", "@id": D + "/#organisation",
         "name": "CHANCELENO", "url": D + "/", "logo": D + "/images/logo.png", "description": desc,
@@ -888,6 +901,8 @@ def build_main(site):
                                                      first_text(filled, r'<div class="band">.*?<p[^>]*>(.*?)</p>'))
                 if pid == "home":
                     jsonld = [x for x in (organization(site, lang), website(site, lang), faq(filled)) if x]
+                elif pid in ORG_PAGES:   # la marque et ses deux sociétés, aussi sur les pages qui les présentent
+                    jsonld = [organization(site, lang)]
             robots = "noindex, follow" if pid in NOINDEX else "index, follow"
             extra = '<meta name="google-site-verification" content="%s">' % site.site["google_site_verification"] if pid == "home" else ""
             page = head(site, lang, pid, title, desc, og_title=og_title, jsonld=jsonld, robots=robots,
@@ -1051,6 +1066,46 @@ def build_sitemap(site):
     wr("/sitemap.xml", "\n".join(rows) + "\n")
 
 
+MOIS = {"fr": ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+        "en": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        "pt": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]}
+
+
+def date_longue(iso, lang):
+    """AAAA-MM-JJ -> « 20 novembre 2026 », « 20 November 2026 », « 20 de novembro de 2026 »."""
+    if not iso:
+        return ""
+    y, m, d = iso.split("-")
+    return ("%d de %s de %s" if lang == "pt" else "%d %s %s") % (int(d), MOIS[lang][int(m) - 1], y)
+
+
+def build_llms(site):
+    """/llms.txt (format llmstxt.org) pour les assistants IA : en-tête commun puis une partie par langue
+    (content/llms/<langue>.md). Valeurs reprises de config/site.yml et content/data.json, sans HTML :
+    {{nom}} (valeurs de la configuration), {{lien:page}} (adresse complète de la page), {{secteurs}} (liste)."""
+    c, f, a, D = site.config, site.config["france"], site.config["angola"], site.domain
+    parts = []
+    for lang in [None] + LANGS:
+        t = rd(CONTENT, "llms", (lang or "entete") + ".md")
+        v = site.tokens(lang)
+        if lang:
+            v.update({"forme": f["forme"], "capital": f["capital"], "rcs": f["rcs"], "siren": f["siren"], "tva": f["tva"],
+                      "adresse_fr": f["adresse"], "nif": a["nif"], "adresse_ao": a["localisation"],
+                      "date_fr": date_longue(f["date_immatriculation"], lang), "date_ao": date_longue(a["date_creation"], lang),
+                      "secteurs": "\n".join("- [%s](%s%s)" % (site.tr(s["titre"], lang, "llms.txt"), D, site.url("secteur-%d" % i, lang))
+                                            for i, s in enumerate(site.data["secteurs"]))})
+
+        def one(m):
+            k = m.group(1)
+            if k.startswith("lien:"):
+                return D + site.url(k[5:], lang)
+            if k not in v or v[k] == "":
+                raise SystemExit("llms.txt : marqueur inconnu ou vide {{%s}} (content/llms/%s.md)" % (k, lang or "entete"))
+            return str(v[k])
+        parts.append(re.sub(r"\{\{([a-z_]+(?::[a-z-]+)?)\}\}", one, t).strip())
+    wr("/llms.txt", "\n\n".join(parts) + "\n")
+
+
 def build_redirect(site):
     routes = {pid: v for pid, v in site.pages.items() if not pid.startswith("secteur-") and (pid != "cgv" or site.cgv)}
     js = ("/* Fichier généré par tools/build.py. Anciennes adresses #/rubrique et langue mémorisée. */\n"
@@ -1172,6 +1227,7 @@ def main():
     build_thanks(site)
     build_404(site)
     build_sitemap(site)
+    build_llms(site)
     build_redirect(site)
     build_strings(site)
     make_icons()

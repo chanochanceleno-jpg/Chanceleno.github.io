@@ -316,6 +316,37 @@ async function reel(b) {
       && v[0].includes("RCS Lyon 133 060 319") && v[0].includes("12 rue de la Part-Dieu, 69003 Lyon"), lang + " : pied de page identique sur les " + all.length + " pages " + JSON.stringify(v));
   }
   await pf.context().close();
+  // lisibilité par les assistants IA : llms.txt, données schema.org des deux sociétés, robots.txt, plan du site
+  const SITE_DIR = path.join(__dirname, "..", "_site");
+  const llms = fs.readFileSync(path.join(SITE_DIR, "llms.txt"), "utf8");
+  ok(llms.startsWith("# CHANCELENO\n\n> ") && ["## Français", "## English", "## Português"].every(h => llms.includes("\n" + h + "\n")), "llms.txt : titre, résumé et trois langues");
+  ok(["RCS Lyon 133 060 319", "FR70133060319", "NIF 5003018334", "CHANCELENO – COMÉRCIO GERAL, (SU), LDA", "20 novembre 2026", "17 avril 2026", "20 November 2026", "17 de abril de 2026"].every(x => llms.includes(x)), "llms.txt : sociétés, identifiants et dates");
+  ok((llms.match(/^- \[[^\]]+\]\(https:\/\/chanceleno\.com\/(en\/industries|pt\/setores|secteurs)\/[a-z-]+\/\)$/gm) || []).length === 24, "llms.txt : 8 secteurs par langue, avec leur lien");
+  ok(!/\{\{|<[a-z]|@chanceleno|compte bancaire|bank account|conta bancária/i.test(llms) && llms.includes("contact(at)chanceleno.com"), "llms.txt : ni marqueur, ni HTML, ni email en clair, ni compte bancaire des sociétés");
+  for (const u of [...llms.matchAll(/\]\((https:\/\/chanceleno\.com[^)]*)\)/g)].map(m => m[1].replace("https://chanceleno.com", ""))) {
+    const f = path.join(SITE_DIR, u, "index.html"); ok(fs.existsSync(f), "llms.txt : lien vers une page existante " + u);
+  }
+  const pj = await page(b, 1280);
+  for (const lang of LANGS) for (const pid of ["home", "a-propos", "mentions", "contact"]) {
+    await pj.goto(BASE + U(pid, lang));
+    const lds = await pj.$$eval('script[type="application/ld+json"]', s => s.map(x => JSON.parse(x.textContent)));
+    const org = lds.find(x => x["@id"] === "https://chanceleno.com/#organisation") || {};
+    const [ao, fr] = org.subOrganization || [{}, {}];
+    ok(ao["@id"] === "https://chanceleno.com/#chanceleno-comercio-geral" && ao.foundingDate === "2026-04-17" && ao.identifier[0].value === "5003018334" && ao.parentOrganization["@id"] === org["@id"]
+      && fr["@id"] === "https://chanceleno.com/#chanceleno-international" && fr.foundingDate === "2026-11-20" && fr.vatID === "FR70133060319" && fr.address.postalCode === "69003"
+      && fr.identifier.some(i => i.propertyID === "RCS" && i.value === "RCS Lyon 133 060 319") && !JSON.stringify(org).includes("@chanceleno"), lang + " " + pid + " : schema.org, les deux sociétés");
+  }
+  await pj.context().close();
+  const robots = fs.readFileSync(path.join(SITE_DIR, "robots.txt"), "utf8");
+  const groups = robots.split(/\n\s*\n/).map(g => ({ ua: [...g.matchAll(/^User-agent: (.+)$/gm)].map(m => m[1].trim()), rules: [...g.matchAll(/^(Allow|Disallow): (.*)$/gm)].map(m => m[1] + " " + m[2].trim()) })).filter(g => g.ua.length);
+  const rule = bot => (groups.find(g => g.ua.includes(bot)) || groups.find(g => g.ua.includes("*"))).rules.join(",");
+  ok(["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended", "CCBot", "anthropic-ai"].every(bot => rule(bot) === "Allow /") && rule("Bytespider") === "Disallow /"
+    && robots.includes("Sitemap: https://chanceleno.com/sitemap.xml"), "robots.txt : robots des IA autorisés, Bytespider refusé");
+  // plan du site : toutes les pages indexables, aucune page noindex
+  const pages = []; (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const f = path.join(d, e.name); if (e.isDirectory()) walk(f); else if (e.name === "index.html") pages.push(f); } })(SITE_DIR);
+  const idx = pages.filter(f => !/noindex/.test(fs.readFileSync(f, "utf8").match(/<meta name="robots" content="([^"]*)"/)?.[1] || "")).map(f => "/" + path.relative(SITE_DIR, path.dirname(f)).split(path.sep).join("/") + (path.dirname(f) === SITE_DIR ? "" : "/")).map(u => u.replace("//", "/"));
+  const inMap = new Set(all);
+  ok(idx.length === all.length && idx.every(u => inMap.has(u)), "plan du site : " + all.length + " pages, toutes les pages indexables et elles seules " + JSON.stringify(idx.filter(u => !inMap.has(u))));
 }
 
 async function fictif(b) {
