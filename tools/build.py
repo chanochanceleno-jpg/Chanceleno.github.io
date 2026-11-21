@@ -264,6 +264,9 @@ class Site:
                 amount = amount.replace(",", "\u202f").replace(".", ",")
             v["prix_audit"] = B["prix"].format(montant=amount)
             v["france_statut"] = B["statut_immatriculee"].format(**self.france_display()) if f["immatriculee"] else B["statut_attente"]
+            # responsable du traitement (confidentialité) : identité complète et email de la société française
+            v["france_identite"] = f["denomination"] + " – " + v["france_statut"]
+            v["france_email"] = mask(f["email"] or c["email"])
             v["accueil_description"] = c["accueil_description"][lang]
         return v
 
@@ -294,15 +297,13 @@ class Site:
         c, B = self.config, self.blocs[lang]
         if which == "angola":
             a = c["angola"]
-            parts = [B["nif"].format(nif=a["nif"]), B["siege"].format(adresse=a["adresse"]), B["tel"].format(tel=c["wa_afrique"])]
-            return a["denomination"] + " — " + " — ".join(parts) + "."
+            return a["denomination"] + " – " + a["localisation"] + " – " + B["nif"].format(nif=a["nif"]) + "."
         f = self.france_display()
         if not f["immatriculee"]:
             return B["france_attente"].format(nom=f["denomination"], ville=f["ville"])
-        parts = [B["capital"].format(**f), B["siren"].format(**f), B["rcs"].format(**f)] + \
-            ([B["tva"].format(**f)] if f["tva"] else []) + \
-            [B["siege"].format(adresse=f["adresse"]), B["president"].format(**f), B["tel"].format(tel=c["wa_europe"])]
-        return f["denomination"] + " — " + " — ".join(parts) + "."
+        parts = [B["statut_immatriculee"].format(**f)] + ([B["tva"].format(**f)] if f["tva"] else []) + \
+            [B["email"].format(email=mask(f["email"])), B["tel"].format(tel=c["wa_europe"])]
+        return f["denomination"] + " – " + " – ".join(parts) + "."
 
     def france_display(self):
         """Société française, avec des espaces insécables dans les numéros (SIREN, RCS, capital non coupés en fin de ligne)."""
@@ -315,9 +316,12 @@ class Site:
         c, B = self.config, self.blocs[lang]
         ed = c["editeur"]
         other = "france" if ed == "angola" else "angola"
-        pub = B["publication"].format(directeur=c["directeur"], email=mask(c["email"]))
+        directeur = c["directeur"]
+        if ed == "france" and directeur == c["france"]["president"]:
+            directeur = B["qualite_president"].format(nom=directeur)
+        pub = B["publication"].format(directeur=directeur)
         e = lambda t: esc(t).replace("&#x27;", "'")
-        return "<h3>%s</h3><p>%s %s</p><h3>%s</h3><p>%s</p>" % (
+        return "<h3>%s</h3><p>%s</p><p>%s</p><h3>%s</h3><p>%s</p>" % (
             e(B["h_editeur"]), e(self.entity_text(ed, lang)), e(pub), e(B["h_autre"][other]), e(self.entity_text(other, lang)))
 
     def entities_html(self, lang):
@@ -328,8 +332,8 @@ class Site:
         tel = lambda n: '<a href="https://wa.me/%s">%s</a>' % (re.sub(r"\D", "", n), e(n))
         ao = [e(a["ville"] + ", " + B["pays"]["AO"]), e(B["nif"].format(nif=a["nif"])), tel(c["wa_afrique"])]
         if f["immatriculee"]:
-            fr = [e(f["ville"] + ", " + B["pays"]["FR"]), e(B["siren"].format(**f) + " · " + B["rcs"].format(**f))] + \
-                ([e(B["tva"].format(**f))] if f["tva"] else []) + [tel(c["wa_europe"])]
+            fr = [e(f["ville"] + ", " + B["pays"]["FR"]), e(B["capital"].format(**f)), e(B["rcs"].format(**f))] + \
+                ([e(B["tva"].format(**f))] if f["tva"] else []) + [e(B["siege"].format(adresse=f["adresse"])), tel(c["wa_europe"])]
         else:
             fr = [e(f["ville"] + ", " + B["pays"]["FR"] + " — " + B["statut_attente"]), e(B["pied_attente"]), tel(c["wa_europe"])]
         return "\n      ".join("<div><strong>%s</strong><br>%s</div>" % (e(n), "<br>".join(lines))

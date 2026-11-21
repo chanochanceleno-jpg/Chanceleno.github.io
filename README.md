@@ -81,7 +81,8 @@ de la configuration :
 | `{{wa_europe}}`, `{{wa_afrique}}` | +33 6 41 80 84 99, +244 928 424 849 |
 | `{{wa_europe_num}}`, `{{wa_afrique_num}}` | 33641808499, 244928424849 (pour les liens `https://wa.me/…`) |
 | `{{linkedin_profil}}`, `{{linkedin_page}}`, `{{instagram}}`, `{{facebook}}`, `{{youtube}}`, `{{tiktok}}` | adresse du réseau social |
-| `{{france_nom}}`, `{{france_statut}}`, `{{angola_nom}}` | dénomination, « société en cours d'immatriculation » ou « SASU, SIREN … » |
+| `{{france_nom}}`, `{{france_statut}}`, `{{angola_nom}}` | dénomination ; « SAS à associé unique au capital de 1 000 € – RCS Lyon 133 060 319 – Siège : … » (ou « société en cours d'immatriculation » tant que le SIREN est vide) |
+| `{{france_identite}}`, `{{france_email}}` | dénomination suivie de `{{france_statut}}` ; email de la société française, masqué (responsable du traitement, page Confidentialité) |
 | `{{annee}}` | l'année en cours (copyright) |
 
 Un lien vers un réseau social porte en plus `data-si="instagram"` (par exemple) : il disparaît tout seul quand
@@ -89,30 +90,37 @@ l'adresse est vide. Le copyright se met à jour seul : le site est régénéré 
 
 ## Remplir les champs Kbis
 
-Quand CHANCELENO INTERNATIONAL est immatriculée, recopiez le Kbis dans `config/site.yml`, rubrique
-`identite` → `france` :
+CHANCELENO INTERNATIONAL est immatriculée : le Kbis est recopié dans `config/site.yml`, rubrique
+`identite` → `france` (à mettre à jour en cas de changement) :
 
 ```yaml
   france:
     denomination: "CHANCELENO INTERNATIONAL"
-    forme: "SASU"
-    adresse: "10 rue Exemple, 69002 Lyon, France"
+    forme: "SAS à associé unique"
+    adresse: "12 rue de la Part-Dieu, 69003 Lyon"
     ville: "Lyon"
-    siren: "123 456 789"
-    rcs: "Lyon 123 456 789"
-    tva: "FR12123456789"
+    siren: "133 060 319"
+    rcs: "Lyon 133 060 319"
+    tva: ""                            # vide = non affiché ; ex. "FR12123456789"
     capital: "1 000 €"
-    president: "Chano Ndandu CHANCELENO"
-    date_immatriculation: "2026-11-05"
+    president: "Chano Chanceleno"
+    email: "ceo@chanceleno.com"
+    date_immatriculation: "20/11/2026" # JJ/MM/AAAA (ou AAAA-MM-JJ)
 ```
 
 Tant que `siren` est vide, le site indique « société en cours d'immatriculation ». Dès qu'il est rempli, sans
-rien d'autre à faire : les **mentions légales**, le **pied de page** (toutes les pages et les articles), la
-**carte Lyon** de la page Marchés et les **données lues par Google** affichent les identifiants, en FR, EN et PT.
-Forme, adresse, RCS, capital et président deviennent alors obligatoires (le TVA est facultatif).
+rien d'autre à faire, les identifiants s'affichent en FR, EN et PT dans :
+- les **mentions légales** (formule complète, email, téléphone) ;
+- la **politique de confidentialité** (responsable du traitement, droits exercés auprès de `email`) ;
+- le **pied de page** de toutes les pages et des articles ;
+- la **carte Lyon** de la page Marchés ;
+- les **données lues par Google**.
 
-Pour que la société française devienne l'**éditeur du site**, changez aussi `editeur: angola` en `editeur: france` :
-elle passe en tête des mentions légales, et la société angolaise devient « Structure angolaise ».
+Forme, adresse, RCS, capital, président et email deviennent alors obligatoires. La TVA est facultative.
+
+`editeur: france` place la société française en tête des mentions légales, avec « Directeur de la publication :
+<directeur>, Président » quand le directeur est aussi le président. La société angolaise y figure en
+« Structure angolaise », avec le lieu `angola.localisation` (« Kilamba, Luanda, Angola ») et son NIF.
 Le texte de l'hébergeur (GitHub) reste dans `content/pages/mentions.html`.
 
 ## Ajouter une photo
@@ -444,8 +452,8 @@ une, copiez-la dans `static/images/` (par exemple `static/images/references/maca
 ## À faire régulièrement
 
 - **Chaque année, avant le 22 octobre** : repousser d'un an la date `Expires` de `static/.well-known/security.txt`.
-- **Après l'immatriculation de CHANCELENO INTERNATIONAL** : remplir les champs Kbis (voir plus haut). Seul le texte
-  des informations contractuelles (`content/pages/conditions.html`) reste à relire à la main.
+- **Société française immatriculée** (champs Kbis remplis, voir plus haut) : seul le texte des informations
+  contractuelles (`content/pages/conditions.html`) reste à relire à la main.
 
 ## Tests navigateur (facultatif)
 
