@@ -254,7 +254,12 @@ class Site:
              "formsubmit": c["formsubmit"], "wa_europe": c["wa_europe"], "wa_afrique": c["wa_afrique"],
              "wa_europe_num": re.sub(r"\D", "", c["wa_europe"]), "wa_afrique_num": re.sub(r"\D", "", c["wa_afrique"]),
              "delai_rapport": str(c["delai_rapport"]), "delai_reponse": str(c["delai_reponse"]), "annee": str(self.year),
-             "france_nom": f["denomination"], "angola_nom": c["angola"]["denomination"], "cgv": "oui" if self.cgv else ""}
+             "france_nom": f["denomination"], "angola_nom": c["angola"]["denomination"],
+             "france_ville": f["ville"], "angola_ville": c["angola"]["ville"], "cgv": "oui" if self.cgv else ""}
+        # WhatsApp selon la langue (Afrique en portugais, Europe sinon) : lien de la bulle d'aide sans JavaScript
+        v["wa_langue_num"] = v["wa_afrique_num"] if lang == "pt" else v["wa_europe_num"]
+        # adresses de la page Devis (FR, EN, PT), pour compter les clics « Demander un devis » (assets/stats.js)
+        v["chemins_devis"] = ",".join(self.site["pages"]["devis"][l]["chemin"] for l in LANGS)
         v.update(c["reseaux"])
         if lang:
             B = self.blocs[lang]

@@ -311,6 +311,16 @@ input:focus,select:focus,textarea:focus{outline:3px solid rgba(200,160,100,.55);
 .status code{font-weight:700;font-size:17px;color:var(--cuivre-texte)}
 fieldset{border:0;padding:0;margin:0}
 legend{font-family:var(--serif);font-size:22px;margin-bottom:12px;padding:0}
+/* Devis : bloc « Ajouter des précisions », replié par défaut (les 4 champs essentiels restent visibles) */
+.more{min-width:0;margin:28px 0 20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.more>summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:48px;padding:12px 0;font:600 16px var(--sans);color:var(--cuivre-texte)}
+.more>summary::-webkit-details-marker{display:none}
+.more>summary::after{content:"+";font-size:22px;font-weight:400;color:var(--copper)}
+.more[open]>summary::after{content:"−"}
+.more>summary .opt{font-weight:400;color:var(--muted);margin-right:auto}
+.more>fieldset{min-width:0;margin:14px 0 30px}
+/* Contenu de <details> : le pseudo-élément ::details-content n'hérite pas du box-sizing de la page */
+.more *{box-sizing:border-box}
 
 /* Markets */
 .nodes{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--line)}
@@ -411,7 +421,7 @@ footer.site .socials a:hover,footer.site .socials a:focus-visible{color:var(--go
 body.cb-on .wa{bottom:calc(96px + env(safe-area-inset-bottom,0px))}
 body.cb-on .wa-menu{bottom:66px}
 .cbx{position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:50}
-#cbBtn{min-height:48px;padding:0 18px;border-radius:24px;border:0;background:var(--ink);color:#EFE7D8;font:600 14px var(--sans);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#cbBtn{display:inline-flex;align-items:center;text-decoration:none;min-height:48px;padding:0 18px;border-radius:24px;border:0;background:var(--ink);color:#EFE7D8;font:600 14px var(--sans);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .cbx-panel{position:absolute;right:0;bottom:58px;width:min(300px,calc(100vw - 32px));background:var(--paper);color:var(--text);border:1px solid var(--line);box-shadow:0 12px 32px rgba(0,0,0,.22);padding:16px;font-size:14px}
 .cbx-panel p{margin:0 0 10px}
 .cbx-panel{max-height:calc(100vh - 120px);overflow:auto}

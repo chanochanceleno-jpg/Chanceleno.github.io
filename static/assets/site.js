@@ -21,6 +21,8 @@ const params=new URLSearchParams(location.search);
 const $id=id=>document.getElementById(id);
 if($id("r-sec")&&params.has("s"))$id("r-sec").value=params.get("s");
 if($id("r-type")&&params.has("t"))$id("r-type").value=params.get("t");
+/* Devis : le bloc « Ajouter des précisions » s'ouvre si l'adresse présélectionne le type de demande ou le secteur */
+if($id("r-more")&&(params.has("t")||params.has("s")))$id("r-more").open=true;
 if($id("p-type")){const sel=$id("p-type"),pick=w=>[...sel.options].forEach((o,i)=>{if((o.dataset.fr||o.text).indexOf(w)===0)sel.selectedIndex=i});
   if(params.has("a"))pick("Apporteur");if(params.has("e"))pick("Export")}
 
@@ -160,6 +162,9 @@ document.querySelectorAll("[data-tel]").forEach(box=>{const t=telParts(box);
 
 /* ---------- Forms ---------- */
 const emailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+/* Champ « Email ou numéro WhatsApp » (devis) : une adresse email, ou un numéro international (+ ou 00, 8 à 15 chiffres) */
+const waOk=v=>/^(\+|00)[\d\s().-]+$/.test(v)&&(v.replace(/\D/g,"").length-(v.startsWith("00")?2:0))>=8&&v.replace(/\D/g,"").length<=17;
+const contactOk=v=>emailOk(v)||waOk(v);
 /* Devis, fournisseur, partenaire : envoi classique (multipart) vers FormSubmit, seul mode qui transmet les pièces
    jointes et l'accusé de réception (_autoresponse, captcha actif). FormSubmit redirige ensuite vers la page de
    remerciement (_next) avec la référence. Le contact reste en AJAX (voir plus bas). */
@@ -176,7 +181,8 @@ function sendClassic(fd,toSend,ref,kind){
   const nf=document.createElement("form");nf.method="POST";nf.action=FORM_POST;nf.enctype="multipart/form-data";nf.acceptCharset="UTF-8";nf.hidden=true;
   const add=(k,v)=>{const i=document.createElement("input");i.type="hidden";i.name=k;i.value=v;nf.appendChild(i)};
   for(const [k,v] of fd.entries())if(k!=="_captcha")add(k,v);
-  add("_next",THANKS[l]+"?ref="+encodeURIComponent(ref));add("_autoresponse",unmask(ACK[l](kind,ref)));
+  /* m=0 : pas d'adresse email (contact par WhatsApp), donc pas d'accusé de réception par email */
+  add("_next",THANKS[l]+"?ref="+encodeURIComponent(ref)+(fd.get("email")?"":"&m=0"));add("_autoresponse",unmask(ACK[l](kind,ref)));
   if(toSend.length){const fi=document.createElement("input");fi.type="file";fi.name="upload";fi.multiple=true;const dt=new DataTransfer();toSend.forEach(f=>dt.items.add(f));fi.files=dt.files;nf.appendChild(fi)}
   document.body.appendChild(nf);nf.submit()}
 /* Retour arrière depuis FormSubmit : réactiver les boutons restés sur « Envoi en cours… ». */
@@ -188,12 +194,12 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
     const hp=form.querySelector(".hp");if(hp&&hp.value)return;
     let first=null;
     form.querySelectorAll("[required]").forEach(inp=>{
-      const bad=!inp.value.trim()||(inp.type==="email"&&!emailOk(inp.value.trim()));
+      const bad=!inp.value.trim()||(inp.type==="email"&&!emailOk(inp.value.trim()))||(inp.hasAttribute("data-contact")&&!contactOk(inp.value.trim()));
       const er=document.getElementById("e-"+inp.id);
       inp.setAttribute("aria-invalid",bad);if(er){er.classList.toggle("show",bad);if(bad)inp.setAttribute("aria-describedby",er.id)}
       if(bad&&!first)first=inp});
     form.querySelectorAll("[data-tel]").forEach(box=>{const bad=telShow(box,telSync(box));if(bad&&!first)first=bad});
-    if(first){st.className="status bad show";st.textContent=window.__t("Certains champs sont à compléter. Vos informations saisies sont conservées.");first.focus();return}
+    if(first){const d=first.closest("details");if(d)d.open=true;st.className="status bad show";st.textContent=window.__t("Certains champs sont à compléter. Vos informations saisies sont conservées.");first.focus();return}
     /* statistiques : formulaire valide qui part (voir assets/stats.js) */
     if(window.chStat)window.chStat({RFQ:"envoi-devis",SUP:"envoi-fournisseur",PAR:"envoi-partenaire",CT:"envoi-contact"}[form.dataset.kind]);
     const btn=form.querySelector("button[type=submit]");const label=btn.textContent;btn.dataset.label=label;btn.disabled=true;btn.textContent=window.__t("Envoi en cours…");
@@ -206,7 +212,7 @@ document.querySelectorAll("form[data-kind]").forEach(form=>{
       const lab=form.querySelector('label[for="'+el.id+'"]');const key=(el.dataset.key||(lab&&lab.dataset.fr)||(lab?lab.childNodes[0].textContent:el.id)).trim();
       let val=el.type==="checkbox"?(el.checked?"oui":"non"):(el.tagName==="SELECT"?(el.options[el.selectedIndex].dataset.fr||el.options[el.selectedIndex].text):el.value);
       const tb=el.type==="tel"&&el.closest("[data-tel]");if(tb)val=telRead(tb).full;   // ex. +244923456789 (vide si non renseigné)
-      if(el.type==="email")fd.append("email",val);
+      if(el.type==="email"||(el.hasAttribute("data-contact")&&emailOk(val.trim())))fd.append("email",val.trim());
       fd.append(key,val)});
     const toSend=form.id==="rfqForm"?files:Array.from((form.querySelector("input[type=file]")||{}).files||[]);
     if(toSend.reduce((n,f)=>n+f.size,0)>10*1024*1024){st.className="status bad show";st.textContent=window.__t("Vos fichiers dépassent 10 Mo au total. Retirez-en, ou envoyez-les par email à {{email}}.");btn.disabled=false;btn.textContent=label;st.setAttribute("tabindex","-1");st.focus();return}
@@ -245,7 +251,11 @@ brand.addEventListener("mouseenter",replayLogo);brand.addEventListener("focus",r
 /* ---------- Assistant guidé (sans service externe) ---------- */
 const cbBtn=document.getElementById("cbBtn"),cbPanel=document.getElementById("cbPanel");
 const cbClose=()=>{cbPanel.hidden=true;cbBtn.setAttribute("aria-expanded","false")};
-cbBtn.addEventListener("click",()=>{const o=cbPanel.hidden;cbPanel.hidden=!o;cbBtn.setAttribute("aria-expanded",String(o))});
+/* La bulle est un lien WhatsApp (utile sans JavaScript) ; ici, elle ouvre le menu d'aide. Espace l'active aussi (role="button"). */
+cbBtn.setAttribute("role","button");cbBtn.setAttribute("aria-expanded","false");cbBtn.setAttribute("aria-controls","cbPanel");
+const cbToggle=e=>{e.preventDefault();const o=cbPanel.hidden;cbPanel.hidden=!o;cbBtn.setAttribute("aria-expanded",String(o))};
+cbBtn.addEventListener("click",cbToggle);
+cbBtn.addEventListener("keydown",e=>{if(e.key===" ")cbToggle(e)});
 cbPanel.querySelectorAll("a").forEach(a=>a.addEventListener("click",cbClose));
 document.getElementById("cbWa").addEventListener("click",function(){const pt=LANG==="pt";const msg={fr:"Bonjour CHANCELENO, j’ai une demande :",en:"Hello CHANCELENO, I have a request:",pt:"Olá CHANCELENO, tenho um pedido:"}[LANG]||"";this.href="https://wa.me/"+(pt?"{{wa_afrique_num}}":"{{wa_europe_num}}")+"?text="+encodeURIComponent(msg)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")cbClose()});

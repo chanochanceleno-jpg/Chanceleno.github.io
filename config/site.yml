@@ -41,7 +41,7 @@ identite:
     ville: "Lyon"
     siren: "133 060 319"               # 9 chiffres
     rcs: "Lyon 133 060 319"
-    tva: ""                            # vide = non affiché ; ex. "FR12123456789"
+    tva: "FR70133060319"               # numéro de TVA intracommunautaire (vide = non affiché)
     capital: "1 000 €"
     president: "Chano Chanceleno"
     email: "ceo@chanceleno.com"        # contact de l'éditeur (mentions légales) et pour l'exercice des droits (confidentialité)

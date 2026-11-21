@@ -34,7 +34,7 @@ def fictitious(text):
         ('    adresse: "12 rue de la Part-Dieu, 69003 Lyon"', '    adresse: "1 rue de l\'Exemple, 69001 Lyon, France"'),
         ('    siren: "133 060 319"', '    siren: "123 456 789"'),
         ('    rcs: "Lyon 133 060 319"', '    rcs: "Lyon 123 456 789"'),
-        ('    tva: ""', '    tva: "FR12123456789"'),
+        ('    tva: "FR70133060319"', '    tva: "FR12123456789"'),
         ('    president: "Chano Chanceleno"', '    president: "Président Fictif"'),
         ('    email: "ceo@chanceleno.com"', '    email: "fictif@chanceleno.com"'),
         ('    date_immatriculation: "20/11/2026"', '    date_immatriculation: "02/11/2026"'),
