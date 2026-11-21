@@ -4,14 +4,18 @@
 :root{
   --ink:#0A1622; --paper:#FAF6EE; --cream:#EFE7D8; --text:#14202C; --muted:#56616C;
   --copper:#9C6035; --copper-strong:#935B33; --copper-btn:#9C6035; --gold:#C8A064; --line:rgba(20,32,44,.14);
+  /* Cuivre des textes et liens : mêmes valeurs et mêmes règles que site.css (WCAG AA ≥ 4,5:1) */
+  --cuivre-texte:#8F4F28; --cuivre-clair:#D08A5C;
   --serif:"Newsreader", Georgia, "Times New Roman", serif;
   --sans:"Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
   --wrap:1180px; --read:720px;
 }
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452;--copper-strong:#C98452}
+  :root:not([data-theme="light"]){--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452;--copper-strong:#C98452;--cuivre-texte:var(--cuivre-clair)}
 }
-:root[data-theme="dark"]{--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452;--copper-strong:#C98452}
+:root[data-theme="dark"]{--paper:#0C1824;--cream:#132435;--text:#ECE4D4;--muted:#A5AFB8;--line:rgba(236,228,212,.16);--copper:#C98452;--copper-strong:#C98452;--cuivre-texte:var(--cuivre-clair)}
+/* blocs bleu nuit, quel que soit le thème : textes cuivre clairs */
+header.site,footer.site{--cuivre-texte:var(--cuivre-clair)}
 *,*::before,*::after{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--text);font-family:var(--sans);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{max-width:100%}
@@ -90,4 +94,4 @@ footer.site .socials a:hover,footer.site .socials a:focus-visible{color:var(--go
 /* liens « Voir aussi » (repère <!--VOIR …--> et cartes Marchés) */
 .see-also{margin:24px 0 0;font-size:15.5px;line-height:1.6;color:var(--muted)}
 .see-also strong{display:block;color:var(--text);font-weight:600}
-.see-also a{display:block;width:fit-content;padding:4px 0;color:var(--copper);font-weight:600}
+.see-also a{display:block;width:fit-content;padding:4px 0;color:var(--cuivre-texte);font-weight:600}
