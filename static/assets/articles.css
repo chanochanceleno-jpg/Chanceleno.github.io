@@ -41,6 +41,11 @@ header.site{position:sticky;top:0;z-index:40;background:var(--ink);color:#EFE7D8
 .btn-primary{background:var(--copper-btn);color:#FFF8EE}
 .btn-primary:hover{background:#8F552C}
 .btn-sm{min-height:40px;padding:8px 14px;font-size:14px}
+/* Page de remerciement : WhatsApp (vert foncé #075E54, texte blanc 7,7:1) et retour à l'accueil */
+.btn-wa{background:#075E54;color:#fff}
+.btn-wa:hover{background:#054C44}
+.btn-ghost{background:none;color:var(--text);border:1.5px solid currentColor}
+.thanks-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
 @media (max-width:760px){.hcta{display:none}.hnav>a.sec{padding:10px 6px}}
 @media (max-width:520px){.word{display:none}.lang a{min-width:32px;padding:9px 6px}}
 

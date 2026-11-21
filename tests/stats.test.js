@@ -50,7 +50,7 @@ const settle = p => p.waitForTimeout(600);
     await p.goto(BASE + U("devis", lang)); await settle(p);
     p.hits.length = 0; await p.click("#rfqForm button[type=submit]"); await settle(p);
     ok(events(p).length === 0, L + " formulaire invalide : aucun événement");
-    await p.fill("#r-req", "T"); await p.fill("#r-dest", "Luanda"); await p.fill("#r-name", "T"); await p.fill("#r-mail", "a@b.co");
+    await p.fill("#r-req", "T"); await p.fill("#r-dest", "Luanda"); await p.fill("#r-name", "T"); await p.fill("#r-contact", "a@b.co");
     await p.click("#rfqForm button[type=submit]"); await settle(p);
     ok(events(p).includes("envoi-devis"), L + " envoi-devis " + events(p));
     for (const [pid, form, fill, ev] of [
@@ -61,6 +61,10 @@ const settle = p => p.waitForTimeout(600);
       await fill(); await p.click("#" + form + " button[type=submit]"); await settle(p);
       ok(events(p).includes(ev), L + " " + ev + " " + events(p));
     }
+    // clics « Demander un devis » (accueil)
+    await p.goto(BASE + U("home", lang)); await settle(p); p.hits.length = 0;
+    await p.click('main a[href^="' + U("devis", lang) + '"] >> nth=0'); await p.waitForURL("**" + U("devis", lang) + "**"); await settle(p);
+    ok(events(p).includes("clic-devis"), L + " clic-devis " + events(p));
     // WhatsApp : menu flottant (Europe, Afrique), assistant (numéro selon la langue)
     await p.goto(BASE + U("home", lang)); await settle(p);
     for (const [i, ev] of [[0, "whatsapp-europe"], [1, "whatsapp-afrique"]]) {
@@ -69,7 +73,8 @@ const settle = p => p.waitForTimeout(600);
       ok(events(p).includes(ev), L + " menu WhatsApp " + ev + " " + events(p));
     }
     await p.evaluate(() => document.body.click()); // ferme le menu WhatsApp resté ouvert
-    p.hits.length = 0; await p.click("#cbBtn");
+    p.hits.length = 0; await p.click("#cbBtn"); await settle(p);
+    ok(!events(p).some(e => e.startsWith("whatsapp")), L + " bulle d'aide : ouvre le menu, pas de clic WhatsApp compté " + events(p));
     const [pop] = await Promise.all([p.waitForEvent("popup"), p.click("#cbWa")]); await pop.close(); await settle(p);
     const want = lang === "pt" ? "whatsapp-afrique" : "whatsapp-europe";
     ok(events(p).includes(want), L + " assistant WhatsApp " + want + " " + events(p));
