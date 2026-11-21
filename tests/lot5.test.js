@@ -219,11 +219,36 @@ async function reel(b) {
         { fr: "Contact pour l'exercice de vos droits : ceo@chanceleno.com.", en: "Contact for exercising your rights: ceo@chanceleno.com.", pt: "Contacto para o exercício dos seus direitos: ceo@chanceleno.com." }[lang]), L + " : confidentialité, responsable du traitement");
       ok(!c.includes("COMÉRCIO GERAL") && (c.match(/ceo@chanceleno\.com/g) || []).length === 2 && !c.includes("(at)"), L + " : confidentialité, droits exercés auprès de ceo@");
       // confidentialité : FormSubmit (États-Unis) et WhatsApp (Meta), base des transferts hors UE
-      ok(c.includes({ fr: "FormSubmit, établi aux États-Unis", en: "FormSubmit, based in the United States", pt: "FormSubmit, sediado nos Estados Unidos" }[lang])
+      ok(c.includes({ fr: "FormSubmit (États-Unis)", en: "FormSubmit (United States)", pt: "FormSubmit (Estados Unidos)" }[lang])
         && c.includes({ fr: "WhatsApp (groupe Meta)", en: "WhatsApp (Meta group)", pt: "WhatsApp (grupo Meta)" }[lang])
         && c.includes({ fr: "article 49, paragraphe 1, b) du RGPD", en: "Article 49(1)(b) of the GDPR", pt: "artigo 49.º, n.º 1, alínea b), do RGPD" }[lang])
         && c.includes("Data Privacy Framework"), L + " : confidentialité, destinataires et transferts hors UE");
       if (w === WIDTHS[0]) {
+        // confidentialité : date de mise à jour et liste complète des destinataires (services tiers)
+        ok(c.startsWith({ fr: "Dernière mise à jour : 21 novembre 2026", en: "Last updated: 21 November 2026", pt: "Última atualização: 21 de novembro de 2026" }[lang]) || (await text(p, ".pagehead")).includes({ fr: "Dernière mise à jour : 21 novembre 2026", en: "Last updated: 21 November 2026", pt: "Última atualização: 21 de novembro de 2026" }[lang]), L + " : confidentialité, date de mise à jour");
+        const dest = await p.$$eval(".legal .band ul li", li => li.map(x => x.textContent.split(/[ (,:]/)[0]));
+        ok(JSON.stringify(dest.slice(2)) === '["GitHub","FormSubmit","Google","Zoho","GoatCounter","WhatsApp"]' && dest.length === 8, L + " : confidentialité, destinataires " + JSON.stringify(dest));
+        ok(c.includes({ fr: "Zoho Mail héberge nos emails dans son centre de données de l'Union européenne", en: "Zoho Mail hosts our emails in its European Union data centre", pt: "O Zoho Mail aloja os nossos emails no seu centro de dados da União Europeia" }[lang])
+          && c.includes({ fr: "GitHub Inc. héberge le site aux États-Unis", en: "GitHub Inc. hosts the site in the United States", pt: "A GitHub Inc. aloja o site nos Estados Unidos" }[lang]) && !/formspree/i.test(c), L + " : confidentialité, transferts GitHub et Zoho");
+        // informations contractuelles : phrase sur le contrat de chaque opération conservée, CGV du Pack Audit complètes
+        await p.goto(BASE + U("conditions", lang));
+        const cg = await text(p, ".legal .band");
+        const CGV = {
+          fr: ["Le périmètre, les responsabilités, les conditions de paiement et de contrôle de chaque opération sont définis dans le contrat propre à cette opération.",
+            "Conditions générales de vente – Pack Audit & Inspection Fournisseur", "Vendeur. " + FR_ID.fr + " – TVA intracommunautaire : FR70133060319.",
+            "réservé exclusivement aux professionnels", "en euros hors taxes ; la TVA est due en sus selon la réglementation applicable. Audit documentaire : 250 € HT.",
+            "payable à la commande, par virement bancaire", "remis sous 48 heures ouvrées. Ce délai court à compter de la réception du paiement et des informations nécessaires",
+            "fourni à titre informatif. La décision d'achat reste celle du client.", "limitée au montant payé pour cet audit",
+            "Banque centrale européenne à son opération de refinancement la plus récente, majoré de 10 points", "indemnité forfaitaire de 40 € pour frais de recouvrement (articles L441-10 et D441-5 du Code de commerce)",
+            "soumises au droit français. Tout litige relève de la compétence des tribunaux de Lyon."],
+          en: ["are set out in the contract specific to that operation.", "General terms and conditions of sale – Supplier Audit & Inspection Pack", "Seller. " + FR_ID.en + " – EU VAT number: FR70133060319.",
+            "reserved exclusively for professionals", "Documentary audit: €250 excl. VAT.", "payable on order, by bank transfer", "within 48 business hours", "remains the customer's",
+            "limited to the amount paid for that audit", "plus 10 percentage points", "fixed indemnity of €40 for collection costs (Articles L441-10 and D441-5", "French law", "courts of Lyon"],
+          pt: ["definidos no contrato próprio dessa operação.", "Condições gerais de venda – Pack Auditoria e Inspeção de Fornecedor", "Vendedor. " + FR_ID.pt + " – IVA intracomunitário: FR70133060319.",
+            "exclusivamente a profissionais", "Auditoria documental: 250 € sem IVA.", "por transferência bancária", "em 48 horas úteis", "continua a ser do cliente",
+            "limitada ao montante pago por essa auditoria", "acrescida de 10 pontos percentuais", "indemnização fixa de 40 € por custos de cobrança (artigos L441-10 e D441-5", "direito francês", "tribunais de Lyon"] }[lang];
+        const miss = CGV.filter(x => !cg.includes(x));
+        ok(miss.length === 0, L + " : CGV du Pack Audit complètes" + (miss.length ? " — manque : " + JSON.stringify(miss) : ""));
         // responsabilité : limitée par le contrat de chaque opération (À propos)
         await p.goto(BASE + U("a-propos", lang));
         const ab = await text(p, "main"), lim = { fr: "dans les limites fixées par le contrat de chaque opération", en: "within the limits set by the contract for each operation", pt: "dentro dos limites fixados pelo contrato de cada operação" }[lang];
@@ -275,6 +300,22 @@ async function reel(b) {
     const r = await p.goto(BASE + "/cgv/"); ok(r.status() === 404, w + " : pas de page CGV tant que le texte n'existe pas");
     await p.context().close();
   }
+  // pied de page : bloc CHANCELENO INTERNATIONAL identique sur toutes les pages du plan du site, dans chaque langue
+  const sm = fs.readFileSync(path.join(__dirname, "..", "_site", "sitemap.xml"), "utf8");
+  const all = [...sm.matchAll(/<loc>https:\/\/chanceleno\.com([^<]*)<\/loc>/g)].map(m => m[1]);
+  const pf = await page(b, 1280), seen = { fr: new Set(), en: new Set(), pt: new Set() };
+  for (const u of all) {
+    await pf.goto(BASE + u);
+    const lang = u.startsWith("/en/") ? "en" : u.startsWith("/pt/") ? "pt" : "fr";
+    const blk = await pf.$$eval(".entities > div", d => d.map(x => x.innerText.replace(/\s+/g, " ").trim()).find(t => t.startsWith("CHANCELENO INTERNATIONAL")) || "");
+    seen[lang].add(blk);
+  }
+  for (const lang of LANGS) {
+    const v = [...seen[lang]];
+    ok(v.length === 1 && v[0].includes(VAT[lang]) && v[0].includes({ fr: "SAS à associé unique au capital de 1 000 €", en: "SAS à associé unique with share capital of 1 000 €", pt: "SAS à associé unique com capital social de 1 000 €" }[lang])
+      && v[0].includes("RCS Lyon 133 060 319") && v[0].includes("12 rue de la Part-Dieu, 69003 Lyon"), lang + " : pied de page identique sur les " + all.length + " pages " + JSON.stringify(v));
+  }
+  await pf.context().close();
 }
 
 async function fictif(b) {
