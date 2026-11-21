@@ -621,9 +621,9 @@ def fill_lists(site, src):
         '<article class="sector-detail"><h3><a href="#/secteur-%d">%s</a></h3><dl><div><dt>Enjeux fréquents</dt><dd>%s</dd></div>'
         '<div><dt>Besoins typiques</dt><dd>%s</dd></div><div><dt>Ce que nous apportons</dt><dd>Sourcing ciblé, vérification '
         'proportionnée au risque, comparaison documentée des offres.</dd></div><div><dt>Prochaine étape</dt><dd><a href="#/devis?s=%d" '
-        'style="color:var(--copper);font-weight:600">Envoyer un besoin dans ce secteur</a></dd></div></dl></article>'
+        'style="color:var(--cuivre-texte);font-weight:600">Envoyer un besoin dans ce secteur</a></dd></div></dl></article>'
         % (i, s["titre"], s["enjeux"], s["besoins"], i) for i, s in enumerate(d["secteurs"]))
-    sect += ('<p style="margin-top:36px" class="lead">Votre secteur n\'apparaît pas ? <a href="#/devis" style="color:var(--copper)">'
+    sect += ('<p style="margin-top:36px" class="lead">Votre secteur n\'apparaît pas ? <a href="#/devis" style="color:var(--cuivre-texte)">'
              'Envoyez-nous votre besoin.</a></p>')
     src = src.replace('<div class="wrap" id="sectorsFull"></div>', '<div class="wrap" id="sectorsFull">%s</div>' % sect)
     opts = "".join('<option value="%d">%s</option>' % (i, s["titre"]) for i, s in enumerate(d["secteurs"])) + \
