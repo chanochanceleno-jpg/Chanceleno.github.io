@@ -30,15 +30,14 @@ CGV = {"fr": "<h3>Article 1 — Objet (TEXTE DE TEST)</h3><p>Texte fictif de tes
 def fictitious(text):
     """Valeurs fictives, clairement marquées comme telles."""
     rep = [
-        ('  editeur: angola', '  editeur: france'),
-        ('    forme: ""', '    forme: "SASU"'),
-        ('    adresse: ""                        # adresse du siège', '    adresse: "1 rue de l\'Exemple, 69001 Lyon, France"  #'),
-        ('    siren: ""', '    siren: "123 456 789"'),
-        ('    rcs: ""', '    rcs: "Lyon 123 456 789"'),
+        ('    forme: "SAS à associé unique"', '    forme: "SASU"'),
+        ('    adresse: "12 rue de la Part-Dieu, 69003 Lyon"', '    adresse: "1 rue de l\'Exemple, 69001 Lyon, France"'),
+        ('    siren: "133 060 319"', '    siren: "123 456 789"'),
+        ('    rcs: "Lyon 133 060 319"', '    rcs: "Lyon 123 456 789"'),
         ('    tva: ""', '    tva: "FR12123456789"'),
-        ('    capital: ""', '    capital: "1 000 €"'),
-        ('    president: ""', '    president: "Président Fictif"'),
-        ('    date_immatriculation: ""', '    date_immatriculation: "2026-11-02"'),
+        ('    president: "Chano Chanceleno"', '    president: "Président Fictif"'),
+        ('    email: "ceo@chanceleno.com"', '    email: "fictif@chanceleno.com"'),
+        ('    date_immatriculation: "20/11/2026"', '    date_immatriculation: "02/11/2026"'),
         ('  youtube: "https://www.youtube.com/@Chanceleno"', '  youtube: ""'),
         ('  prix_audit_ht: 250', '  prix_audit_ht: 300'),
         ('  delai_reponse_h: 48', '  delai_reponse_h: 24'),
@@ -60,9 +59,9 @@ def fictitious(text):
     temoignage: {fr: "Ce témoignage ne doit jamais apparaître.", en: "Must never appear.", pt: "Nunca deve aparecer."}
     autorisation: non'''),
         ('''  accueil_description:
-    fr: ""
-    en: ""
-    pt: ""''', '''  accueil_description:
+    fr: "Cargo et conteneurs au port de Namibe, en Angola"
+    en: "Cargo ship and containers at the port of Namibe, Angola"
+    pt: "Navio de carga e contentores no porto do Namibe, Angola"''', '''  accueil_description:
     fr: "Photo de test de l'accueil"
     en: "Home test photo"
     pt: "Foto de teste da página inicial"'''),
@@ -86,10 +85,12 @@ def main():
     fails = 0
     try:
         # 1. erreurs volontaires : la génération doit s'arrêter avec un message clair
-        for bad, expected in [(('    siren: ""', '    siren: "12345"'), "identite.france.siren : 9 chiffres attendus"),
+        for bad, expected in [(('    siren: "133 060 319"', '    siren: "12345"'), "identite.france.siren : 9 chiffres attendus"),
+                              (('    email: "ceo@chanceleno.com"', '    email: "ceo"'), "identite.france.email : adresse email attendue"),
+                              (('    date_immatriculation: "20/11/2026"', '    date_immatriculation: "2026/11/20"'), "identite.france.date_immatriculation : date au format"),
                               (('  youtube: "https://www.youtube.com/@Chanceleno"', '  youtube: "youtube.com/@x"'), "reseaux.youtube : adresse complète commençant par https://"),
                               (('  prix_audit_ht: 250', '  prix_audit_ht: "250 €"'), "tarifs.prix_audit_ht : nombre positif attendu"),
-                              (('  editeur: angola', '  editeur: france'), "« france » n'est possible qu'une fois le SIREN")]:
+                              (('    siren: "133 060 319"', '    siren: ""'), "« france » n'est possible qu'une fois le SIREN")]:
             open(CONFIG, "w", encoding="utf-8").write(original.replace(*bad))
             r = build()
             ok = r.returncode != 0 and expected in (r.stdout + r.stderr)

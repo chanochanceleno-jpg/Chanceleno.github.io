@@ -17,9 +17,9 @@
 # Utilisées dans les mentions légales, le pied de page, la carte Lyon et les données lues par Google (schema.org).
 # ----------------------------------------------------------------------------------------------------------------
 identite:
-  # Entité qui édite le site : « angola » aujourd'hui, « france » quand CHANCELENO INTERNATIONAL sera immatriculée.
-  editeur: angola
-  directeur_publication: "Chano Ndandu CHANCELENO"
+  # Entité qui édite le site : « france » (CHANCELENO INTERNATIONAL) ou « angola ».
+  editeur: france
+  directeur_publication: "Chano Chanceleno"
 
   # Société angolaise. Téléphone affiché : le WhatsApp Afrique (rubrique coordonnees).
   angola:
@@ -27,22 +27,25 @@ identite:
     adresse: "Bairro Quarteirão V6, Rua V6, Kilamba, Luanda, Angola"
     ville: "Luanda"
     nif: "5003018334"
+    localisation: "Kilamba, Luanda, Angola"   # lieu affiché dans les mentions légales (vide = adresse complète)
     date_creation: "2026-04-17"        # format AAAA-MM-JJ
 
   # Société française. Tant que le SIREN est vide, le site indique « société en cours d'immatriculation ».
-  # Dès qu'il est rempli (avec le Kbis), les identifiants s'affichent partout automatiquement.
+  # Dès qu'il est rempli (avec le Kbis), les identifiants s'affichent partout automatiquement : mentions légales,
+  # politique de confidentialité (responsable du traitement), pied de page, carte Lyon, données lues par Google.
   # Téléphone affiché : le WhatsApp Europe (rubrique coordonnees).
   france:
     denomination: "CHANCELENO INTERNATIONAL"
-    forme: ""                          # ex. "SASU"
-    adresse: ""                        # adresse du siège, ex. "10 rue Exemple, 69002 Lyon, France"
+    forme: "SAS à associé unique"      # forme juridique, telle qu'écrite sur le Kbis
+    adresse: "12 rue de la Part-Dieu, 69003 Lyon"   # adresse du siège
     ville: "Lyon"
-    siren: ""                          # 9 chiffres, ex. "123 456 789"
-    rcs: ""                            # ex. "Lyon 123 456 789"
-    tva: ""                            # ex. "FR12123456789"
-    capital: ""                        # ex. "1 000 €"
-    president: ""                      # ex. "Chano Ndandu CHANCELENO"
-    date_immatriculation: ""           # format AAAA-MM-JJ
+    siren: "133 060 319"               # 9 chiffres
+    rcs: "Lyon 133 060 319"
+    tva: ""                            # vide = non affiché ; ex. "FR12123456789"
+    capital: "1 000 €"
+    president: "Chano Chanceleno"
+    email: "ceo@chanceleno.com"        # contact de l'éditeur (mentions légales) et pour l'exercice des droits (confidentialité)
+    date_immatriculation: "20/11/2026" # format JJ/MM/AAAA
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -102,9 +105,9 @@ marches:
       en: "Lyon, France"
       pt: "Lyon, França"
     texte:
-      fr: "{{france_nom}}, {{france_statut}}. Base administrative et logistique pour l'Europe et les pays francophones."
-      en: "{{france_nom}}, {{france_statut}}. Administrative and logistics base for Europe and French-speaking countries."
-      pt: "{{france_nom}}, {{france_statut}}. Base administrativa e logística para a Europa e os países francófonos."
+      fr: "{{france_nom}} – {{france_statut}}. Base administrative et logistique pour l'Europe et les pays francophones."
+      en: "{{france_nom}} – {{france_statut}}. Administrative and logistics base for Europe and French-speaking countries."
+      pt: "{{france_nom}} – {{france_statut}}. Base administrativa e logística para a Europa e os países francófonos."
   - id: luanda
     affiche: oui
     role:

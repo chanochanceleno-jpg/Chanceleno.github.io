@@ -52,9 +52,13 @@ def per_lang(v, champ, errors, obligatoire=True, langues=LANGS):
 
 
 def date(v, champ, errors):
+    """Date écrite AAAA-MM-JJ ou JJ/MM/AAAA -> AAAA-MM-JJ (format lu par Google)."""
     v = text(v, champ, errors)
-    if v and not re.match(r"^\d{4}-\d{2}-\d{2}$", v):
-        errors.append("%s : date au format AAAA-MM-JJ attendue, ex. 2026-11-05 (valeur actuelle : %r)" % (champ, v))
+    m = re.match(r"^(\d{2})/(\d{2})/(\d{4})$", v)
+    if m:
+        v = "%s-%s-%s" % (m.group(3), m.group(2), m.group(1))
+    if v and not re.match(r"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$", v):
+        errors.append("%s : date au format JJ/MM/AAAA ou AAAA-MM-JJ attendue, ex. 20/11/2026 (valeur actuelle : %r)" % (champ, v))
     return v
 
 
@@ -113,17 +117,20 @@ def load(path=CONFIG):
         errors.append("identite.editeur : écrire angola ou france (valeur actuelle : %r)" % cfg["editeur"])
     cfg["directeur"] = text(ident.get("directeur_publication"), "identite.directeur_publication", errors, True)
     cfg["angola"] = {k: text(ao.get(k), "identite.angola." + k, errors, True) for k in ("denomination", "adresse", "ville", "nif")}
+    cfg["angola"]["localisation"] = text(ao.get("localisation"), "identite.angola.localisation", errors) or cfg["angola"]["adresse"]
     cfg["angola"]["date_creation"] = date(ao.get("date_creation"), "identite.angola.date_creation", errors)
     f = {k: text(fr.get(k), "identite.france." + k, errors, k in ("denomination", "ville"))
-         for k in ("denomination", "forme", "adresse", "ville", "siren", "rcs", "tva", "capital", "president")}
+         for k in ("denomination", "forme", "adresse", "ville", "siren", "rcs", "tva", "capital", "president", "email")}
     f["date_immatriculation"] = date(fr.get("date_immatriculation"), "identite.france.date_immatriculation", errors)
     f["immatriculee"] = bool(f["siren"])
     if f["siren"]:
         if not re.match(r"^\d{9}$", f["siren"].replace(" ", "")):
             errors.append("identite.france.siren : 9 chiffres attendus, ex. \"123 456 789\" (valeur actuelle : %r)" % f["siren"])
-        for k in ("forme", "adresse", "rcs", "capital", "president"):
+        for k in ("forme", "adresse", "rcs", "capital", "president", "email"):
             if not f[k]:
                 errors.append("identite.france.%s : obligatoire dès que le SIREN est rempli (voir le Kbis)" % k)
+    if f["email"] and not re.match(r"^[a-z0-9._+-]+@[a-z0-9-]+(\.[a-z0-9-]+)+$", f["email"]):
+        errors.append("identite.france.email : adresse email attendue, en minuscules (valeur actuelle : %r)" % f["email"])
     if f["tva"] and not re.match(r"^FR[0-9A-Z]{2}\d{9}$", f["tva"].replace(" ", "")):
         errors.append("identite.france.tva : numéro de TVA français attendu, ex. \"FR12123456789\" (valeur actuelle : %r)" % f["tva"])
     if cfg["editeur"] == "france" and not f["immatriculee"]:

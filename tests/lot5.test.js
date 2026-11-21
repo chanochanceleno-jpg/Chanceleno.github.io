@@ -46,7 +46,15 @@ const loaded = async (p, sel, webp = true) => {
 const jsonld = p => p.$eval('script[type="application/ld+json"]', s => JSON.parse(s.textContent)).catch(() => ({}));
 const shot = async (p, name) => { if (SHOTS) { fs.mkdirSync(SHOTS, { recursive: true }); await p.screenshot({ path: path.join(SHOTS, name + ".png"), fullPage: true }); } };
 
-const PAGES = ["home", "marches", "mentions", "contact", "devis", "cookies"];
+const PAGES = ["home", "marches", "mentions", "confidentialite", "contact", "devis", "cookies"];
+
+// Identité légale réelle (config/site.yml) : société française éditrice et structure angolaise
+const FR_ID = {
+  fr: "CHANCELENO INTERNATIONAL – SAS à associé unique au capital de 1 000 € – RCS Lyon 133 060 319 – Siège : 12 rue de la Part-Dieu, 69003 Lyon",
+  en: "CHANCELENO INTERNATIONAL – SAS à associé unique with share capital of 1 000 € – RCS Lyon 133 060 319 – Registered office: 12 rue de la Part-Dieu, 69003 Lyon",
+  pt: "CHANCELENO INTERNATIONAL – SAS à associé unique com capital social de 1 000 € – RCS Lyon 133 060 319 – Sede: 12 rue de la Part-Dieu, 69003 Lyon" };
+const AO_ID = "CHANCELENO – COMÉRCIO GERAL, (SU), LDA – Kilamba, Luanda, Angola – NIF 5003018334.";
+const NO_VAT = /TVA|VAT|IVA intra|immatricul|being registered|processo de registo/;
 
 // Réseaux sociaux officiels : ordre, libellés, attributs, taille des zones cliquables (44 × 44 px)
 const SOCIAL = [["https://www.linkedin.com/company/chanceleno/", "LinkedIn"], ["https://www.instagram.com/chanceleno_international/", "Instagram"],
@@ -181,15 +189,38 @@ async function reel(b) {
       ok((await text(p, ".stats")).includes({ fr: "5 langues de travail : FR · PT · EN · ES · LN", en: "5 working languages: FR · PT · EN · ES · LN", pt: "5 línguas de trabalho: FR · PT · EN · ES · LN" }[lang]), L + " : 5 langues de travail");
       ok((await text(p, ".founder")).includes({ fr: "en français, en portugais, en anglais, en espagnol et en lingala.", en: "French, Portuguese, English, Spanish and Lingala.", pt: "francês, português, inglês, espanhol e lingala." }[lang]), L + " : lingala dans le bloc fondateur");
       ok((await text(p, ".fbot")).includes("© " + YEAR + " CHANCELENO"), L + " : copyright " + YEAR);
-      ok((await text(p, ".entities")).includes({ fr: "société en cours d'immatriculation", en: "company being registered", pt: "sociedade em processo de registo" }[lang]), L + " : statut de la société française");
+      const ent = await text(p, ".entities");
+      ok(ent.includes({ fr: "SAS à associé unique au capital de 1 000 € RCS Lyon 133 060 319 Siège : 12 rue de la Part-Dieu, 69003 Lyon",
+        en: "SAS à associé unique with share capital of 1 000 € RCS Lyon 133 060 319 Registered office: 12 rue de la Part-Dieu, 69003 Lyon",
+        pt: "SAS à associé unique com capital social de 1 000 € RCS Lyon 133 060 319 Sede: 12 rue de la Part-Dieu, 69003 Lyon" }[lang]) && !NO_VAT.test(ent), L + " : pied de page, identité de la société française, sans TVA");
       const ld = lang === "fr" ? await jsonld(p) : null;
       if (ld) {
-        ok(!ld.subOrganization[1].taxID && JSON.stringify(ld.sameAs) === JSON.stringify(SOCIAL.slice(0, 4).map(x => x[0])), "JSON-LD : société française sans identifiants, sameAs = 4 comptes de l'entreprise");
+        const sfr = ld.subOrganization[1];
+        ok(sfr.taxID === "133060319" && !sfr.vatID && sfr.foundingDate === "2026-11-20" && sfr.address.streetAddress === "12 rue de la Part-Dieu" && !sfr.description, "JSON-LD : identifiants de la société française, sans TVA");
+        ok(JSON.stringify(ld.sameAs) === JSON.stringify(SOCIAL.slice(0, 4).map(x => x[0])), "JSON-LD : sameAs = 4 comptes de l'entreprise");
         ok(ld.founder.name === "Chano Chanceleno" && JSON.stringify(ld.founder.sameAs) === '["https://www.linkedin.com/in/chanceleno","https://www.tiktok.com/@chano.chanceleno"]', "JSON-LD : fondateur « Chano Chanceleno », profil LinkedIn et TikTok");
         ok(JSON.stringify(ld.knowsLanguage) === '["fr","pt","en","es","ln"]' && !("email" in ld), "JSON-LD : knowsLanguage avec ln, sans email");
       }
+      // mentions légales : éditeur, directeur de la publication, structure angolaise, hébergeur, pas de TVA
       await p.goto(BASE + U("mentions", lang));
-      ok((await text(p, ".legal .band")).includes("NIF 5003018334"), L + " : mentions légales, éditeur angolais");
+      const m = await text(p, ".legal .band");
+      ok(m.includes({ fr: "Éditeur du site ", en: "Site publisher ", pt: "Editor do site " }[lang] + FR_ID[lang] +
+        { fr: " – Email : ceo@chanceleno.com – Tél. : +33 6 41 80 84 99.", en: " – Email: ceo@chanceleno.com – Tel.: +33 6 41 80 84 99.", pt: " – Email: ceo@chanceleno.com – Tel.: +33 6 41 80 84 99." }[lang]), L + " : mentions légales, éditeur français");
+      ok(m.includes({ fr: "Directeur de la publication : Chano Chanceleno, Président.", en: "Publication director: Chano Chanceleno, President.", pt: "Diretor da publicação: Chano Chanceleno, Presidente." }[lang]), L + " : mentions légales, directeur de la publication");
+      ok(m.includes({ fr: "Structure angolaise ", en: "Angolan company ", pt: "Estrutura angolana " }[lang] + AO_ID), L + " : mentions légales, structure angolaise");
+      ok(m.includes("GitHub Inc., 88 Colin P. Kelly Jr Street, San Francisco, CA 94107, " + { fr: "États-Unis.", en: "United States.", pt: "Estados Unidos." }[lang]), L + " : mentions légales, hébergeur");
+      ok(!NO_VAT.test(m) && !m.includes("(at)"), L + " : mentions légales sans TVA, email reconstitué");
+      // confidentialité : responsable du traitement = société française, droits exercés auprès de ceo@
+      await p.goto(BASE + U("confidentialite", lang));
+      const c = await text(p, ".legal .band");
+      ok(c.includes({ fr: "Responsable du traitement ", en: "Data controller ", pt: "Responsável pelo tratamento " }[lang] + FR_ID[lang] + ". " +
+        { fr: "Contact pour l'exercice de vos droits : ceo@chanceleno.com.", en: "Contact for exercising your rights: ceo@chanceleno.com.", pt: "Contacto para o exercício dos seus direitos: ceo@chanceleno.com." }[lang]), L + " : confidentialité, responsable du traitement");
+      ok(!c.includes("COMÉRCIO GERAL") && (c.match(/ceo@chanceleno\.com/g) || []).length === 2 && !c.includes("(at)"), L + " : confidentialité, droits exercés auprès de ceo@");
+      // carte Lyon (Marchés) ; cartes Pointe-Noire et Kinshasa inchangées
+      await p.goto(BASE + U("marches", lang));
+      const cards = await p.$$eval(".nodes > div", d => d.map(x => x.innerText.replace(/\s+/g, " ")));
+      ok(cards[0].includes(FR_ID[lang] + ". "), L + " : carte Lyon avec l'identité légale");
+      ok(cards.some(x => x.includes("Pointe-Noire")) && cards.some(x => x.includes("Kinshasa")), L + " : cartes Pointe-Noire et Kinshasa");
       // message de confirmation du formulaire de contact, traduit
       await p.goto(BASE + U("contact", lang));
       ok((await text(p, ".follow p")) === { fr: "Suivez-nous", en: "Follow us", pt: "Siga-nos" }[lang], L + " : Contact, « Suivez-nous »");
@@ -232,7 +263,7 @@ async function fictif(b) {
       await socials(p, "footer.site", lang, L, SOCIAL.filter(x => x[1] !== "YouTube"));   // lien YouTube vidé : icône absente
       ok(foot.some(x => x.endsWith(" " + U("cgv", lang))), L + " : lien CGV dans le pied de page");
       const ent = await text(p, ".entities");
-      ok(ent.includes("SIREN 123 456 789 · RCS Lyon 123 456 789") && ent.includes("FR12123456789") && !/immatricul|registered|registo/.test(ent), L + " : pied de page, identifiants de la société française");
+      ok(ent.includes("RCS Lyon 123 456 789") && ent.includes("FR12123456789") && !/immatricul|registered|registo/.test(ent), L + " : pied de page, identifiants de la société française");
       if (lang === "fr") {
         const ld = await jsonld(p), fr = ld.subOrganization[1];
         ok(fr.taxID === "123456789" && fr.vatID === "FR12123456789" && fr.foundingDate === "2026-11-02" && !fr.description, "JSON-LD : identifiants de la société française");
@@ -243,17 +274,18 @@ async function fictif(b) {
       await p.goto(BASE + U("marches", lang));
       const cards = await p.$$eval(".nodes > div", d => d.map(x => x.innerText.replace(/\s+/g, " ")));
       ok(cards.length === 6 && !cards.some(c => c.includes("XAF")), L + " : carte « Devises » masquée");
-      ok(cards[0].includes("CHANCELENO INTERNATIONAL, SASU, SIREN 123 456 789."), L + " : carte Lyon avec le SIREN");
+      ok(cards[0].includes({ fr: "CHANCELENO INTERNATIONAL – SASU au capital de 1 000 € – RCS Lyon 123 456 789 – Siège : 1 rue de l'Exemple, 69001 Lyon, France.",
+        en: "CHANCELENO INTERNATIONAL – SASU with share capital of 1 000 € – RCS Lyon 123 456 789", pt: "CHANCELENO INTERNATIONAL – SASU com capital social de 1 000 € – RCS Lyon 123 456 789" }[lang]), L + " : carte Lyon avec le RCS");
       ok(cards.some(c => c.includes("Pointe-Noire")) && cards.some(c => c.includes("Kinshasa")), L + " : cartes Pointe-Noire et Kinshasa");
       ok(await loaded(p, ".nodes > div:nth-child(2) img.node-photo"), L + " : photo de Luanda");
       if (w === 360) await shot(p, "fictif-marches-" + lang);
       // mentions légales
       await p.goto(BASE + U("mentions", lang));
       const m = await text(p, ".legal .band");
-      ok(m.includes({ fr: "Éditeur du site CHANCELENO INTERNATIONAL — SASU au capital de 1 000 € — SIREN 123 456 789 — RCS Lyon 123 456 789 — TVA intracommunautaire FR12123456789 — Siège : 1 rue de l'Exemple, 69001 Lyon, France — Président : Président Fictif — Tél. : +33 6 41 80 84 99. Directeur de la publication : Chano Ndandu CHANCELENO.",
-        en: "Site publisher CHANCELENO INTERNATIONAL — SASU with share capital of 1 000 €", pt: "Editor do site CHANCELENO INTERNATIONAL — SASU com capital social de 1 000 €" }[lang]), L + " : mentions légales, éditeur français");
-      ok(m.includes({ fr: "Structure angolaise CHANCELENO – COMÉRCIO GERAL, (SU), LDA — NIF 5003018334", en: "Angolan company CHANCELENO", pt: "Estrutura angolana CHANCELENO" }[lang]), L + " : mentions légales, société angolaise");
-      ok(m.includes("contact@chanceleno.com"), L + " : mentions légales, email reconstitué");
+      ok(m.includes({ fr: "Éditeur du site CHANCELENO INTERNATIONAL – SASU au capital de 1 000 € – RCS Lyon 123 456 789 – Siège : 1 rue de l'Exemple, 69001 Lyon, France – TVA intracommunautaire FR12123456789 – Email : fictif@chanceleno.com – Tél. : +33 6 41 80 84 99. Directeur de la publication : Chano Chanceleno.",
+        en: "Site publisher CHANCELENO INTERNATIONAL – SASU with share capital of 1 000 €", pt: "Editor do site CHANCELENO INTERNATIONAL – SASU com capital social de 1 000 €" }[lang]), L + " : mentions légales, éditeur français (directeur ≠ président : sans qualité)");
+      ok(m.includes({ fr: "Structure angolaise CHANCELENO – COMÉRCIO GERAL, (SU), LDA – Kilamba, Luanda, Angola – NIF 5003018334", en: "Angolan company CHANCELENO", pt: "Estrutura angolana CHANCELENO" }[lang]), L + " : mentions légales, société angolaise");
+      ok(m.includes("fictif@chanceleno.com") && !m.includes("(at)"), L + " : mentions légales, email reconstitué");
       if (w === 360) await shot(p, "fictif-mentions-" + lang);
       // CGV, devis, remerciement
       await p.goto(BASE + U("cgv", lang));
@@ -267,7 +299,7 @@ async function fictif(b) {
     // article (mise en page légère) : pied de page et auteur
     await p.goto(BASE + "/articles/");
     const art = await text(p, "footer.site");
-    ok(art.includes("SIREN 123 456 789") && (await p.$$("footer.site .socials a")).length === 4 && art.includes("Conditions générales de vente"), w + " : pied de page des articles");
+    ok(art.includes("RCS Lyon 123 456 789") && (await p.$$("footer.site .socials a")).length === 4 && art.includes("Conditions générales de vente"), w + " : pied de page des articles");
     await p.context().close();
   }
   const sm = fs.readFileSync(path.join(__dirname, "..", "_site", "sitemap.xml"), "utf8");
