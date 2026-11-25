@@ -5,3 +5,6 @@ tests/node_modules/
 tests/package-lock.json
 __pycache__/
 .DS_Store
+
+# Dossier de travail privé (contacts, e-mails, journal) : ne jamais publier
+ops-prive/
