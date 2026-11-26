@@ -1,5 +1,5 @@
 {
- "_aide": "Listes affichées sur le site. Les textes sont en français ; leurs traductions sont dans i18n.json. Secteurs : « description » = résumé pour Google dans chaque langue (120 à 155 caractères) ; « titre_seo » (facultatif) = titre de l'onglet et de Google, 60 caractères au plus, à la place du nom du secteur ; « article » (facultatif) = dossier d'un article à recommander sur la page du secteur.",
+ "_aide": "Listes affichées sur le site. Les textes sont en français ; leurs traductions sont dans i18n.json. Secteurs : « description » = résumé pour Google dans chaque langue (120 à 155 caractères) ; « titre_seo » (facultatif) = titre de l'onglet et de Google, 60 caractères au plus, à la place du nom du secteur ; « article » (facultatif) = dossier d'un article à recommander sur la page du secteur. « h1 » (facultatif) = titre principal de la page dans chaque langue, à la place du nom du secteur. Texte rédigé d'une page secteur (facultatif) : content/secteurs/<adresse française>/fr.html, en.html et pt.html.",
  "capacites": [
   {
    "titre": "Sourcing international",
@@ -37,16 +37,21 @@
     "pt": "automovel-pesados-frotas"
    },
    "description": {
-    "fr": "Pièces détachées poids lourds, camions et flottes en Angola : pièces d'origine ou équivalentes, références vérifiées avant achat. Demandez un devis.",
+    "fr": "Pièces de rechange pour camions, poids lourds et flottes en Angola : d'origine ou équivalentes, références vérifiées avant achat. Demandez un devis.",
     "en": "Heavy truck and fleet spare parts for Angola: genuine or OE-quality parts, with part numbers checked before purchase. Request a quote today.",
-    "pt": "Peças para camiões, pesados e frotas em Angola: peças originais ou equivalentes, com referências verificadas antes da compra. Peça uma cotação."
+    "pt": "Peças sobressalentes para camiões, pesados e frotas em Angola: originais ou equivalentes, com referências verificadas antes da compra. Peça uma cotação."
    },
    "titre_seo": {
-    "fr": "Pièces détachées poids lourds en Angola | CHANCELENO",
+    "fr": "Pièces de rechange poids lourds en Angola | CHANCELENO",
     "en": "Heavy truck spare parts for Angola | CHANCELENO",
-    "pt": "Peças para camiões e pesados em Angola | CHANCELENO"
+    "pt": "Peças sobressalentes para camiões em Angola | CHANCELENO"
    },
-   "article": "importer-pieces-camions"
+   "article": "importer-pieces-camions",
+   "h1": {
+    "fr": "Pièces de rechange pour camions, poids lourds et flottes",
+    "en": "Spare parts for trucks, heavy vehicles and fleets",
+    "pt": "Peças sobressalentes para camiões, pesados e frotas"
+   }
   },
   {
    "titre": "Pétrole, gaz & sécurité HSE",
