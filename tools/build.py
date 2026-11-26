@@ -127,6 +127,33 @@ def optimize_images(page):
 
 SITE = None   # sources chargées (Site), pour le remplacement des marqueurs dans wr()
 
+# Noms propres que les traducteurs automatiques (Google Traduction, navigateur) ne doivent jamais traduire :
+# sans protection, « CHANCELENO » devient par exemple « chancelier ». Les plus longs d'abord.
+BRAND_NAMES = [
+    "CHANCELENO – COMÉRCIO GERAL, (SU), LDA",
+    "CHANCELENO INTERNATIONAL",
+    "Grupo Chanceleno",
+    "Chano Chanceleno",
+    "CHANCELENO",
+    "Chanceleno",
+]
+BRAND_RE = re.compile(r"(?<![\w.@/-])(" + "|".join(re.escape(n) for n in BRAND_NAMES) + r")(?![\w.@/-])")
+SKIP_RE = re.compile(r"(<(script|style|title|textarea|head)\b.*?</\2>|<!--.*?-->|<[^>]*>)", re.S | re.I)
+
+
+def protect_brand(page):
+    """Entoure les noms de la marque, dans le texte visible, de <span translate="no">…</span>."""
+    out, pos = [], 0
+    for m in SKIP_RE.finditer(page):
+        out.append(BRAND_RE.sub(r'<span translate="no">\1</span>', page[pos:m.start()]))
+        out.append(m.group(0))
+        pos = m.end()
+    out.append(BRAND_RE.sub(r'<span translate="no">\1</span>', page[pos:]))
+    # <summary> est en display:flex : sans enveloppe, le nom protégé deviendrait un bloc séparé qui ne passe
+    # plus à la ligne (débordement à 360 px). On garde tout le texte de la question dans un seul bloc.
+    return re.sub(r"(<summary\b[^>]*>)((?:(?!</summary>).)*?translate=\"no\"(?:(?!</summary>).)*?)(</summary>)",
+                  r"\1<span>\2</span>\3", "".join(out), flags=re.S)
+
 
 def wr(path, s):
     full = os.path.join(OUT, path.lstrip("/"))
@@ -134,7 +161,7 @@ def wr(path, s):
         full += "index.html"
     if full.endswith(".html"):
         lang = re.search(r'<html lang="([a-z]+)"', s)
-        s = optimize_images(SITE.fill(s, lang.group(1) if lang else None))
+        s = protect_brand(optimize_images(SITE.fill(s, lang.group(1) if lang else None)))
     elif SITE:
         s = SITE.fill(s, None)
     os.makedirs(os.path.dirname(full), exist_ok=True)
