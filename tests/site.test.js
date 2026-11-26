@@ -138,11 +138,24 @@ async function main() {
     await p.goto(BASE + U("devis", lang) + "?s=3"); ok(await p.$eval("#r-sec", s => s.value) === "3", L + " ?s=3");
     await p.goto(BASE + U("devis", lang) + "?t=audit1"); ok(await p.$eval("#r-type", s => s.value) === "audit1", L + " ?t=audit1");
     await p.click("#rfqForm button[type=submit]"); ok((await p.$$("#rfqForm .err.show")).length >= 4, L + " devis : validation");
-    await p.fill("#r-req", "Test"); await p.fill("#r-dest", "Luanda"); await p.fill("#r-name", "T"); await p.fill("#r-mail", "a@b.co");
+    await p.fill("#r-req", "Test"); await p.fill("#r-dest", "Luanda"); await p.fill("#r-name", "T"); await p.fill("#r-contact", "a@b.co");
+    await p.evaluate(() => { document.getElementById("r-more").open = true; });   // pièces jointes : bloc « Ajouter des précisions »
     await p.setInputFiles("#r-files", { name: "liste.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4") });
     let body = await submit("rfqForm", "RFQ");
     ok(/filename="liste\.pdf"/.test(body) && field(body, "Pays et ville de destination") === "Luanda" && field(body, "Type de demande") !== null, L + " devis : pièce jointe et noms de champs en français");
     ok(field(body, "Téléphone") === "" && field(body, "Indicatif du pays") === null && field(body, "Indicatif du pays (autre)") === null, L + " devis : téléphone vide accepté, indicatif non envoyé à part");
+    ok(field(body, "email") === "a@b.co" && !/[?&]m=0/.test(field(body, "_next")), L + " devis : email transmis, accusé de réception par email");
+    // devis : contact par WhatsApp (sans email) ; contact invalide refusé ; erreur dans le bloc replié : il s'ouvre
+    await p.goto(BASE + U("devis", lang));
+    await p.fill("#r-req", "Test"); await p.fill("#r-dest", "Luanda"); await p.fill("#r-name", "T"); await p.fill("#r-contact", "0612345678");
+    let n0 = posts.length; await p.click("#rfqForm button[type=submit]"); await p.waitForTimeout(300);
+    ok(posts.length === n0 && await p.$eval("#e-r-contact", e => e.classList.contains("show")), L + " devis : numéro sans indicatif refusé");
+    await p.fill("#r-contact", "+244 923 456 789"); await p.evaluate(() => { document.getElementById("r-more").open = true; }); await p.fill("#r-tel", "123");
+    await p.evaluate(() => { document.getElementById("r-more").open = false; }); await p.click("#rfqForm button[type=submit]"); await p.waitForTimeout(300);
+    ok(posts.length === n0 && await p.$eval("#r-more", d => d.open) && await p.evaluate(() => document.activeElement.id) === "r-tel", L + " devis : erreur dans le bloc replié, bloc ouvert");
+    await p.fill("#r-tel", ""); await p.evaluate(() => document.activeElement.blur()); await p.waitForTimeout(100);   // l'erreur retirée à la sortie du champ décale le bouton
+    body = await submit("rfqForm", "RFQ");
+    ok(field(body, "email") === null && field(body, "Email ou numéro WhatsApp") === "+244 923 456 789" && /[?&]m=0$/.test(field(body, "_next")), L + " devis : contact WhatsApp sans email");
     // fournisseur
     await p.goto(BASE + U("fournisseurs", lang));
     ok((await p.$$('section.page .caps .cap')).length === 5, L + " bloc « Pourquoi rejoindre »");
@@ -221,13 +234,14 @@ async function main() {
   const TEL = { fr: { cc: "33", err: "6 à 14 chiffres", errCc: "Choisissez l'indicatif" },
     en: { cc: "", err: "6 to 14 digits", errCc: "Choose the country code" },
     pt: { cc: "244", err: "6 a 14 algarismos", errCc: "Escolha o indicativo" } };
-  for (const lang of LANGS) for (const [pid, form, pre, req] of [["devis", "rfqForm", "r", { "#r-req": "Test", "#r-dest": "Luanda", "#r-name": "T", "#r-mail": "a@b.co" }],
+  for (const lang of LANGS) for (const [pid, form, pre, req] of [["devis", "rfqForm", "r", { "#r-req": "Test", "#r-dest": "Luanda", "#r-name": "T", "#r-contact": "a@b.co" }],
     ["partenaires", "parForm", "p", { "#p-co": "TEST", "#p-country": "France", "#p-msg": "T", "#p-name": "T", "#p-mail": "a@b.co" }]]) {
     const L = "360px " + lang + " " + pid + " téléphone", t = TEL[lang];
     const p = await page(b, 360);
     const posts = [];
     await p.route(/formsubmit\.co/, r => { posts.push(r.request().postDataBuffer().toString("utf8")); r.fulfill({ status: 200, contentType: "text/html", body: "ok" }); });
-    await p.goto(BASE + U(pid, lang));
+    const more = async () => p.evaluate(() => { const d = document.getElementById("r-more"); if (d) d.open = true; });   // devis : téléphone dans le bloc replié
+    await p.goto(BASE + U(pid, lang)); await more();
     for (const [k, v] of Object.entries(req)) await p.fill(k, v);
     // sortie du champ avant le clic : l'erreur affichée à la sortie décale le bouton
     const send = async () => { await p.evaluate(() => document.activeElement && document.activeElement.blur()); await p.waitForTimeout(100); await p.click("#" + form + " button[type=submit]"); };
@@ -259,7 +273,7 @@ async function main() {
     await send(); await p.waitForTimeout(500);
     ok(posts.length === 1 && field(posts[0], "Téléphone") === "+351912345678" && field(posts[0], "Joignable sur WhatsApp") === "oui", L + " : envoi +351912345678 et WhatsApp oui");
     // « Autre » : saisie libre de l'indicatif
-    await p.goto(BASE + U(pid, lang)); for (const [k, v] of Object.entries(req)) await p.fill(k, v);
+    await p.goto(BASE + U(pid, lang)); await more(); for (const [k, v] of Object.entries(req)) await p.fill(k, v);
     ok(await p.$eval("#" + pre + "-tel-x", i => i.closest(".telx").hidden), L + " : indicatif libre masqué");
     await p.selectOption(cc, "autre"); ok(!(await p.$eval("#" + pre + "-tel-x", i => i.closest(".telx").hidden)), L + " : « Autre » affiche l'indicatif libre");
     await p.fill(num, "912 345 67 89"); await send(); await p.waitForTimeout(300);

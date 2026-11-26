@@ -1,8 +1,10 @@
 /* Adresse email : écrite « contact(at)chanceleno.com » dans le code des pages pour échapper aux robots
    collecteurs de spam, puis reconstituée au chargement (texte normal et lien mailto cliquable). */
 (function(){
-  var MAIL=["{{email_nom}}","{{email_domaine}}"].join("@"),TOKEN=new RegExp("{{email}}".replace(/[.()+]/g,"\\$&"),"g"); // config/site.yml
-  function unmask(s){return String(s).replace(TOKEN,MAIL)}
+  var MAIL=["{{email_nom}}","{{email_domaine}}"].join("@"); // config/site.yml
+  /* toute adresse masquée : l'email général et celui de la société française (mentions légales, confidentialité) */
+  var TOKEN=/([a-z0-9._+-]+)\(at\)([a-z0-9-]+(?:\.[a-z0-9-]+)+)/g;
+  function unmask(s){return String(s).replace(TOKEN,"$1@$2")}
   function reveal(root){
     root.querySelectorAll("a[data-mail]").forEach(function(a){a.href="mailto:"+MAIL});
     var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n;
